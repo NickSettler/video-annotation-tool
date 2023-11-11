@@ -6,7 +6,7 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import '@fontsource/roboto/900.css';
 import { Grid } from '@mui/material';
-import { VideoBlock } from './components/video-block/VideoBlock';
+import { VideoBlock } from './components/video/video-block/VideoBlock';
 
 const App = (): JSX.Element => (
   <Grid container sx={{ px: 2, py: 1 }}>

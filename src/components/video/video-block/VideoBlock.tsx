@@ -1,7 +1,7 @@
 import { JSX, useCallback, useEffect, useRef, useState } from 'react';
 import { Box, Stack, styled } from '@mui/material';
-import { AddressBar } from '../address-bar/AddressBar';
-import { useAppDispatch, useAppSelector } from '../../store/store';
+import { AddressBar } from '../../address-bar/AddressBar';
+import { useAppDispatch, useAppSelector } from '../../../store/store';
 import {
   setVideoLoadedAction,
   setVideoLoadingAction,
@@ -13,14 +13,14 @@ import {
   videoIsLoadingSelector,
   videoIsPlayingSelector,
   videoUrlSelector,
-} from '../../store/video';
-import { commonVideoOptions, computeMeta } from '../../utils/video/video-js';
+} from '../../../store/video';
+import { commonVideoOptions, computeMeta } from '../../../utils/video/video-js';
 import VideoJsPlayer from 'video.js';
 import { VideoControls } from '../video-controls/VideoControls';
-import { roundToDecimal } from '../../utils/math/round';
+import { roundToDecimal } from '../../../utils/math/round';
 import { VideoTimestamp } from '../video-timestamp/VideoTimestamp';
 import { VideoOverlay } from '../video-overlay/VideoOverlay';
-import { useControls } from '../../hooks/video/useControls';
+import { useControls } from '../../../hooks/video/useControls';
 
 const VideosBox = styled(Box)({
   position: 'relative',

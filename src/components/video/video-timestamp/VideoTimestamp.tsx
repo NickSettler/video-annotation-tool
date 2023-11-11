@@ -1,6 +1,6 @@
 import { JSX, useMemo } from 'react';
 import { Typography } from '@mui/material';
-import { getSMPTETimeCode } from '../../utils/video/smpte';
+import { getSMPTETimeCode } from '../../../utils/video/smpte';
 
 export type TVideoTimestampProps = {
   fps: number;
