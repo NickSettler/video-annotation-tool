@@ -36,6 +36,12 @@ module.exports = {
       'ignorePackages',
       { ts: 'never', tsx: 'never' },
     ],
+    'import/no-unresolved': [
+      'error',
+      {
+        ignore: ['^geojson$'],
+      },
+    ],
     'no-shadow': 'off',
     'max-len': ['warn', { code: 120, ignoreComments: true, ignoreUrls: true }],
     'react-hooks/rules-of-hooks': 'error',
