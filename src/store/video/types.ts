@@ -1,0 +1,16 @@
+export type TVideoMeta = {
+  fps: number;
+  width: number;
+  height: number;
+};
+
+export type TVideoState = {
+  url: string | null;
+  fps: TVideoMeta['fps'] | null;
+  videoWidth: TVideoMeta['width'] | null;
+  videoHeight: TVideoMeta['height'] | null;
+  currentTime: number;
+  isPlaying: boolean;
+  isLoading: boolean;
+  isLoaded: boolean;
+};
