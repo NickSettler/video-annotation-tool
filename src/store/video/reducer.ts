@@ -1,7 +1,6 @@
 import { TVideoState } from './types';
 import { createReducer } from '@reduxjs/toolkit';
 import {
-  E_VIDEO_ACTIONS,
   setVideoCurrentTimeAction,
   setVideoLoadedAction,
   setVideoLoadingAction,

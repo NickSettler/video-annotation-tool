@@ -20,6 +20,7 @@ import { VideoControls } from '../video-controls/VideoControls';
 import { roundToDecimal } from '../../utils/math/round';
 import { VideoTimestamp } from '../video-timestamp/VideoTimestamp';
 import { VideoOverlay } from '../video-overlay/VideoOverlay';
+import { useControls } from '../../hooks/video/useControls';
 
 const VideosBox = styled(Box)({
   position: 'relative',
@@ -138,55 +139,13 @@ export const VideoBlock = (): JSX.Element => {
     }
   }, [isLoaded, url, videoOnReadyCallback]);
 
-  const handleFirstStep = useCallback(() => {
-    if (!video) return;
-
-    video.currentTime(0);
-  }, [video]);
-
-  const handlePrevStep = useCallback(() => {
-    if (!video) return;
-
-    const currentTime = video.currentTime();
-
-    if (!currentTime) return;
-
-    video.currentTime(
-      (
-        roundToDecimal(currentTime, frequency) -
-        frequency -
-        frequency / 4
-      ).toFixed(2),
-    );
-  }, [frequency, video]);
-
-  const handlePlayPause = useCallback(() => {
-    if (!video) return;
-
-    video.paused() ? video.play() : video.pause();
-  }, [video]);
-
-  const handleNextStep = useCallback(() => {
-    if (!video) return;
-
-    const currentTime = video.currentTime();
-
-    if (!currentTime) return;
-
-    video.currentTime(
-      (
-        roundToDecimal(currentTime, frequency) +
-        frequency +
-        frequency / 4
-      ).toFixed(2),
-    );
-  }, [frequency, video]);
-
-  const handleLastStep = useCallback(() => {
-    if (!video) return;
-
-    video.currentTime(video.duration());
-  }, [video]);
+  const {
+    handleFirstStep,
+    handlePrevStep,
+    handlePlayPause,
+    handleNextStep,
+    handleLastStep,
+  } = useControls(video, frequency);
 
   return (
     <Stack spacing={2}>
