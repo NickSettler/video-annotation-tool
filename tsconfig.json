@@ -22,6 +22,7 @@
   },
   "include": [
     "src",
+    "src/utils/theme/mui.d.ts",
     ".eslintrc.js"
   ]
 }

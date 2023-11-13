@@ -1,0 +1,3 @@
+export enum E_LOCAL_STORAGE_KEYS {
+  SETTINGS = 'SETTINGS',
+}
