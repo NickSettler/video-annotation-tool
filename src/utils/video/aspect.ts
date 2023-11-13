@@ -10,8 +10,8 @@
 export const getAspectRatio = (
   width: number | null,
   height: number | null,
-): string => {
-  if (!width || !height) return '0:0';
+): string | null => {
+  if (!width || !height) return null;
 
   const gcd = (a: number, b: number): number => {
     if (b === 0) {
@@ -23,5 +23,5 @@ export const getAspectRatio = (
 
   const divisor = gcd(width, height);
 
-  return `${width / divisor}:${height / divisor}`;
+  return `${width / divisor}/${height / divisor}`;
 };
