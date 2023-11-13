@@ -7,6 +7,7 @@ import {
   setVideoMetadataAction,
   setVideoPlayingAction,
   setVideoUrlAction,
+  setVideoViewportSizeAction,
 } from './actions';
 
 const initialState: TVideoState = {
@@ -14,6 +15,8 @@ const initialState: TVideoState = {
   fps: null,
   videoWidth: null,
   videoHeight: null,
+  viewportWidth: null,
+  viewportHeight: null,
   currentTime: 0,
   isPlaying: false,
   isLoading: false,
@@ -39,6 +42,11 @@ export const videoReducer = createReducer(initialState, (builder) => {
             ...(payload.width && { videoWidth: payload.width }),
             ...(payload.height && { videoHeight: payload.height }),
           }),
+    }))
+    .addCase(setVideoViewportSizeAction, (state, { payload }) => ({
+      ...state,
+      viewportWidth: payload.width,
+      viewportHeight: payload.height,
     }))
     .addCase(setVideoCurrentTimeAction, (state, { payload }) => ({
       ...state,

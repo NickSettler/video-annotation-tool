@@ -9,6 +9,8 @@ export type TVideoState = {
   fps: TVideoMeta['fps'] | null;
   videoWidth: TVideoMeta['width'] | null;
   videoHeight: TVideoMeta['height'] | null;
+  viewportWidth: number | null;
+  viewportHeight: number | null;
   currentTime: number;
   isPlaying: boolean;
   isLoading: boolean;

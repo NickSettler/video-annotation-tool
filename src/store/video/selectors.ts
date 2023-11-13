@@ -1,15 +1,18 @@
 import { TAppState } from '../store';
 import { createSelector } from '@reduxjs/toolkit';
+import { getAspectRatio } from '../../utils/video/aspect';
+import { moduleName } from './actions';
+import { TVideoState } from './types';
 
-const videoSelector = (state: TAppState) => state.video;
+const videoState = (state: TAppState): TVideoState => state[moduleName];
 
 export const videoUrlSelector = createSelector(
-  videoSelector,
+  videoState,
   (video) => video.url,
 );
 
 export const videoFPSSelector = createSelector(
-  videoSelector,
+  videoState,
   (video) => video.fps,
 );
 
@@ -18,17 +21,33 @@ export const videoFrequencySelector = createSelector(videoFPSSelector, (fps) =>
 );
 
 export const videoWidthSelector = createSelector(
-  videoSelector,
+  videoState,
   (video) => video.videoWidth,
 );
 
 export const videoHeightSelector = createSelector(
-  videoSelector,
+  videoState,
   (video) => video.videoHeight,
 );
 
+export const videoAspectRatioSelector = createSelector(
+  videoWidthSelector,
+  videoHeightSelector,
+  (width, height) => getAspectRatio(width, height),
+);
+
+export const videoViewportWidthSelector = createSelector(
+  videoState,
+  (video) => video.viewportWidth,
+);
+
+export const videoViewportHeightSelector = createSelector(
+  videoState,
+  (video) => video.viewportHeight,
+);
+
 export const videoCurrentTimeSelector = createSelector(
-  videoSelector,
+  videoState,
   (video) => video.currentTime,
 );
 
@@ -39,16 +58,16 @@ export const videoCurrentFrameSelector = createSelector(
 );
 
 export const videoIsPlayingSelector = createSelector(
-  videoSelector,
+  videoState,
   (video) => video.isPlaying,
 );
 
 export const videoIsLoadingSelector = createSelector(
-  videoSelector,
+  videoState,
   (video) => video.isLoading,
 );
 
 export const videoIsLoadedSelector = createSelector(
-  videoSelector,
+  videoState,
   (video) => video.isLoaded,
 );
