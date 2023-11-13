@@ -2,20 +2,24 @@ import React, { ChangeEvent, FormEvent, JSX, useEffect, useState } from 'react';
 import {
   alpha,
   AppBar,
-  InputBase,
-  styled,
-  Typography,
-  Toolbar as MUIToolbar,
   Button,
+  IconButton,
+  InputBase,
   Stack,
+  styled,
+  Toolbar,
+  Typography,
 } from '@mui/material';
-import { Link } from '@mui/icons-material';
+import { Link, Settings } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { setVideoUrlAction, videoUrlSelector } from '../../../store/video';
+import { useModal } from '../../../hooks/modal/useModal';
+import { E_MODALS } from '../../../store/modals';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
+  transition: theme.transitions.create('background'),
   backgroundColor: alpha(theme.palette.common.white, 0.15),
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
@@ -54,10 +58,14 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export const Toolbar = (): JSX.Element => {
+export const AppToolbar = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
   const storeUrl = useAppSelector(videoUrlSelector);
+
+  const { onOpen: handleModalOpen, onClose: handleModalClose } = useModal(
+    E_MODALS.PROJECT_SETTINGS,
+  );
 
   const [url, setUrl] = useState('https://www.fit.vutbr.cz/~iklima/out.mp4');
 
@@ -76,8 +84,8 @@ export const Toolbar = (): JSX.Element => {
   };
 
   return (
-    <AppBar component='nav'>
-      <MUIToolbar>
+    <AppBar component='nav' sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+      <Toolbar>
         <Typography variant='h6'>Video Annotation Tool</Typography>
         <Stack
           direction={'row'}
@@ -101,7 +109,12 @@ export const Toolbar = (): JSX.Element => {
             Load
           </Button>
         </Stack>
-      </MUIToolbar>
+        <Stack direction={'row'} spacing={1}>
+          <IconButton color={'inherit'} onClick={handleModalOpen}>
+            <Settings />
+          </IconButton>
+        </Stack>
+      </Toolbar>
     </AppBar>
   );
 };
