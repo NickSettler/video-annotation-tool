@@ -108,6 +108,7 @@ export const VideoBlock = (): JSX.Element => {
     }
   }, [dispatch, url]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const playerTicker = (
     _: DOMHighResTimeStamp,
     metadata: VideoFrameCallbackMetadata,
@@ -176,6 +177,7 @@ export const VideoBlock = (): JSX.Element => {
     return () => {
       window.removeEventListener('resize', documentResizeHandler);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
