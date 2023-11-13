@@ -63,9 +63,7 @@ export const AppToolbar = (): JSX.Element => {
 
   const storeUrl = useAppSelector(videoUrlSelector);
 
-  const { onOpen: handleModalOpen, onClose: handleModalClose } = useModal(
-    E_MODALS.PROJECT_SETTINGS,
-  );
+  const { onOpen: handleModalOpen } = useModal(E_MODALS.PROJECT_SETTINGS);
 
   const [url, setUrl] = useState('https://www.fit.vutbr.cz/~iklima/out.mp4');
 
