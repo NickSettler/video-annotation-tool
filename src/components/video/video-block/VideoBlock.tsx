@@ -91,9 +91,11 @@ export const VideoBlock = (): JSX.Element => {
   ) => {
     if (!video) return;
 
-    // dispatch(setVideoCurrentTimeAction(metadata.mediaTime));
-    //
-    // videoRef.current?.requestVideoFrameCallback(playerTicker);
+    dispatch(setVideoCurrentTimeAction(metadata.mediaTime));
+
+    if (videoRef.current) {
+      videoRef.current.requestVideoFrameCallback(playerTicker);
+    }
   };
 
   const videoOnReadyCallback = useCallback(() => {
