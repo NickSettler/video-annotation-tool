@@ -7,11 +7,15 @@ import '@fontsource/roboto/700.css';
 import '@fontsource/roboto/900.css';
 import { Grid } from '@mui/material';
 import { VideoBlock } from './components/video/video-block/VideoBlock';
+import { AnnotationList } from './components/annotation/annotation-list/AnnotationList';
 
 const App = (): JSX.Element => (
-  <Grid container sx={{ px: 2, py: 1 }}>
+  <Grid container spacing={2} sx={{ px: 2, py: 1 }}>
     <Grid item xs={8}>
       <VideoBlock />
+    </Grid>
+    <Grid item xs={4}>
+      <AnnotationList />
     </Grid>
   </Grid>
 );
