@@ -5,7 +5,9 @@ export const moduleName = 'video';
 
 export enum E_VIDEO_ACTIONS {
   SET_VIDEO_URL = `${moduleName}/SET_VIDEO_URL`,
-  SET_VIDEO_METADATA = `${moduleName}/SET_VIDEO_METADATA`,
+  SET_VIDEO_FPS = `${moduleName}/SET_VIDEO_FPS`,
+  SET_VIDEO_SIZE = `${moduleName}/SET_VIDEO_SIZE`,
+  SET_VIDEO_DURATION = `${moduleName}/SET_VIDEO_DURATION`,
   SET_VIDEO_VIEWPORT_SIZE = `${moduleName}/SET_VIDEO_VIEWPORT_SIZE`,
 
   SET_VIDEO_CURRENT_TIME = `${moduleName}/SET_VIDEO_CURRENT_TIME`,
@@ -18,8 +20,16 @@ export const setVideoUrlAction = createAction<string>(
   E_VIDEO_ACTIONS.SET_VIDEO_URL,
 );
 
-export const setVideoMetadataAction = createAction<Partial<TVideoMeta> | null>(
-  E_VIDEO_ACTIONS.SET_VIDEO_METADATA,
+export const setVideoFPSAction = createAction<number>(
+  E_VIDEO_ACTIONS.SET_VIDEO_FPS,
+);
+
+export const setVideoSizeAction = createAction<Omit<TVideoMeta, 'fps'>>(
+  E_VIDEO_ACTIONS.SET_VIDEO_SIZE,
+);
+
+export const setVideoDurationAction = createAction<number>(
+  E_VIDEO_ACTIONS.SET_VIDEO_DURATION,
 );
 
 export const setVideoViewportSizeAction = createAction<Omit<TVideoMeta, 'fps'>>(

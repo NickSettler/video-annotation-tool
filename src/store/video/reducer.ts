@@ -2,10 +2,12 @@ import { TVideoState } from './types';
 import { createReducer } from '@reduxjs/toolkit';
 import {
   setVideoCurrentTimeAction,
+  setVideoDurationAction,
+  setVideoFPSAction,
   setVideoLoadedAction,
   setVideoLoadingAction,
-  setVideoMetadataAction,
   setVideoPlayingAction,
+  setVideoSizeAction,
   setVideoUrlAction,
   setVideoViewportSizeAction,
 } from './actions';
@@ -16,6 +18,7 @@ const initialState: TVideoState = {
   videoWidth: null,
   videoHeight: null,
   viewportWidth: null,
+  videoDuration: null,
   viewportHeight: null,
   currentTime: 0,
   isPlaying: false,
@@ -29,19 +32,18 @@ export const videoReducer = createReducer(initialState, (builder) => {
       ...state,
       url: payload,
     }))
-    .addCase(setVideoMetadataAction, (state, { payload }) => ({
+    .addCase(setVideoFPSAction, (state, { payload }) => ({
       ...state,
-      ...(payload === null
-        ? {
-            fps: null,
-            videoWidth: null,
-            videoHeight: null,
-          }
-        : {
-            ...(payload.fps && { fps: payload.fps }),
-            ...(payload.width && { videoWidth: payload.width }),
-            ...(payload.height && { videoHeight: payload.height }),
-          }),
+      fps: payload,
+    }))
+    .addCase(setVideoSizeAction, (state, { payload }) => ({
+      ...state,
+      videoWidth: payload.width,
+      videoHeight: payload.height,
+    }))
+    .addCase(setVideoDurationAction, (state, { payload }) => ({
+      ...state,
+      videoDuration: payload,
     }))
     .addCase(setVideoViewportSizeAction, (state, { payload }) => ({
       ...state,

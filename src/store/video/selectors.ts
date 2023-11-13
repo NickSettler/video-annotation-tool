@@ -36,6 +36,17 @@ export const videoAspectRatioSelector = createSelector(
   (width, height) => getAspectRatio(width, height),
 );
 
+export const videoDurationSelector = createSelector(
+  videoState,
+  (video) => video.videoDuration,
+);
+
+export const videoTotalFramesSelector = createSelector(
+  videoDurationSelector,
+  videoFrequencySelector,
+  (duration, frequency) => (duration ? Math.round(duration / frequency) : 0),
+);
+
 export const videoViewportWidthSelector = createSelector(
   videoState,
   (video) => video.viewportWidth,
