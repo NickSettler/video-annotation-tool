@@ -1,5 +1,5 @@
 import { JSX, useMemo } from 'react';
-import { Box, Stack, styled, Typography } from '@mui/material';
+import { Stack, styled, Typography } from '@mui/material';
 import { getSMPTETimeCode } from '../../../utils/video/smpte';
 import { useAppSelector } from '../../../store/store';
 import {

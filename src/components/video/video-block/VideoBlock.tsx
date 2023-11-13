@@ -3,13 +3,14 @@ import { Box, Stack, styled } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import {
   setVideoCurrentTimeAction,
+  setVideoDurationAction,
+  setVideoFPSAction,
   setVideoLoadedAction,
   setVideoLoadingAction,
-  setVideoMetadataAction,
   setVideoPlayingAction,
+  setVideoSizeAction,
   setVideoViewportSizeAction,
   videoAspectRatioSelector,
-  videoFPSSelector,
   videoFrequencySelector,
   videoHeightSelector,
   videoIsLoadedSelector,
@@ -71,7 +72,6 @@ export const CanvasBox = styled(Box)({
 
 export const VideoBlock = (): JSX.Element => {
   const url = useAppSelector(videoUrlSelector);
-  const fps = useAppSelector(videoFPSSelector);
   const videoWidth = useAppSelector(videoWidthSelector);
   const videoHeight = useAppSelector(videoHeightSelector);
   const videoAspectRatio = useAppSelector(videoAspectRatioSelector);
@@ -97,8 +97,9 @@ export const VideoBlock = (): JSX.Element => {
         src: url,
         type: 'video/mp4',
       })
-        .then((meta) => {
-          dispatch(setVideoMetadataAction(meta));
+        .then(({ fps: _fps, ...size }) => {
+          dispatch(setVideoFPSAction(_fps));
+          dispatch(setVideoSizeAction(size));
           dispatch(setVideoLoadedAction(true));
         })
         .finally(() => {
@@ -121,8 +122,14 @@ export const VideoBlock = (): JSX.Element => {
     }
   };
 
+  const loadMetaDataCallback = useCallback(() => {
+    const duration = videoRef.current?.duration;
+
+    if (duration) dispatch(setVideoDurationAction(duration));
+  }, [dispatch]);
+
   const videoOnReadyCallback = useCallback(() => {
-    if (!videoRef.current) return;
+    if (!videoRef.current || !video) return;
 
     dispatch(
       setVideoViewportSizeAction({
@@ -147,8 +154,10 @@ export const VideoBlock = (): JSX.Element => {
       );
     });
 
+    videoRef.current?.addEventListener('loadedmetadata', loadMetaDataCallback);
+
     videoRef.current?.requestVideoFrameCallback(playerTicker);
-  }, [dispatch, frequency, playerTicker, video]);
+  }, [dispatch, frequency, playerTicker, video, loadMetaDataCallback]);
 
   useEffect(() => {
     if (video) videoOnReadyCallback();
@@ -171,10 +180,24 @@ export const VideoBlock = (): JSX.Element => {
   };
 
   useEffect(() => {
+    const _videoRef = videoRef.current;
+
     window.addEventListener('resize', documentResizeHandler);
 
     return () => {
       window.removeEventListener('resize', documentResizeHandler);
+
+      if (_videoRef) {
+        _videoRef.removeEventListener('loadedmetadata', loadMetaDataCallback);
+      }
+
+      if (video) {
+        video.dispose();
+      }
+
+      dispatch(setVideoLoadedAction(false));
+      dispatch(setVideoPlayingAction(false));
+      dispatch(setVideoLoadingAction(false));
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -222,7 +245,7 @@ export const VideoBlock = (): JSX.Element => {
         )}
       </Box>
       <Stack direction={'row'} justifyContent={'center'}>
-        <VideoTimestamp fps={fps ?? 1} currentFrame={1} />
+        <VideoTimestamp />
         <VideoControls
           isPlaying={isPlaying}
           onFirstStep={handleFirstStep}
