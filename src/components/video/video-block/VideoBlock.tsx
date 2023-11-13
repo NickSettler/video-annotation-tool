@@ -3,16 +3,21 @@ import { Box, Stack, styled } from '@mui/material';
 import { AddressBar } from '../../address-bar/AddressBar';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import {
+  setVideoCurrentTimeAction,
   setVideoLoadedAction,
   setVideoLoadingAction,
   setVideoMetadataAction,
   setVideoPlayingAction,
+  setVideoViewportSizeAction,
+  videoAspectRatioSelector,
   videoFPSSelector,
   videoFrequencySelector,
+  videoHeightSelector,
   videoIsLoadedSelector,
   videoIsLoadingSelector,
   videoIsPlayingSelector,
   videoUrlSelector,
+  videoWidthSelector,
 } from '../../../store/video';
 import { commonVideoOptions, computeMeta } from '../../../utils/video/video-js';
 import VideoJsPlayer from 'video.js';
@@ -68,6 +73,9 @@ export const CanvasBox = styled(Box)({
 export const VideoBlock = (): JSX.Element => {
   const url = useAppSelector(videoUrlSelector);
   const fps = useAppSelector(videoFPSSelector);
+  const videoWidth = useAppSelector(videoWidthSelector);
+  const videoHeight = useAppSelector(videoHeightSelector);
+  const videoAspectRatio = useAppSelector(videoAspectRatioSelector);
   const frequency = useAppSelector(videoFrequencySelector);
   const isLoading = useAppSelector(videoIsLoadingSelector);
   const isLoaded = useAppSelector(videoIsLoadedSelector);
