@@ -134,9 +134,11 @@ export const Canvas = (): JSX.Element => {
         setFrameAnnotationAction({
           frame: currentFrame,
           annotation: {
-            ...currentFrameAnnotations[0],
+            type: 'Feature',
+            properties: currentFrameAnnotations?.[0].properties ?? {},
+            id: currentFrameAnnotations?.[0].id ?? 'new',
             geometry: {
-              ...currentFrameAnnotations[0].geometry,
+              type: currentFrameAnnotations?.[0].geometry.type ?? 'MultiPoint',
               coordinates: result,
             },
           },

@@ -6,5 +6,5 @@ export type TFrameAnnotation = Feature<MultiPoint> & {
 };
 
 export type TAnnotationState = {
-  annotations: Array<Array<TFrameAnnotation>>;
+  annotations: Array<Array<TFrameAnnotation> | undefined>;
 };

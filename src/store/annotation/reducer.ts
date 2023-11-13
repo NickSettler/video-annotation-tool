@@ -1,6 +1,10 @@
 import { TAnnotationState } from './types';
 import { createReducer } from '@reduxjs/toolkit';
-import { setFrameAnnotationAction } from './actions';
+import {
+  setAllAnnotationsAction,
+  setFrameAnnotationAction,
+  setFrameAnnotationsAction,
+} from './actions';
 
 const initialState: TAnnotationState = {
   annotations: [
@@ -44,13 +48,27 @@ const initialState: TAnnotationState = {
 };
 
 export const annotationReducer = createReducer(initialState, (builder) =>
-  builder.addCase(
-    setFrameAnnotationAction,
-    (state, { payload: { annotation, frame } }) => ({
+  builder
+    .addCase(setAllAnnotationsAction, (state, { payload: annotations }) => ({
       ...state,
-      annotations: state.annotations.map((frameAnnotations, index) =>
-        index === frame ? [annotation] : frameAnnotations,
-      ),
-    }),
-  ),
+      annotations,
+    }))
+    .addCase(
+      setFrameAnnotationAction,
+      (state, { payload: { annotation, frame } }) => ({
+        ...state,
+        annotations: state.annotations.map((frameAnnotations, index) =>
+          index === frame ? [annotation] : frameAnnotations,
+        ),
+      }),
+    )
+    .addCase(
+      setFrameAnnotationsAction,
+      (state, { payload: { annotations, frame } }) => ({
+        ...state,
+        annotations: state.annotations.map((frameAnnotations, index) =>
+          index === frame ? annotations : frameAnnotations,
+        ),
+      }),
+    ),
 );
