@@ -6,7 +6,8 @@ import {
   styled,
   Typography,
   Toolbar as MUIToolbar,
-  Box,
+  Button,
+  Stack,
 } from '@mui/material';
 import { Link } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
@@ -78,9 +79,10 @@ export const Toolbar = (): JSX.Element => {
     <AppBar component='nav'>
       <MUIToolbar>
         <Typography variant='h6'>Video Annotation Tool</Typography>
-        <Box
-          display={'flex'}
+        <Stack
+          direction={'row'}
           justifyContent={'center'}
+          spacing={1}
           flexGrow={1}
           component={'form'}
           onSubmit={handleSubmit}
@@ -95,7 +97,10 @@ export const Toolbar = (): JSX.Element => {
               placeholder='Video URL'
             />
           </Search>
-        </Box>
+          <Button variant={'text'} type={'submit'} color={'inherit'}>
+            Load
+          </Button>
+        </Stack>
       </MUIToolbar>
     </AppBar>
   );
