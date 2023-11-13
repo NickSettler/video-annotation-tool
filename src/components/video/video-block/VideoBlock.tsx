@@ -80,18 +80,8 @@ export const VideoBlock = (): JSX.Element => {
   const [video, setVideo] = useState<ReturnType<typeof VideoJsPlayer> | null>(
     null,
   );
-  // const [currentTime, setCurrentTime] = useState(0);
 
-  // useEffect(
-  //   () => () => {
-  //     dispatch(setVideoLoadedAction(false));
-  //     dispatch(setVideoLoadingAction(false));
-  //     dispatch(setVideoPlayingAction(false));
-  //     dispatch(setVideoMetadataAction(null));
-  //   },
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   [],
-  // );
+  const orientation = useVideoOrientation(videoWidth, videoHeight);
 
   useEffect(() => {
     if (url && videoPreloadRef.current) {
@@ -210,7 +200,10 @@ export const VideoBlock = (): JSX.Element => {
       <AddressBar />
       <Box sx={{ width: '100%', position: 'relative' }}>
         {!isLoaded && <VideoOverlay isLoading={isLoading} />}
-        <VideosBox>
+        <VideosBox
+          orientation={orientation}
+          aspect={videoAspectRatio ?? '16/9'}
+        >
           <video ref={videoPreloadRef} />
           {isLoaded && <video ref={videoRef} />}
         </VideosBox>
