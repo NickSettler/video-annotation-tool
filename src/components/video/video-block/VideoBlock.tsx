@@ -21,6 +21,12 @@ import { roundToDecimal } from '../../../utils/math/round';
 import { VideoTimestamp } from '../video-timestamp/VideoTimestamp';
 import { VideoOverlay } from '../video-overlay/VideoOverlay';
 import { useControls } from '../../../hooks/video/useControls';
+import {
+  TOrientation,
+  useVideoOrientation,
+} from '../../../hooks/video/useVideoOrientation';
+import { throttle } from 'lodash';
+import { Canvas } from '../../annotation/canvas/Canvas';
 
 const VideosBox = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'orientation' && prop !== 'aspect',
@@ -120,7 +126,6 @@ export const VideoBlock = (): JSX.Element => {
   const videoOnReadyCallback = useCallback(() => {
     if (!videoRef.current) return;
 
-    video.on('play', () => {
     dispatch(
       setVideoViewportSizeAction({
         width: videoRef.current.clientWidth,
@@ -152,6 +157,28 @@ export const VideoBlock = (): JSX.Element => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [video]);
 
+  const dispatchVideoViewportSize = throttle(() => {
+    if (!videoRef.current) return;
+
+    dispatch(
+      setVideoViewportSizeAction({
+        width: videoRef.current.clientWidth,
+        height: videoRef.current.clientHeight,
+      }),
+    );
+  }, 100);
+
+  const documentResizeHandler = () => {
+    dispatchVideoViewportSize();
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', documentResizeHandler);
+
+    return () => {
+      window.removeEventListener('resize', documentResizeHandler);
+    };
+  }, []);
 
   useEffect(() => {
     if (!video && isLoaded && videoRef.current) {
@@ -187,6 +214,11 @@ export const VideoBlock = (): JSX.Element => {
           <video ref={videoPreloadRef} />
           {isLoaded && <video ref={videoRef} />}
         </VideosBox>
+        {isLoaded && (
+          <CanvasBox>
+            <Canvas />
+          </CanvasBox>
+        )}
       </Box>
       <Stack direction={'row'} justifyContent={'center'}>
         <VideoTimestamp fps={fps ?? 1} currentFrame={1} />
