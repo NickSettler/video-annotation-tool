@@ -1,5 +1,5 @@
 import { JSX } from 'react';
-import { Button, ButtonGroup } from '@mui/material';
+import { Button, ButtonGroup, styled } from '@mui/material';
 import {
   FastForward,
   FastRewind,
@@ -8,6 +8,20 @@ import {
   SkipNext,
   SkipPrevious,
 } from '@mui/icons-material';
+
+const VideoControlButton = styled(Button)(({ theme }) => ({
+  '&': {
+    width: theme.spacing(4),
+    height: theme.spacing(4),
+    padding: theme.spacing(0.5),
+    minWidth: '0 !important',
+  },
+
+  '& > svg': {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+  },
+}));
 
 export type TVideoControlsProps = {
   isPlaying: boolean;
@@ -28,21 +42,21 @@ export const VideoControls = ({
 }: TVideoControlsProps): JSX.Element => {
   return (
     <ButtonGroup size={'small'} variant={'outlined'}>
-      <Button onClick={onFirstStep}>
+      <VideoControlButton onClick={onFirstStep}>
         <FastRewind />
-      </Button>
-      <Button onClick={onPrevStep}>
+      </VideoControlButton>
+      <VideoControlButton onClick={onPrevStep}>
         <SkipPrevious />
-      </Button>
-      <Button onClick={onPlayPause}>
+      </VideoControlButton>
+      <VideoControlButton onClick={onPlayPause}>
         {isPlaying ? <PlayArrow /> : <Pause />}
-      </Button>
-      <Button onClick={onNextStep}>
+      </VideoControlButton>
+      <VideoControlButton onClick={onNextStep}>
         <SkipNext />
-      </Button>
-      <Button onClick={onLastStep}>
+      </VideoControlButton>
+      <VideoControlButton onClick={onLastStep}>
         <FastForward />
-      </Button>
+      </VideoControlButton>
     </ButtonGroup>
   );
 };
