@@ -25,7 +25,7 @@ import {
 import {
   GenericMenu,
   TGenericMenuAction,
-} from '../../general/generic-menu/GenericMenu';
+} from '../../common/generic-menu/GenericMenu';
 import { FileDownload, FileUpload, MoreVert } from '@mui/icons-material';
 import { downloadAsJson } from '../../../utils/files/download';
 import { FeatureCollection } from 'geojson';
