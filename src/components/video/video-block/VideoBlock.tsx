@@ -1,6 +1,5 @@
 import { JSX, useCallback, useEffect, useRef, useState } from 'react';
 import { Box, Stack, styled } from '@mui/material';
-import { AddressBar } from '../../address-bar/AddressBar';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import {
   setVideoCurrentTimeAction,
@@ -207,7 +206,6 @@ export const VideoBlock = (): JSX.Element => {
 
   return (
     <Stack spacing={2}>
-      <AddressBar />
       <Box sx={{ width: '100%', position: 'relative' }}>
         {!isLoaded && <VideoOverlay isLoading={isLoading} />}
         <VideosBox
