@@ -118,21 +118,29 @@ export const VideoBlock = (): JSX.Element => {
   };
 
   const videoOnReadyCallback = useCallback(() => {
-    if (!video) return;
+    if (!videoRef.current) return;
 
     video.on('play', () => {
+    dispatch(
+      setVideoViewportSizeAction({
+        width: videoRef.current.clientWidth,
+        height: videoRef.current.clientHeight,
+      }),
+    );
+
+    video?.on('play', () => {
       dispatch(setVideoPlayingAction(true));
     });
 
-    video.on('pause', () => {
+    video?.on('pause', () => {
       dispatch(setVideoPlayingAction(false));
 
-      const currentTime = video.currentTime();
+      const _currentTime = video.currentTime();
 
-      if (!currentTime) return;
+      if (!_currentTime) return;
 
       video.currentTime(
-        (roundToDecimal(currentTime, frequency) + frequency).toFixed(2),
+        (roundToDecimal(_currentTime, frequency) + frequency).toFixed(2),
       );
     });
 
@@ -140,25 +148,27 @@ export const VideoBlock = (): JSX.Element => {
   }, [dispatch, frequency, playerTicker, video]);
 
   useEffect(() => {
-    if (isLoaded && videoRef.current) {
+    if (video) videoOnReadyCallback();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [video]);
+
+
+  useEffect(() => {
+    if (!video && isLoaded && videoRef.current) {
       setVideo(
-        VideoJsPlayer(
-          videoRef.current,
-          {
-            ...commonVideoOptions,
-            controls: false,
-            sources: [
-              {
-                src: url,
-                type: 'video/mp4',
-              },
-            ],
-          },
-          videoOnReadyCallback,
-        ),
+        VideoJsPlayer(videoRef.current, {
+          ...commonVideoOptions,
+          controls: false,
+          sources: [
+            {
+              src: url,
+              type: 'video/mp4',
+            },
+          ],
+        }),
       );
     }
-  }, [isLoaded, url, videoOnReadyCallback]);
+  }, [video, isLoaded, url, videoOnReadyCallback]);
 
   const {
     handleFirstStep,
