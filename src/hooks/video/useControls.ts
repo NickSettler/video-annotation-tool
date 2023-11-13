@@ -25,7 +25,7 @@ export const useControls = (
 
     const currentTime = video.currentTime();
 
-    if (!currentTime) return;
+    if (currentTime === undefined) return;
 
     video.currentTime(
       (
@@ -47,7 +47,7 @@ export const useControls = (
 
     const currentTime = video.currentTime();
 
-    if (!currentTime) return;
+    if (currentTime === undefined) return;
 
     video.currentTime(
       (
