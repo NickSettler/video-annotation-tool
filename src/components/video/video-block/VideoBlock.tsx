@@ -22,22 +22,41 @@ import { VideoTimestamp } from '../video-timestamp/VideoTimestamp';
 import { VideoOverlay } from '../video-overlay/VideoOverlay';
 import { useControls } from '../../../hooks/video/useControls';
 
-const VideosBox = styled(Box)({
-  position: 'relative',
-  aspectRatio: '16/9',
+const VideosBox = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'orientation' && prop !== 'aspect',
+})<{ orientation?: TOrientation; aspect?: string }>(
+  ({ orientation, aspect }) => ({
+    position: 'relative',
+    aspectRatio: '16/9',
 
-  '& > div': {
-    width: 0,
-    height: 0,
-    '& > video': {
-      position: 'absolute',
+    '& > div': {
       width: '100%',
-      // height: '100%',
-      aspectRatio: '16/9',
-      left: 0,
-      top: 0,
+      height: '100%',
+      paddingTop: '0 !important',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+
+      '& > video': {
+        position: 'absolute',
+        ...(orientation === 'portrait' && {
+          height: '100%',
+        }),
+        ...(orientation === 'landscape' && {
+          width: '100%',
+        }),
+        aspectRatio: aspect,
+      },
     },
-  },
+  }),
+);
+
+export const CanvasBox = styled(Box)({
+  width: '100%',
+  height: '100%',
+  position: 'absolute',
+  top: 0,
+  left: 0,
 });
 
 export const VideoBlock = (): JSX.Element => {
