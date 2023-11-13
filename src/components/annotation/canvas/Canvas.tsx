@@ -135,7 +135,10 @@ export const Canvas = (): JSX.Element => {
           frame: currentFrame,
           annotation: {
             type: 'Feature',
-            properties: currentFrameAnnotations?.[0].properties ?? {},
+            properties: currentFrameAnnotations?.[0].properties ?? {
+              name: 'new',
+              color: '#000000',
+            },
             id: currentFrameAnnotations?.[0].id ?? 'new',
             geometry: {
               type: currentFrameAnnotations?.[0].geometry.type ?? 'MultiPoint',

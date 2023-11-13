@@ -15,7 +15,7 @@ import {
   selectCurrentFrameAnnotation,
   setAllAnnotationsAction,
   setFrameAnnotationsAction,
-  TFrameAnnotation,
+  TAnnotation,
 } from '../../../store/annotation';
 import {
   videoCurrentFrameSelector,
@@ -47,7 +47,7 @@ export const AnnotationList = (): JSX.Element => {
   const currentFrameAnnotations = useAppSelector(selectCurrentFrameAnnotation);
 
   const processFrameAnnotations = (
-    annotations: Array<TFrameAnnotation>,
+    annotations: Array<TAnnotation>,
   ): FeatureCollection => ({
     type: 'FeatureCollection',
     features: annotations,
@@ -68,7 +68,7 @@ export const AnnotationList = (): JSX.Element => {
             dispatch(
               setFrameAnnotationsAction({
                 frame: currentFrame,
-                annotations: annotations.features as Array<TFrameAnnotation>,
+                annotations: annotations.features as Array<TAnnotation>,
               }),
             );
           }
@@ -77,8 +77,7 @@ export const AnnotationList = (): JSX.Element => {
             dispatch(
               setAllAnnotationsAction(
                 annotations.map(
-                  (annotation) =>
-                    annotation.features as Array<TFrameAnnotation>,
+                  (annotation) => annotation.features as Array<TAnnotation>,
                 ),
               ),
             );

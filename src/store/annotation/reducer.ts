@@ -23,6 +23,7 @@ const initialState: TAnnotationState = {
         },
         properties: {
           name: 'test',
+          color: 'red',
         },
       },
     ],
@@ -41,6 +42,7 @@ const initialState: TAnnotationState = {
         },
         properties: {
           name: 'test',
+          color: 'red',
         },
       },
     ],
