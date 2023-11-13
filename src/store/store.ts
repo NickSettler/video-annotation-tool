@@ -1,10 +1,15 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { videoReducer } from './video';
+import { videoReducer, moduleName as videoModuleName } from './video';
+import {
+  annotationReducer,
+  moduleName as annotationModuleName,
+} from './annotation';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 export const store = configureStore({
   reducer: combineReducers({
-    video: videoReducer,
+    [videoModuleName]: videoReducer,
+    [annotationModuleName]: annotationReducer,
   }),
 });
 
