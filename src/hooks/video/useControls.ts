@@ -28,11 +28,7 @@ export const useControls = (
     if (currentTime === undefined) return;
 
     video.currentTime(
-      (
-        roundToDecimal(currentTime, frequency) -
-        frequency -
-        frequency / 4
-      ).toFixed(2),
+      (roundToDecimal(currentTime, frequency) - frequency).toFixed(2),
     );
   }, [frequency, video]);
 
@@ -50,11 +46,7 @@ export const useControls = (
     if (currentTime === undefined) return;
 
     video.currentTime(
-      (
-        roundToDecimal(currentTime, frequency) +
-        frequency +
-        frequency / 4
-      ).toFixed(2),
+      (roundToDecimal(currentTime, frequency) + frequency).toFixed(2),
     );
   }, [frequency, video]);
 
