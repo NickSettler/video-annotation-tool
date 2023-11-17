@@ -7,6 +7,7 @@ export enum E_ANNOTATION_ACTIONS {
   SET_ALL_ANNOTATIONS = `${moduleName}/SET_ALL_ANNOTATIONS`,
   SET_FRAME_ANNOTATION = `${moduleName}/SET_FRAME_ANNOTATION`,
   SET_FRAME_ANNOTATIONS = `${moduleName}/SET_FRAME_ANNOTATIONS`,
+  ADD_FRAME_ANNOTATION = `${moduleName}/ADD_FRAME_ANNOTATION`,
 }
 
 export const setAllAnnotationsAction = createAction<Array<Array<TAnnotation>>>(
@@ -22,3 +23,8 @@ export const setFrameAnnotationsAction = createAction<{
   frame: number;
   annotations: Array<TAnnotation>;
 }>(E_ANNOTATION_ACTIONS.SET_FRAME_ANNOTATIONS);
+
+export const addFrameAnnotationAction = createAction<{
+  frame: number;
+  annotation: TAnnotation;
+}>(E_ANNOTATION_ACTIONS.ADD_FRAME_ANNOTATION);
