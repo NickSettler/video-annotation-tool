@@ -10,9 +10,13 @@ import {
 import { AnnotationOverlay } from '../annotation-overlay/AnnotationOverlay';
 import Konva from 'konva';
 import {
+  addFrameAnnotationAction,
   selectFrameAnnotations,
-  setFrameAnnotationAction,
 } from '../../../store/annotation';
+import { ExistingAnnotationOverlay } from '../annotation-overlay/ExistingAnnotationOverlay';
+import { isEmpty } from 'lodash';
+import { v4 as uuidV4 } from 'uuid';
+import { NEW_POLYGON_NAME } from '../../../utils/annotation/name';
 
 export const CanvasBox = styled(Box)({
   display: 'flex',
@@ -36,19 +40,6 @@ export const Canvas = (): JSX.Element => {
   const [isMouseOverPoint, setIsMouseOverPoint] = useState(false);
   const [isPolyComplete, setIsPolyComplete] = useState(false);
 
-  useEffect(() => {
-    if (currentFrameAnnotations) {
-      // console.log(currentFrameAnnotations[0].geometry.coordinates);
-      setPosition(currentFrameAnnotations[0].geometry.coordinates[0]);
-      setPoints(currentFrameAnnotations[0].geometry.coordinates);
-      setIsPolyComplete(true);
-    } else {
-      setPosition([0, 0]);
-      setIsPolyComplete(false);
-      setPoints([]);
-    }
-  }, [currentFrameAnnotations]);
-
   const flattenedPoints = useMemo(
     () =>
       points
@@ -57,6 +48,37 @@ export const Canvas = (): JSX.Element => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [points],
   );
+
+  useEffect(() => {
+    if (!isPolyComplete) return;
+
+    if (isEmpty(points)) return;
+
+    const uuid = uuidV4();
+
+    dispatch(
+      addFrameAnnotationAction({
+        frame: currentFrame,
+        annotation: {
+          type: 'Feature',
+          properties: {
+            name: uuid,
+            color: '#000000',
+          },
+          id: uuid,
+          geometry: {
+            type: 'MultiPoint',
+            coordinates: points,
+          },
+        },
+      }),
+    );
+
+    setPosition([0, 0]);
+    setIsPolyComplete(false);
+    setPoints([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPolyComplete]);
 
   const getMousePos = (stage: Konva.Stage) => {
     return [
@@ -71,6 +93,11 @@ export const Canvas = (): JSX.Element => {
     const stage = e.target.getStage();
 
     if (!stage) return;
+
+    const isOverPolygon = e.target.getType() === 'Shape';
+    const isOverSelf = e.target.parent?.name() === NEW_POLYGON_NAME;
+
+    if (isOverPolygon && !isOverSelf) return;
 
     const mousePos = getMousePos(stage);
 
@@ -129,24 +156,6 @@ export const Canvas = (): JSX.Element => {
       e.target.position({ x: 0, y: 0 });
 
       setPoints(result);
-
-      dispatch(
-        setFrameAnnotationAction({
-          frame: currentFrame,
-          annotation: {
-            type: 'Feature',
-            properties: currentFrameAnnotations?.[0].properties ?? {
-              name: 'new',
-              color: '#000000',
-            },
-            id: currentFrameAnnotations?.[0].id ?? 'new',
-            geometry: {
-              type: currentFrameAnnotations?.[0].geometry.type ?? 'MultiPoint',
-              coordinates: result,
-            },
-          },
-        }),
-      );
     }
   };
 
@@ -168,6 +177,12 @@ export const Canvas = (): JSX.Element => {
             handleMouseOutStartPoint={handleMouseOutStartPoint}
             isFinished={isPolyComplete}
           />
+          {currentFrameAnnotations?.map((annotation) => (
+            <ExistingAnnotationOverlay
+              annotation={annotation}
+              key={annotation.id}
+            />
+          ))}
         </Layer>
       </Stage>
     </CanvasBox>
