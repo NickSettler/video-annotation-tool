@@ -5,6 +5,7 @@ import {
   Button,
   IconButton,
   InputBase,
+  LinearProgress,
   Stack,
   styled,
   Toolbar,
@@ -12,16 +13,24 @@ import {
 } from '@mui/material';
 import { Link, Settings } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
-import { setVideoUrlAction, videoUrlSelector } from '../../../store/video';
+import {
+  setVideoUrlAction,
+  videoIsLoadingSelector,
+  videoUrlSelector,
+} from '../../../store/video';
 import { useModal } from '../../../hooks/modal/useModal';
 import { E_MODALS } from '../../../store/modals';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
+  overflow: 'hidden',
   transition: theme.transitions.create('background'),
   backgroundColor: alpha(theme.palette.common.white, 0.15),
   '&:hover': {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  '&:has(input:disabled)': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
   marginLeft: 0,
@@ -31,6 +40,12 @@ const Search = styled('div')(({ theme }) => ({
     width: 'auto',
   },
 }));
+
+const SearchProgress = styled(LinearProgress)({
+  position: 'absolute',
+  top: 0,
+  width: '100%',
+});
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
   padding: theme.spacing(0, 2),
@@ -62,6 +77,7 @@ export const AppToolbar = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
   const storeUrl = useAppSelector(videoUrlSelector);
+  const isVideoLoading = useAppSelector(videoIsLoadingSelector);
 
   const { onOpen: handleModalOpen } = useModal(E_MODALS.PROJECT_SETTINGS);
 
@@ -88,12 +104,14 @@ export const AppToolbar = (): JSX.Element => {
         <Stack
           direction={'row'}
           justifyContent={'center'}
+          position={'relative'}
           spacing={1}
           flexGrow={1}
           component={'form'}
           onSubmit={handleSubmit}
         >
           <Search>
+            {isVideoLoading && <SearchProgress />}
             <SearchIconWrapper>
               <Link />
             </SearchIconWrapper>
