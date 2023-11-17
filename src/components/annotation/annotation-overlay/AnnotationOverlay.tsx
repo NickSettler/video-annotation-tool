@@ -2,6 +2,7 @@ import { JSX, useCallback, useState } from 'react';
 import { Circle, Group, Line } from 'react-konva';
 import Konva from 'konva';
 import { minMax } from '../../../utils/annotation/min-max';
+import { getPolygonName } from '../../../utils/annotation/name';
 
 export type TAnnotationOverlayProps = {
   points: Array<Array<number>>;
@@ -91,7 +92,7 @@ export const AnnotationOverlay = ({
 
   return (
     <Group
-      name='polygon'
+      name={getPolygonName()}
       draggable={isFinished}
       onMouseOver={handleGroupMouseOver}
       onMouseOut={handleGroupMouseOut}
