@@ -32,6 +32,7 @@ import {
 } from '../../../hooks/video/useVideoOrientation';
 import { throttle } from 'lodash';
 import { Canvas } from '../../annotation/canvas/Canvas';
+import { VideoToolbar } from '../video-toolbar/VideoToolbar';
 
 const VideosBox = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'orientation' && prop !== 'aspect',
@@ -244,17 +245,14 @@ export const VideoBlock = (): JSX.Element => {
           </CanvasBox>
         )}
       </Box>
-      <Stack direction={'row'} justifyContent={'center'}>
-        <VideoTimestamp />
-        <VideoControls
-          isPlaying={isPlaying}
-          onFirstStep={handleFirstStep}
-          onPrevStep={handlePrevStep}
-          onPlayPause={handlePlayPause}
-          onNextStep={handleNextStep}
-          onLastStep={handleLastStep}
-        />
-      </Stack>
+      <VideoToolbar
+        isPlaying={isPlaying}
+        onFirstStep={handleFirstStep}
+        onPrevStep={handlePrevStep}
+        onPlayPause={handlePlayPause}
+        onNextStep={handleNextStep}
+        onLastStep={handleLastStep}
+      />
     </Stack>
   );
 };
