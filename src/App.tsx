@@ -9,6 +9,7 @@ import { Box, CssBaseline, Toolbar } from '@mui/material';
 import { VideoBlock } from './components/video/video-block/VideoBlock';
 import { AppToolbar } from './components/common/app-toolbar/AppToolbar';
 import { AppDrawer } from './components/common/app-drawer/AppDrawer';
+import { Toaster } from 'react-hot-toast';
 
 const App = (): JSX.Element => (
   <Box sx={{ display: 'flex' }}>
@@ -19,6 +20,7 @@ const App = (): JSX.Element => (
       <VideoBlock />
     </Box>
     <AppDrawer />
+    <Toaster position='bottom-right' reverseOrder={false} />
   </Box>
 );
 
