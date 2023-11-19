@@ -21,9 +21,7 @@ import {
 } from '../../../store/video';
 import { commonVideoOptions, computeMeta } from '../../../utils/video/video-js';
 import VideoJsPlayer from 'video.js';
-import { VideoControls } from '../video-controls/VideoControls';
 import { roundToDecimal } from '../../../utils/math/round';
-import { VideoTimestamp } from '../video-timestamp/VideoTimestamp';
 import { VideoOverlay } from '../video-overlay/VideoOverlay';
 import { useControls } from '../../../hooks/video/useControls';
 import {
@@ -33,6 +31,7 @@ import {
 import { throttle } from 'lodash';
 import { Canvas } from '../../annotation/canvas/Canvas';
 import { VideoToolbar } from '../video-toolbar/VideoToolbar';
+import { initAnnotationsAction } from '../../../store/annotation';
 
 const VideosBox = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'orientation' && prop !== 'aspect',
@@ -126,8 +125,13 @@ export const VideoBlock = (): JSX.Element => {
   const loadMetaDataCallback = useCallback(() => {
     const duration = videoRef.current?.duration;
 
-    if (duration) dispatch(setVideoDurationAction(duration));
-  }, [dispatch]);
+    console.log(frequency);
+
+    if (duration) {
+      dispatch(setVideoDurationAction(duration));
+      dispatch(initAnnotationsAction({ count: duration * (1 / frequency) }));
+    }
+  }, [dispatch, frequency]);
 
   const videoOnReadyCallback = useCallback(() => {
     if (!videoRef.current || !video) return;

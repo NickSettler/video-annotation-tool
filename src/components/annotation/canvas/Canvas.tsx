@@ -11,12 +11,14 @@ import { AnnotationOverlay } from '../annotation-overlay/AnnotationOverlay';
 import Konva from 'konva';
 import {
   addFrameAnnotationAction,
+  selectAnnotationsById,
   selectFrameAnnotations,
 } from '../../../store/annotation';
 import { ExistingAnnotationOverlay } from '../annotation-overlay/ExistingAnnotationOverlay';
 import { isEmpty } from 'lodash';
 import { v4 as uuidV4 } from 'uuid';
 import { NEW_POLYGON_NAME } from '../../../utils/annotation/name';
+import { getPolygonColor } from '../../../utils/annotation/palette';
 
 export const CanvasBox = styled(Box)({
   display: 'flex',
@@ -30,6 +32,7 @@ export const Canvas = (): JSX.Element => {
 
   const videoViewportWidth = useAppSelector(videoViewportWidthSelector);
   const videoViewportHeight = useAppSelector(videoViewportHeightSelector);
+  const uniqAnnotations = useAppSelector(selectAnnotationsById);
   const currentFrame = useAppSelector(videoCurrentFrameSelector);
   const currentFrameAnnotations = useAppSelector((state) =>
     selectFrameAnnotations(state, currentFrame),
@@ -55,6 +58,7 @@ export const Canvas = (): JSX.Element => {
     if (isEmpty(points)) return;
 
     const uuid = uuidV4();
+    const color = getPolygonColor(uniqAnnotations.length);
 
     dispatch(
       addFrameAnnotationAction({
@@ -63,7 +67,7 @@ export const Canvas = (): JSX.Element => {
           type: 'Feature',
           properties: {
             name: uuid,
-            color: '#000000',
+            color: color,
           },
           id: uuid,
           geometry: {
@@ -124,39 +128,10 @@ export const Canvas = (): JSX.Element => {
     e.target.scale({ x: 3, y: 3 });
     setIsMouseOverPoint(true);
   };
+
   const handleMouseOutStartPoint = (e: Konva.KonvaEventObject<MouseEvent>) => {
     e.target.scale({ x: 1, y: 1 });
     setIsMouseOverPoint(false);
-  };
-
-  const handlePointDragMove = (e: Konva.KonvaEventObject<DragEvent>) => {
-    const stage = e.target.getStage();
-
-    if (!stage) return;
-
-    const index = e.target.index - 1;
-    const pos = [e.target._lastPos?.x ?? 0, e.target._lastPos?.y ?? 0];
-
-    if (pos[0] < 0) pos[0] = 0;
-    if (pos[1] < 0) pos[1] = 0;
-    if (pos[0] > stage.width()) pos[0] = stage.width();
-    if (pos[1] > stage.height()) pos[1] = stage.height();
-
-    setPoints([...points.slice(0, index), pos, ...points.slice(index + 1)]);
-  };
-
-  const handleGroupDragEnd = (e: Konva.KonvaEventObject<DragEvent>) => {
-    if (e.target.name() === 'polygon') {
-      const result: Array<Array<number>> = [];
-      const copyPoints = [...points];
-
-      copyPoints.map((point) =>
-        result.push([point[0] + e.target.x(), point[1] + e.target.y()]),
-      );
-      e.target.position({ x: 0, y: 0 });
-
-      setPoints(result);
-    }
   };
 
   return (
@@ -171,16 +146,13 @@ export const Canvas = (): JSX.Element => {
           <AnnotationOverlay
             points={points}
             flattenedPoints={flattenedPoints}
-            handlePointDragMove={handlePointDragMove}
-            handleGroupDragEnd={handleGroupDragEnd}
             handleMouseOverStartPoint={handleMouseOverStartPoint}
             handleMouseOutStartPoint={handleMouseOutStartPoint}
-            isFinished={isPolyComplete}
           />
           {currentFrameAnnotations?.map((annotation) => (
             <ExistingAnnotationOverlay
               annotation={annotation}
-              key={annotation.id}
+              key={`${currentFrame}-${annotation.id}`}
             />
           ))}
         </Layer>

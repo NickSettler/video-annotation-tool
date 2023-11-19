@@ -1,5 +1,4 @@
 import { Feature, MultiPoint } from 'geojson';
-import { NonUndefined } from 'utility-types';
 
 export type TAnnotationProperties = {
   name: string;
@@ -7,9 +6,9 @@ export type TAnnotationProperties = {
 };
 
 export type TAnnotation = Feature<MultiPoint, TAnnotationProperties> & {
-  id: NonUndefined<Feature['id']>;
+  id: string;
 };
 
 export type TAnnotationState = {
-  annotations: Array<Array<TAnnotation> | undefined>;
+  annotations: Array<Array<TAnnotation>>;
 };
