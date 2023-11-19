@@ -67,6 +67,7 @@ export const Canvas = (): JSX.Element => {
           type: 'Feature',
           properties: {
             name: uuid,
+            frame: currentFrame,
             color: color,
           },
           id: uuid,

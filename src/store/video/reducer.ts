@@ -1,6 +1,7 @@
 import { TVideoState } from './types';
 import { createReducer } from '@reduxjs/toolkit';
 import {
+  setVideoCurrentFrameAction,
   setVideoCurrentTimeAction,
   setVideoDurationAction,
   setVideoFPSAction,
@@ -53,6 +54,10 @@ export const videoReducer = createReducer(initialState, (builder) => {
     .addCase(setVideoCurrentTimeAction, (state, { payload }) => ({
       ...state,
       currentTime: payload,
+    }))
+    .addCase(setVideoCurrentFrameAction, (state, { payload }) => ({
+      ...state,
+      currentTime: payload / (state.fps ?? 1),
     }))
     .addCase(setVideoPlayingAction, (state, { payload }) => ({
       ...state,

@@ -11,6 +11,8 @@ export enum E_VIDEO_ACTIONS {
   SET_VIDEO_VIEWPORT_SIZE = `${moduleName}/SET_VIDEO_VIEWPORT_SIZE`,
 
   SET_VIDEO_CURRENT_TIME = `${moduleName}/SET_VIDEO_CURRENT_TIME`,
+  SET_VIDEO_CURRENT_FRAME = `${moduleName}/SET_VIDEO_CURRENT_FRAME`,
+
   SET_VIDEO_PLAYING = `${moduleName}/SET_VIDEO_PLAYING`,
   SET_VIDEO_LOADING = `${moduleName}/SET_VIDEO_LOADING`,
   SET_VIDEO_LOADED = `${moduleName}/SET_VIDEO_LOADED`,
@@ -38,6 +40,10 @@ export const setVideoViewportSizeAction = createAction<Omit<TVideoMeta, 'fps'>>(
 
 export const setVideoCurrentTimeAction = createAction<number>(
   E_VIDEO_ACTIONS.SET_VIDEO_CURRENT_TIME,
+);
+
+export const setVideoCurrentFrameAction = createAction<number>(
+  E_VIDEO_ACTIONS.SET_VIDEO_CURRENT_FRAME,
 );
 
 export const setVideoPlayingAction = createAction<boolean>(
