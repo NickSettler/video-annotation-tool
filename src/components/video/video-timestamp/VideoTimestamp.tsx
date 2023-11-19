@@ -1,4 +1,4 @@
-import { JSX, useMemo } from 'react';
+import { JSX, useMemo, MouseEvent } from 'react';
 import { Stack, styled, Typography } from '@mui/material';
 import { getSMPTETimeCode } from '../../../utils/video/smpte';
 import { useAppSelector } from '../../../store/store';
@@ -36,15 +36,9 @@ export const VideoTimestamp = (): JSX.Element => {
     [userSettings],
   );
 
-  const handleClick = () => {
-    setUserSettings((prev) => ({
-      ...prev,
-      timestampMode:
-        prev.timestampMode === E_VIDEO_TIMESTAMP_MODE.FRAME
-          ? E_VIDEO_TIMESTAMP_MODE.SMPTE
-          : E_VIDEO_TIMESTAMP_MODE.FRAME,
-    }));
-  };
+  const maxDigits = useMemo(() => {
+    return totalFrames.toString().length;
+  }, [totalFrames]);
 
   const currentSMPTETimestamp = useMemo(() => {
     if (!fps) return '00:00:00:00';
@@ -58,20 +52,32 @@ export const VideoTimestamp = (): JSX.Element => {
     return getSMPTETimeCode(videoDuration * fps, fps);
   }, [fps, videoDuration]);
 
-  const currentFrameTimestamp = useMemo(() => {
-    const maxDigits = totalFrames.toString().length;
+  const currentFrameTimestamp = useMemo(
+    () => currentFrame.toString().padStart(maxDigits, '0'),
+    [currentFrame, maxDigits],
+  );
 
-    return currentFrame.toString().padStart(maxDigits, '0');
-  }, [currentFrame, totalFrames]);
+  const frameTimestamp = useMemo(
+    () => totalFrames.toString().padStart(maxDigits, '0'),
+    [maxDigits, totalFrames],
+  );
 
-  const frameTimestamp = useMemo(() => {
-    const maxDigits = totalFrames.toString().length;
+  const handleRightClick = (e: MouseEvent) => {
+    e.preventDefault();
 
-    return totalFrames.toString().padStart(maxDigits, '0');
-  }, [totalFrames]);
+    const newMode =
+      currentTimeStampMode === E_VIDEO_TIMESTAMP_MODE.FRAME
+        ? E_VIDEO_TIMESTAMP_MODE.SMPTE
+        : E_VIDEO_TIMESTAMP_MODE.FRAME;
+
+    setUserSettings((prev) => ({
+      ...prev,
+      timestampMode: newMode,
+    }));
+  };
 
   return (
-    <Stack onClick={handleClick}>
+    <Stack onContextMenu={handleRightClick}>
       <VideoTimestampText variant={'captionMono'}>
         {currentTimeStampMode === E_VIDEO_TIMESTAMP_MODE.SMPTE ? (
           <>{currentSMPTETimestamp}</>
