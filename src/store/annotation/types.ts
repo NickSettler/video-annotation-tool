@@ -2,6 +2,7 @@ import { Feature, MultiPoint } from 'geojson';
 
 export type TAnnotationProperties = {
   name: string;
+  frame: number;
   color: string;
 };
 
