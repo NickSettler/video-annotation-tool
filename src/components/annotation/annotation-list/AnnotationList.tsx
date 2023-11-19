@@ -1,17 +1,17 @@
 import {
+  Divider,
   LinearProgress,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Paper,
-  styled,
 } from '@mui/material';
-import { JSX, useState } from 'react';
+import { JSX } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import {
-  selectAllAnnotations,
+  selectAnnotationsGrouped,
   selectCurrentFrameAnnotation,
+  selectUngroupedAnnotations,
   setAllAnnotationsAction,
   setFrameAnnotationsAction,
   TAnnotation,
@@ -25,24 +25,28 @@ import { TGenericMenuAction } from '../../common/generic-menu/GenericMenu';
 import { Circle, FileDownload, FileUpload } from '@mui/icons-material';
 import { downloadAsJson } from '../../../utils/files/download';
 import { FeatureCollection } from 'geojson';
-import { isArray } from 'lodash';
+import { entries, isArray } from 'lodash';
+import { AnnotationGroupListItem } from './AnnotationGroupListItem';
 
-export const AnnotationListPaper = styled(Paper)(({ theme }) => ({
-  height: '100%',
-  overflow: 'auto',
-  padding: `${theme.spacing(2)} ${theme.spacing(1)}`,
-}));
+export type TAnnotationListProps<ID = any> = {
+  rowSelection: Array<ID>;
+  onRowSelectionChange(id: ID): void;
+};
 
-export const AnnotationList = (): JSX.Element => {
+export const AnnotationList = ({
+  rowSelection,
+  onRowSelectionChange,
+}: TAnnotationListProps): JSX.Element => {
   const dispatch = useAppDispatch();
 
   const isLoading = useAppSelector(videoIsLoadingSelector);
   const isLoaded = useAppSelector(videoIsLoadedSelector);
   const currentFrame = useAppSelector(videoCurrentFrameSelector);
-  const allAnnotations = useAppSelector(selectAllAnnotations);
+  const groupedAnnotations: Record<string, Array<TAnnotation>> = useAppSelector(
+    selectAnnotationsGrouped,
+  );
+  const ungroupedAnnotations = useAppSelector(selectUngroupedAnnotations);
   const currentFrameAnnotations = useAppSelector(selectCurrentFrameAnnotation);
-
-  const [rowSelection, setRowSelection] = useState<Array<number>>([]);
 
   const processFrameAnnotations = (
     annotations: Array<TAnnotation>,
@@ -97,16 +101,16 @@ export const AnnotationList = (): JSX.Element => {
   };
 
   const handleExportAll = () => {
-    if (!allAnnotations.length) return;
-
-    downloadAsJson(
-      allAnnotations
-        .filter((annotation) => annotation)
-        .map((annotation) =>
-          annotation ? processFrameAnnotations(annotation) : [],
-        ),
-      'annotations',
-    );
+    // if (!allAnnotations.length) return;
+    //
+    // downloadAsJson(
+    //   allAnnotations
+    //     .filter((annotation) => annotation)
+    //     .map((annotation) =>
+    //       annotation ? processFrameAnnotations(annotation) : [],
+    //     ),
+    //   'annotations',
+    // );
   };
 
   const menuActions: Array<TGenericMenuAction> = [
@@ -127,32 +131,30 @@ export const AnnotationList = (): JSX.Element => {
     },
   ];
 
-  const handleRowClick = (index: number) => () => {
-    setRowSelection((prev) => {
-      if (prev.includes(index)) return prev.filter((item) => item !== index);
-
-      return [...prev, index];
-    });
-  };
-
   if (isLoading) return <LinearProgress />;
 
   if (!isLoaded) return <></>;
 
   return (
     <List dense disablePadding>
-      {currentFrameAnnotations?.map((annotation, index) => (
+      {entries(groupedAnnotations).map(([id, annotations]) => (
+        <AnnotationGroupListItem key={`group-${id}`} id={id} />
+      ))}
+      {!!entries(groupedAnnotations).length &&
+        !!ungroupedAnnotations.length && <Divider />}
+      {ungroupedAnnotations.map((annotation, index) => (
         <ListItemButton
-          key={annotation.id}
-          onClick={handleRowClick(index)}
-          selected={rowSelection.includes(index)}
+          key={`${annotation.id}-${annotation.properties.frame}-${index}`}
+          onClick={() => onRowSelectionChange(`${annotation.id}`)}
+          onDoubleClick={() => console.log('SsSS')}
+          selected={rowSelection.includes(`${annotation.id}`)}
         >
           <ListItemIcon sx={{ minWidth: 24, height: 24, mr: 1 }}>
             <Circle sx={{ color: annotation.properties.color }} />
           </ListItemIcon>
           <ListItemText
             primary={annotation.properties?.name ?? <i>Nso Name</i>}
-            secondary={annotation.id}
+            secondary={`Frame: ${annotation.properties.frame}`}
           />
         </ListItemButton>
       ))}
