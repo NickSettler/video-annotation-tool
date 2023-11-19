@@ -1,16 +1,12 @@
 import { JSX } from 'react';
 import { Stack, styled } from '@mui/material';
 import { VideoTimestamp } from '../video-timestamp/VideoTimestamp';
-import { VideoControls } from '../video-controls/VideoControls';
+import {
+  TVideoControlsProps,
+  VideoControls,
+} from '../video-controls/VideoControls';
 
-export type TVideoToolbarProps = {
-  isPlaying: boolean;
-  onFirstStep(): void;
-  onPrevStep(): void;
-  onPlayPause(): void;
-  onNextStep(): void;
-  onLastStep(): void;
-};
+export type TVideoToolbarProps = TVideoControlsProps;
 
 const VideoToolbarStyled = styled(Stack)({
   '& > *': {

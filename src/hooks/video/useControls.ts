@@ -8,6 +8,7 @@ export type TUseControls = {
   handlePlayPause(): void;
   handleNextStep(): void;
   handleLastStep(): void;
+  handleFrameJump(frame: number): void;
 };
 
 export const useControls = (
@@ -56,11 +57,21 @@ export const useControls = (
     video.currentTime(video.duration());
   }, [video]);
 
+  const handleFrameJump = useCallback(
+    (frame: number) => {
+      if (!video) return;
+
+      video.currentTime(frame / (1 / frequency));
+    },
+    [video, frequency],
+  );
+
   return {
     handleFirstStep,
     handlePrevStep,
     handlePlayPause,
     handleNextStep,
     handleLastStep,
+    handleFrameJump,
   };
 };

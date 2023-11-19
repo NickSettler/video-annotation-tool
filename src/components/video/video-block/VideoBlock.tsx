@@ -230,6 +230,7 @@ export const VideoBlock = (): JSX.Element => {
     handlePlayPause,
     handleNextStep,
     handleLastStep,
+    handleFrameJump,
   } = useControls(video, frequency);
 
   return (
@@ -256,6 +257,7 @@ export const VideoBlock = (): JSX.Element => {
         onPlayPause={handlePlayPause}
         onNextStep={handleNextStep}
         onLastStep={handleLastStep}
+        onFrameJump={handleFrameJump}
       />
     </Stack>
   );
