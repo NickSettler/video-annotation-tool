@@ -1,14 +1,13 @@
 import {
   LinearProgress,
   List,
-  ListItem,
+  ListItemButton,
+  ListItemIcon,
   ListItemText,
   Paper,
-  Stack,
   styled,
-  Typography,
 } from '@mui/material';
-import { JSX } from 'react';
+import { JSX, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import {
   selectAllAnnotations,
@@ -22,11 +21,8 @@ import {
   videoIsLoadedSelector,
   videoIsLoadingSelector,
 } from '../../../store/video';
-import {
-  GenericMenu,
-  TGenericMenuAction,
-} from '../../common/generic-menu/GenericMenu';
-import { FileDownload, FileUpload, MoreVert } from '@mui/icons-material';
+import { TGenericMenuAction } from '../../common/generic-menu/GenericMenu';
+import { Circle, FileDownload, FileUpload } from '@mui/icons-material';
 import { downloadAsJson } from '../../../utils/files/download';
 import { FeatureCollection } from 'geojson';
 import { isArray } from 'lodash';
@@ -45,6 +41,8 @@ export const AnnotationList = (): JSX.Element => {
   const currentFrame = useAppSelector(videoCurrentFrameSelector);
   const allAnnotations = useAppSelector(selectAllAnnotations);
   const currentFrameAnnotations = useAppSelector(selectCurrentFrameAnnotation);
+
+  const [rowSelection, setRowSelection] = useState<Array<number>>([]);
 
   const processFrameAnnotations = (
     annotations: Array<TAnnotation>,
@@ -129,34 +127,35 @@ export const AnnotationList = (): JSX.Element => {
     },
   ];
 
+  const handleRowClick = (index: number) => () => {
+    setRowSelection((prev) => {
+      if (prev.includes(index)) return prev.filter((item) => item !== index);
+
+      return [...prev, index];
+    });
+  };
+
+  if (isLoading) return <LinearProgress />;
+
+  if (!isLoaded) return <></>;
+
   return (
-    <AnnotationListPaper elevation={0} variant={'outlined'}>
-      <Stack
-        direction={'row'}
-        alignItems={'center'}
-        justifyContent={'space-between'}
-      >
-        <Typography variant={'h6'}>Annotations</Typography>
-        <GenericMenu actions={menuActions} size={'small'}>
-          <MoreVert />
-        </GenericMenu>
-      </Stack>
-      {isLoading ? (
-        <LinearProgress />
-      ) : isLoaded ? (
-        <List dense disablePadding>
-          {currentFrameAnnotations?.map((annotation) => (
-            <ListItem key={annotation.id}>
-              <ListItemText
-                primary={annotation.properties?.name ?? <i>No Name</i>}
-                secondary={annotation.id}
-              />
-            </ListItem>
-          ))}
-        </List>
-      ) : (
-        <></>
-      )}
-    </AnnotationListPaper>
+    <List dense disablePadding>
+      {currentFrameAnnotations?.map((annotation, index) => (
+        <ListItemButton
+          key={annotation.id}
+          onClick={handleRowClick(index)}
+          selected={rowSelection.includes(index)}
+        >
+          <ListItemIcon sx={{ minWidth: 24, height: 24, mr: 1 }}>
+            <Circle sx={{ color: annotation.properties.color }} />
+          </ListItemIcon>
+          <ListItemText
+            primary={annotation.properties?.name ?? <i>Nso Name</i>}
+            secondary={annotation.id}
+          />
+        </ListItemButton>
+      ))}
+    </List>
   );
 };
