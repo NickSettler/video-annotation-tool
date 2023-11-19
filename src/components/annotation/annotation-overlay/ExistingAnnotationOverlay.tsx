@@ -3,7 +3,7 @@ import {
   TAnnotation,
   updateFramePolygonAction,
 } from '../../../store/annotation';
-import { Circle, Group, Line } from 'react-konva';
+import { Circle, Group, Label, Line, Tag, Text } from 'react-konva';
 import { getPolygonName, isGroupName } from '../../../utils/annotation/name';
 import Konva from 'konva';
 import { minMax } from '../../../utils/annotation/min-max';
@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { videoCurrentFrameSelector } from '../../../store/video';
 import { alpha } from '@mui/material';
 import { compare } from '../../../utils/object/compare';
+import { getPolygonCentroid } from '../../../utils/polygons/centroid';
 
 export type TExistingAnnotationOverlayProps = {
   annotation: TAnnotation;
@@ -34,6 +35,10 @@ export const ExistingAnnotationOverlay = ({
   const [stage, setStage] = useState<Konva.Stage>();
   const [minMaxX, setMinMaxX] = useState([0, 0]);
   const [minMaxY, setMinMaxY] = useState([0, 0]);
+
+  const center = useMemo(() => {
+    return getPolygonCentroid(renderPoints);
+  }, [renderPoints]);
 
   const updateAnnotation = useCallback(() => {
     dispatch(
@@ -204,6 +209,19 @@ export const ExistingAnnotationOverlay = ({
             />
           );
         })}
+      </Group>
+      <Group>
+        <Label x={center[0]} y={center[1]} opacity={0.75}>
+          <Tag fill={annotation.properties.color} offsetX={50} />
+          <Text
+            fill={'black'}
+            text={annotation.properties.name}
+            width={100}
+            offsetX={50}
+            padding={4}
+            align={'center'}
+          />
+        </Label>
       </Group>
     </Group>
   );
