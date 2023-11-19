@@ -11,6 +11,7 @@ import {
   setVideoSizeAction,
   setVideoViewportSizeAction,
   videoAspectRatioSelector,
+  videoCurrentTimeSelector,
   videoFrequencySelector,
   videoHeightSelector,
   videoIsLoadedSelector,
@@ -72,10 +73,14 @@ export const CanvasBox = styled(Box)({
 
 export const VideoBlock = (): JSX.Element => {
   const url = useAppSelector(videoUrlSelector);
+
   const videoWidth = useAppSelector(videoWidthSelector);
   const videoHeight = useAppSelector(videoHeightSelector);
   const videoAspectRatio = useAppSelector(videoAspectRatioSelector);
+
+  const storeCurrentTime = useAppSelector(videoCurrentTimeSelector);
   const frequency = useAppSelector(videoFrequencySelector);
+
   const isLoading = useAppSelector(videoIsLoadingSelector);
   const isLoaded = useAppSelector(videoIsLoadedSelector);
   const isPlaying = useAppSelector(videoIsPlayingSelector);
@@ -108,6 +113,13 @@ export const VideoBlock = (): JSX.Element => {
     }
   }, [dispatch, url]);
 
+  useEffect(() => {
+    if (!video || isPlaying) return;
+
+    if (video.currentTime() !== storeCurrentTime)
+      video.currentTime(storeCurrentTime);
+  }, [isPlaying, storeCurrentTime, video]);
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const playerTicker = (
     _: DOMHighResTimeStamp,
@@ -124,8 +136,6 @@ export const VideoBlock = (): JSX.Element => {
 
   const loadMetaDataCallback = useCallback(() => {
     const duration = videoRef.current?.duration;
-
-    console.log(frequency);
 
     if (duration) {
       dispatch(setVideoDurationAction(duration));
