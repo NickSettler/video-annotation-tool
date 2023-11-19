@@ -45,25 +45,15 @@ export const annotationReducer = createReducer(initialState, (builder) =>
     )
     .addCase(
       updateFramePolygonAction,
-      (state, { payload: { frame, polygonID, payload } }) => {
-        const filtered = state.annotations[frame].filter(
-          (polygon) => polygon.id !== polygonID,
-        );
-
-        const updated = assign(
-          {},
-          state.annotations[frame].find((polygon) => polygon.id === polygonID),
-          payload,
-        );
-
-        return {
-          ...state,
-          annotations: [
-            ...state.annotations.slice(0, frame),
-            [...filtered, updated],
-            ...state.annotations.slice(frame + 1),
-          ],
-        };
-      },
+      (state, { payload: { frame, polygonID, payload } }) => ({
+        ...state,
+        annotations: [
+          ...state.annotations.slice(0, frame),
+          state.annotations[frame].map((polygon) =>
+            polygon.id === polygonID ? assign({}, polygon, payload) : polygon,
+          ),
+          ...state.annotations.slice(frame + 1),
+        ],
+      }),
     ),
 );
