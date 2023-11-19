@@ -98,7 +98,11 @@ export const AppToolbar = (): JSX.Element => {
   };
 
   return (
-    <AppBar component='nav' sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+    <AppBar
+      component='nav'
+      sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      elevation={0}
+    >
       <Toolbar>
         <Typography variant='h6'>Video Annotation Tool</Typography>
         <Stack
