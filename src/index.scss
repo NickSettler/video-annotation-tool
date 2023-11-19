@@ -11,3 +11,7 @@ body {
   -webkit-font-feature-settings: "liga" on, "calt" on;
   text-rendering: optimizeLegibility;
 }
+
+[role="button"] {
+  cursor: pointer;
+}
