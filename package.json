@@ -30,7 +30,7 @@
     "@testing-library/user-event": "^14.5.1",
     "@types/earcut": "^2.1.4",
     "@types/geojson": "^7946.0.13",
-    "@types/jest": "^29.5.9",
+    "@types/jest": "^29.5.10",
     "@types/lodash": "^4.14.202",
     "@types/node": "^20.9.3",
     "@types/react": "^18.2.38",
