@@ -1,20 +1,22 @@
-import { JSX, useMemo, useState, MouseEvent } from 'react';
+import { JSX, MouseEvent, useMemo, useState } from 'react';
 import {
   Button,
   IconButton,
   List,
   ListItem,
-  ListItemButton,
   ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
   Stack,
 } from '@mui/material';
-import { Circle, FilterNone, Redo } from '@mui/icons-material';
+import { FilterNone, ModeEdit, Redo } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { selectAnnotationsGroupedById } from '../../../store/annotation';
-import { map, reduce, some } from 'lodash';
 import { setVideoCurrentFrameAction } from '../../../store/video';
+import { useModal } from '../../../hooks/modal/useModal';
+import { E_MODALS } from '../../../store/modals';
+import { AnnotationListItem } from './AnnotationListItem';
+import { isGroupInterpolatable } from '../../../utils/annotation/interpolation';
 
 export type TAnnotationGroupListItemProps = {
   id: string;
@@ -23,6 +25,10 @@ export type TAnnotationGroupListItemProps = {
 export const AnnotationGroupListItem = ({
   id,
 }: TAnnotationGroupListItemProps): JSX.Element => {
+  const { onOpen: openAnnotationEditModal } = useModal(
+    E_MODALS.EDIT_ANNOTATION,
+  );
+
   const dispatch = useAppDispatch();
 
   const annotations = useAppSelector(selectAnnotationsGroupedById(id));
@@ -49,13 +55,15 @@ export const AnnotationGroupListItem = ({
       dispatch(setVideoCurrentFrameAction(frame));
     };
 
+  const handleEdit = () => openAnnotationEditModal({ id });
+
   return (
     <>
       <ListItem role='button' onClick={handleToggleExpanded}>
         <ListItemIcon sx={{ minWidth: 24, height: 24, mr: 1 }}>
           <FilterNone sx={{ color: annotations[0].properties.color }} />
         </ListItemIcon>
-        <ListItemText primary={id} />
+        <ListItemText primary={annotations[0].properties.name} />
         <ListItemSecondaryAction>
           <Stack direction={'row'} spacing={1}>
             {canInterpolate && (
@@ -74,24 +82,19 @@ export const AnnotationGroupListItem = ({
             >
               <Redo />
             </IconButton>
+            <IconButton color={'primary'} size={'small'} onClick={handleEdit}>
+              <ModeEdit />
+            </IconButton>
           </Stack>
         </ListItemSecondaryAction>
       </ListItem>
       {isExpanded && (
         <List dense disablePadding>
           {annotations.map((annotation, index) => (
-            <ListItemButton
+            <AnnotationListItem
               key={`group-${id}-${index}`}
-              onClick={handleJumpToFrame(annotation.properties.frame)}
-            >
-              <ListItemIcon sx={{ minWidth: 24, height: 24, mr: 1 }}>
-                <Circle sx={{ color: annotation.properties.color }} />
-              </ListItemIcon>
-              <ListItemText
-                primary={annotation.properties.name ?? <i>No Name</i>}
-                secondary={`Frame: ${annotation.properties.frame}`}
-              />
-            </ListItemButton>
+              annotation={annotation}
+            />
           ))}
         </List>
       )}
