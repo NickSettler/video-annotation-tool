@@ -1,4 +1,4 @@
-import { JSX, useEffect, useMemo, useState } from 'react';
+import { JSX, useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, styled } from '@mui/material';
 import { Layer, Stage } from 'react-konva';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
@@ -11,14 +11,22 @@ import { AnnotationOverlay } from '../annotation-overlay/AnnotationOverlay';
 import Konva from 'konva';
 import {
   addFrameAnnotationAction,
+  clearSelectionAction,
   selectAnnotationsById,
+  selectCurrentFrameHasSelection,
   selectFrameAnnotations,
+  selectSelectionAnnotations,
 } from '../../../store/annotation';
 import { ExistingAnnotationOverlay } from '../annotation-overlay/ExistingAnnotationOverlay';
 import { isEmpty } from 'lodash';
 import { v4 as uuidV4 } from 'uuid';
 import { NEW_POLYGON_NAME } from '../../../utils/annotation/name';
 import { getPolygonColor } from '../../../utils/annotation/palette';
+import { getCopyKey } from '../../../utils/misc/keyboard';
+import {
+  copyAnnotation,
+  pasteAnnotation,
+} from '../../../utils/annotation/clipboard';
 
 export const CanvasBox = styled(Box)({
   display: 'flex',
@@ -37,6 +45,10 @@ export const Canvas = (): JSX.Element => {
   const currentFrameAnnotations = useAppSelector((state) =>
     selectFrameAnnotations(state, currentFrame),
   );
+  const selectionAnnotations = useAppSelector(selectSelectionAnnotations);
+  const currentFrameHasSelections = useAppSelector(
+    selectCurrentFrameHasSelection,
+  );
 
   const [points, setPoints] = useState<Array<Array<number>>>([]);
   const [position, setPosition] = useState([0, 0]);
@@ -51,6 +63,48 @@ export const Canvas = (): JSX.Element => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [points],
   );
+
+  const handleDocumentKey = useCallback(
+    async (event: KeyboardEvent) => {
+      const { code } = event;
+
+      if (code === 'Escape') {
+        setPosition([0, 0]);
+        setIsPolyComplete(false);
+        setPoints([]);
+      }
+
+      if (event[getCopyKey()] && code === 'KeyC') {
+        await copyAnnotation(selectionAnnotations);
+        dispatch(clearSelectionAction());
+      }
+
+      if (event[getCopyKey()] && code === 'KeyV') {
+        const annotation = await pasteAnnotation();
+
+        dispatch(
+          addFrameAnnotationAction({
+            frame: currentFrame,
+            annotation: {
+              ...annotation,
+              properties: {
+                ...annotation.properties,
+                frame: currentFrame,
+              },
+            },
+          }),
+        );
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentFrame, selectionAnnotations],
+  );
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleDocumentKey);
+
+    return () => document.removeEventListener('keydown', handleDocumentKey);
+  }, [handleDocumentKey]);
 
   useEffect(() => {
     if (!isPolyComplete) return;
@@ -69,6 +123,7 @@ export const Canvas = (): JSX.Element => {
             name: uuid,
             frame: currentFrame,
             color: color,
+            type: null,
           },
           id: uuid,
           geometry: {
@@ -93,14 +148,19 @@ export const Canvas = (): JSX.Element => {
   };
 
   const handleMouseDown = (e: Konva.KonvaEventObject<MouseEvent>) => {
-    if (isPolyComplete) return;
-
     const stage = e.target.getStage();
 
     if (!stage) return;
 
     const isOverPolygon = e.target.getType() === 'Shape';
     const isOverSelf = e.target.parent?.name() === NEW_POLYGON_NAME;
+
+    if (currentFrameHasSelections && !isOverPolygon) {
+      dispatch(clearSelectionAction());
+      return;
+    }
+
+    if (isPolyComplete) return;
 
     if (isOverPolygon && !isOverSelf) return;
 
