@@ -1,9 +1,11 @@
 import { JSX, useCallback, useEffect, useMemo, useState } from 'react';
 import {
+  selectIsAnnotationSelected,
   TAnnotation,
+  toggleSelectionItemAction,
   updateFramePolygonAction,
 } from '../../../store/annotation';
-import { Circle, Group, Label, Line, Tag, Text } from 'react-konva';
+import { Circle, Group, Label, Line, Rect, Tag, Text } from 'react-konva';
 import { getPolygonName, isGroupName } from '../../../utils/annotation/name';
 import Konva from 'konva';
 import { minMax } from '../../../utils/annotation/min-max';
@@ -23,6 +25,9 @@ export const ExistingAnnotationOverlay = ({
   const dispatch = useAppDispatch();
 
   const currentFrame = useAppSelector(videoCurrentFrameSelector);
+  const isAnnotationsSelected = useAppSelector(
+    selectIsAnnotationSelected(annotation.id, annotation.properties.frame),
+  );
 
   const vertexRadius = 3;
 
@@ -35,6 +40,9 @@ export const ExistingAnnotationOverlay = ({
   const [stage, setStage] = useState<Konva.Stage>();
   const [minMaxX, setMinMaxX] = useState([0, 0]);
   const [minMaxY, setMinMaxY] = useState([0, 0]);
+  const [selectionRect, setSelectionRect] = useState<Array<number>>([
+    0, 0, 0, 0,
+  ]);
 
   const center = useMemo(() => {
     return getPolygonCentroid(renderPoints);
@@ -58,6 +66,25 @@ export const ExistingAnnotationOverlay = ({
     if (!compare(points, annotation.geometry.coordinates)) updateAnnotation();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [points]);
+
+  useEffect(() => {
+    const arrX = renderPoints.map((p) => p[0]);
+    const arrY = renderPoints.map((p) => p[1]);
+
+    const _minMaxX = minMax(arrX);
+    const _minMaxY = minMax(arrY);
+
+    setSelectionRect([_minMaxX[0], _minMaxY[0], _minMaxX[1], _minMaxY[1]]);
+  }, [renderPoints]);
+
+  const handleGroupMouseDown = () => {
+    dispatch(
+      toggleSelectionItemAction({
+        id: annotation.id,
+        frame: annotation.properties.frame,
+      }),
+    );
+  };
 
   const handleGroupMouseOver = (e: Konva.KonvaEventObject<MouseEvent>) => {
     const _stage = e.target.getStage();
@@ -144,6 +171,25 @@ export const ExistingAnnotationOverlay = ({
     setMinMaxY(minMax(arrY));
   }, [renderPoints]);
 
+  const handleGroupDragMove = (e: Konva.KonvaEventObject<DragEvent>) => {
+    const result: Array<Array<number>> = [];
+    const copyPoints = [...renderPoints];
+
+    copyPoints.map((point) =>
+      result.push([point[0] + e.target.x(), point[1] + e.target.y()]),
+    );
+
+    const arrX = result.map((p) => p[0]);
+    const arrY = result.map((p) => p[1]);
+
+    setSelectionRect([
+      minMax(arrX)[0],
+      minMax(arrY)[0],
+      minMax(arrX)[1],
+      minMax(arrY)[1],
+    ]);
+  };
+
   const handleGroupDragEnd = (e: Konva.KonvaEventObject<DragEvent>) => {
     const isGroup = isGroupName(e.target.name());
 
@@ -171,58 +217,75 @@ export const ExistingAnnotationOverlay = ({
   }, [annotation]);
 
   return (
-    <Group
-      name={getPolygonName(annotation)}
-      draggable
-      onMouseOver={handleGroupMouseOver}
-      onMouseOut={handleGroupMouseOut}
-      dragBoundFunc={groupDragBound}
-      onDragStart={handleGroupDragStart}
-      onDragEnd={handleGroupDragEnd}
-    >
-      <Group>
-        <Line
-          points={flattenedPoints}
-          strokeWidth={3}
-          stroke={annotation.properties.color}
-          fill={fill}
-          closed
-        />
-
-        {renderPoints.map((point, index) => {
-          const x = point[0] - vertexRadius / 2;
-          const y = point[1] - vertexRadius / 2;
-          return (
-            <Circle
-              name={`polygon-${annotation.id}-point-${index}`}
-              key={index}
-              x={x}
-              y={y}
-              radius={vertexRadius}
-              fill='white'
-              stroke='black'
-              strokeWidth={2}
-              draggable
-              onDragEnd={handlePointDragEnd}
-              onDragMove={handlePointDragMove}
-              dragBoundFunc={pointBoundFunc}
-            />
-          );
-        })}
-      </Group>
-      <Group>
-        <Label x={center[0]} y={center[1]} opacity={0.75}>
-          <Tag fill={annotation.properties.color} offsetX={50} />
-          <Text
-            fill={'black'}
-            text={annotation.properties.name}
-            width={100}
-            offsetX={50}
-            padding={4}
-            align={'center'}
+    <Group>
+      <Group
+        name={getPolygonName(annotation)}
+        draggable
+        onClick={handleGroupMouseDown}
+        onMouseOver={handleGroupMouseOver}
+        onMouseOut={handleGroupMouseOut}
+        dragBoundFunc={groupDragBound}
+        onDragStart={handleGroupDragStart}
+        onDragMove={handleGroupDragMove}
+        onDragEnd={handleGroupDragEnd}
+      >
+        <Group>
+          <Line
+            points={flattenedPoints}
+            strokeWidth={3}
+            stroke={annotation.properties.color}
+            fill={fill}
+            closed
           />
-        </Label>
+
+          {renderPoints.map((point, index) => {
+            const x = point[0] - vertexRadius / 2;
+            const y = point[1] - vertexRadius / 2;
+            return (
+              <Circle
+                name={`polygon-${annotation.id}-point-${index}`}
+                key={index}
+                x={x}
+                y={y}
+                radius={vertexRadius}
+                fill='white'
+                stroke='black'
+                strokeWidth={2}
+                draggable
+                onDragEnd={handlePointDragEnd}
+                onDragMove={handlePointDragMove}
+                dragBoundFunc={pointBoundFunc}
+              />
+            );
+          })}
+        </Group>
+        <Group>
+          <Label x={center[0]} y={center[1]} opacity={0.75}>
+            <Tag fill={annotation.properties.color} offsetX={50} />
+            <Text
+              fill={'black'}
+              text={annotation.properties.name}
+              width={100}
+              offsetX={50}
+              padding={4}
+              align={'center'}
+            />
+          </Label>
+        </Group>
       </Group>
+      {isAnnotationsSelected && (
+        <Group>
+          <Rect
+            x={selectionRect[0]}
+            y={selectionRect[1]}
+            width={selectionRect[2] - selectionRect[0]}
+            height={selectionRect[3] - selectionRect[1]}
+            stroke={'blue'}
+            strokeWidth={1}
+            fillEnabled={false}
+          />
+        </Group>
+      )}
     </Group>
   );
 };
