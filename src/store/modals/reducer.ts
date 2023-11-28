@@ -5,6 +5,7 @@ import { findLastIndex } from 'lodash';
 export enum E_MODALS {
   PROJECT_SETTINGS = 'project-settings.modal',
   JUMP_TO_FRAME = 'jump-to-frame.modal',
+  EDIT_ANNOTATION = 'edit-annotation.modal',
 }
 
 export type TModalMapItem = {
@@ -19,6 +20,10 @@ export type TModalMetaMap = {
   };
   [E_MODALS.JUMP_TO_FRAME]: {
     onSuccess(frame: number): void;
+  };
+  [E_MODALS.EDIT_ANNOTATION]: {
+    id: string;
+    frame?: number;
   };
 };
 
