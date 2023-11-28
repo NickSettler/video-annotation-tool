@@ -1,11 +1,4 @@
-import {
-  Divider,
-  LinearProgress,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from '@mui/material';
+import { Divider, LinearProgress, List } from '@mui/material';
 import { JSX } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import {
@@ -15,6 +8,7 @@ import {
   setAllAnnotationsAction,
   setFrameAnnotationsAction,
   TAnnotation,
+  TAnnotationSelection,
 } from '../../../store/annotation';
 import {
   videoCurrentFrameSelector,
@@ -22,20 +16,21 @@ import {
   videoIsLoadingSelector,
 } from '../../../store/video';
 import { TGenericMenuAction } from '../../common/generic-menu/GenericMenu';
-import { Circle, FileDownload, FileUpload } from '@mui/icons-material';
+import { FileDownload, FileUpload } from '@mui/icons-material';
 import { downloadAsJson } from '../../../utils/files/download';
 import { FeatureCollection } from 'geojson';
-import { entries, isArray } from 'lodash';
+import { entries, isArray, some } from 'lodash';
 import { AnnotationGroupListItem } from './AnnotationGroupListItem';
+import { AnnotationListItem } from './AnnotationListItem';
 
-export type TAnnotationListProps<ID = any> = {
-  rowSelection: Array<ID>;
-  onRowSelectionChange(id: ID): void;
+export type TAnnotationListProps = {
+  selection: Array<TAnnotationSelection>;
+  onSelectionChange(annotationSelection: TAnnotationSelection): void;
 };
 
 export const AnnotationList = ({
-  rowSelection,
-  onRowSelectionChange,
+  selection,
+  onSelectionChange,
 }: TAnnotationListProps): JSX.Element => {
   const dispatch = useAppDispatch();
 
@@ -131,6 +126,10 @@ export const AnnotationList = ({
     },
   ];
 
+  const handleSelectionChange = (id: string, frame: number) => () => {
+    onSelectionChange({ id, frame });
+  };
+
   if (isLoading) return <LinearProgress />;
 
   if (!isLoaded) return <></>;
@@ -143,20 +142,20 @@ export const AnnotationList = ({
       {!!entries(groupedAnnotations).length &&
         !!ungroupedAnnotations.length && <Divider />}
       {ungroupedAnnotations.map((annotation, index) => (
-        <ListItemButton
+        <AnnotationListItem
           key={`${annotation.id}-${annotation.properties.frame}-${index}`}
-          onClick={() => onRowSelectionChange(`${annotation.id}`)}
-          onDoubleClick={() => console.log('SsSS')}
-          selected={rowSelection.includes(`${annotation.id}`)}
-        >
-          <ListItemIcon sx={{ minWidth: 24, height: 24, mr: 1 }}>
-            <Circle sx={{ color: annotation.properties.color }} />
-          </ListItemIcon>
-          <ListItemText
-            primary={annotation.properties?.name ?? <i>Nso Name</i>}
-            secondary={`Frame: ${annotation.properties.frame}`}
-          />
-        </ListItemButton>
+          annotation={annotation}
+          isEditable
+          isSelectable
+          isSelected={some(selection, {
+            id: annotation.id,
+            frame: annotation.properties.frame,
+          })}
+          onSelected={handleSelectionChange(
+            annotation.id,
+            annotation.properties.frame,
+          )}
+        />
       ))}
     </List>
   );

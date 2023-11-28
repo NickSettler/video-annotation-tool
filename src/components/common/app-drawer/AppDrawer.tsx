@@ -1,4 +1,4 @@
-import { JSX, useMemo, useState } from 'react';
+import { JSX, useMemo } from 'react';
 import {
   Box,
   Button,
@@ -11,108 +11,56 @@ import {
 import { AnnotationList } from '../../annotation/annotation-list/AnnotationList';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import {
-  selectAllAnnotations,
-  updateFramePolygonAction,
+  groupSelectionAction,
+  selectAnnotationsSelection,
+  selectIsAnnotationSelectionGroupable,
+  selectIsAnnotationSelectionInterpolatable,
+  TAnnotationSelection,
+  toggleSelectionItemAction,
 } from '../../../store/annotation';
-import { find, flattenDepth, some, uniq, uniqBy } from 'lodash';
-import toast from 'react-hot-toast';
-import { interpolatePolygons } from '../../../utils/polygons/interpolation';
 
 const drawerWidth = '40%';
 
 export const AppDrawer = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
-  const allAnnotations = useAppSelector(selectAllAnnotations);
-
-  const [rowSelection, setRowSelection] = useState<Array<string>>([]);
-
-  const groupButtonVisible = useMemo(() => {
-    const atLeastTwo = rowSelection.length > 1;
-    const differentIDs = uniq(rowSelection).length > 1;
-
-    return atLeastTwo && differentIDs;
-  }, [rowSelection]);
-
-  const interpolateButtonVisible = useMemo(
-    () => rowSelection.length === 2,
-    [rowSelection],
+  const annotationSelection = useAppSelector(selectAnnotationsSelection);
+  const isGroupable = useAppSelector(selectIsAnnotationSelectionGroupable);
+  const isInterpolatable = useAppSelector(
+    selectIsAnnotationSelectionInterpolatable,
   );
 
   const someButtonVisible = useMemo(
-    () => groupButtonVisible || interpolateButtonVisible,
-    [groupButtonVisible, interpolateButtonVisible],
+    () => isGroupable || isInterpolatable,
+    [isGroupable, isInterpolatable],
   );
 
-  const handleRowSelectionChange = (id: string) => {
-    setRowSelection((prev) => {
-      if (prev.includes(id)) {
-        return prev.filter((item) => item !== id);
-      }
-
-      return [...prev, id];
-    });
+  const handleSelectionChange = (selection: TAnnotationSelection) => {
+    dispatch(toggleSelectionItemAction(selection));
   };
 
   const handleGroup = () => {
-    const frames: Array<[number, string]> = rowSelection.map((id) => [
-      allAnnotations.findIndex((frameAnnotations) =>
-        some(frameAnnotations, { id }),
-      ),
-      id,
-    ]);
-
-    const hasDuplicates =
-      uniqBy(frames, (frame) => frame[0]).length !== frames.length;
-
-    if (hasDuplicates) {
-      toast.error('Cannot group annotations from the same frame!');
-      return;
-    }
-
-    const firstAnnotation = find(flattenDepth(allAnnotations, 1), {
-      id: rowSelection[0],
-    });
-
-    if (!firstAnnotation) return;
-
-    setRowSelection([]);
-
-    frames.forEach(([frame, id]) => {
-      dispatch(
-        updateFramePolygonAction({
-          frame,
-          polygonID: id,
-          payload: {
-            id: firstAnnotation.id,
-            properties: {
-              ...firstAnnotation.properties,
-              frame,
-            },
-          },
-        }),
-      );
-    });
+    dispatch(groupSelectionAction());
   };
 
   const handleInterpolate = () => {
-    const polygon1 = find(flattenDepth(allAnnotations, 1), {
-      id: rowSelection[0],
-    });
-
-    const polygon2 = find(flattenDepth(allAnnotations, 1), {
-      id: rowSelection[1],
-    });
-
-    if (!polygon1 || !polygon2) return;
-
-    const interpolation = interpolatePolygons(
-      polygon1.geometry.coordinates,
-      polygon2.geometry.coordinates,
-      5,
-    );
-
-    console.log(interpolation);
+    // const polygon1 = find(flattenDepth(allAnnotations, 1), {
+    //   id: rowSelection[0],
+    // });
+    //
+    // const polygon2 = find(flattenDepth(allAnnotations, 1), {
+    //   id: rowSelection[1],
+    // });
+    //
+    // if (!polygon1 || !polygon2) return;
+    //
+    // const interpolation = interpolatePolygons(
+    //   polygon1.geometry.coordinates,
+    //   polygon2.geometry.coordinates,
+    //   5,
+    // );
+    //
+    // console.log(interpolation);
   };
 
   return (
@@ -137,18 +85,16 @@ export const AppDrawer = (): JSX.Element => {
           <Typography variant={'h6'}>Annotations</Typography>
           {someButtonVisible && (
             <ButtonGroup variant={'outlined'} size={'small'}>
-              {groupButtonVisible && (
-                <Button onClick={handleGroup}>Group</Button>
-              )}
-              {interpolateButtonVisible && (
+              {isGroupable && <Button onClick={handleGroup}>Group</Button>}
+              {isInterpolatable && (
                 <Button onClick={handleInterpolate}>Interpolate</Button>
               )}
             </ButtonGroup>
           )}
         </Stack>
         <AnnotationList
-          rowSelection={rowSelection}
-          onRowSelectionChange={handleRowSelectionChange}
+          selection={annotationSelection}
+          onSelectionChange={handleSelectionChange}
         />
       </Box>
     </Drawer>
