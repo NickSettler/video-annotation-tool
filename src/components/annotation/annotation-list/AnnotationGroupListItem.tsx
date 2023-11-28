@@ -29,27 +29,10 @@ export const AnnotationGroupListItem = ({
 
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const canInterpolate = useMemo(() => {
-    const frames = map(
-      annotations,
-      (annotation) => annotation.properties.frame,
-    );
-
-    const spaces = reduce(
-      frames,
-      (acc, frame, index, array) => {
-        if (index === 0) return acc;
-
-        const prevFrame = array[index - 1];
-        const diff = frame - prevFrame;
-
-        return [...acc, diff];
-      },
-      [] as Array<number>,
-    );
-
-    return some(spaces, (space) => space > 1);
-  }, [annotations]);
+  const canInterpolate = useMemo(
+    () => isGroupInterpolatable(annotations),
+    [annotations],
+  );
 
   const handleToggleExpanded = () => {
     setIsExpanded(!isExpanded);
