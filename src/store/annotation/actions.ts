@@ -12,6 +12,10 @@ export enum E_ANNOTATION_ACTIONS {
   ADD_FRAME_ANNOTATION = `${moduleName}/ADD_FRAME_ANNOTATION`,
   UPDATE_POLYGON_COORDINATES = `${moduleName}/UPDATE_POLYGON_COORDINATES`,
   UPDATE_FRAME_POLYGON = `${moduleName}/UPDATE_FRAME_POLYGON`,
+
+  TOGGLE_SELECTION_ITEM = `${moduleName}/TOGGLE_SELECTION_ITEM`,
+  GROUP_SELECTION = `${moduleName}/GROUP_SELECTION`,
+  CLEAR_SELECTION = `${moduleName}/CLEAR_SELECTION`,
 }
 
 export const initAnnotationsAction = createAction<{
@@ -49,3 +53,15 @@ export const updateFramePolygonAction = createAction<{
   polygonID: string;
   payload: OmitByValue<DeepPartial<TAnnotation>, undefined>;
 }>(E_ANNOTATION_ACTIONS.UPDATE_FRAME_POLYGON);
+
+export const toggleSelectionItemAction = createAction<TAnnotationSelection>(
+  E_ANNOTATION_ACTIONS.TOGGLE_SELECTION_ITEM,
+);
+
+export const groupSelectionAction = createAction(
+  E_ANNOTATION_ACTIONS.GROUP_SELECTION,
+);
+
+export const clearSelectionAction = createAction(
+  E_ANNOTATION_ACTIONS.CLEAR_SELECTION,
+);

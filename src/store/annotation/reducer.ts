@@ -2,15 +2,30 @@ import { TAnnotationState } from './types';
 import { createReducer } from '@reduxjs/toolkit';
 import {
   addFrameAnnotationAction,
+  clearSelectionAction,
+  groupSelectionAction,
   initAnnotationsAction,
   setAllAnnotationsAction,
   setFrameAnnotationsAction,
+  toggleSelectionItemAction,
   updateFramePolygonAction,
 } from './actions';
-import { assign, constant, times } from 'lodash';
+import {
+  assign,
+  constant,
+  find,
+  flattenDepth,
+  isEqual,
+  some,
+  times,
+  xorWith,
+} from 'lodash';
+import { isAnnotationSelectionGroupable } from '../../utils/annotation/group';
 
 const initialState: TAnnotationState = {
   annotations: [],
+  selection: [],
+  types: [],
 };
 
 export const annotationReducer = createReducer(initialState, (builder) =>
@@ -52,8 +67,7 @@ export const annotationReducer = createReducer(initialState, (builder) =>
           state.annotations[frame].map((polygon) =>
             polygon.id === polygonID ? assign({}, polygon, payload) : polygon,
           ),
-          ...state.annotations.slice(frame + 1),
-        ],
+        ),
       }),
     ),
 );

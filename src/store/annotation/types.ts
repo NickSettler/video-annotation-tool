@@ -10,6 +10,12 @@ export type TAnnotation = Feature<MultiPoint, TAnnotationProperties> & {
   id: string;
 };
 
+export type TAnnotationSelection = {
+  id: string;
+  frame: number;
+};
+
 export type TAnnotationState = {
   annotations: Array<Array<TAnnotation>>;
+  selection: Array<TAnnotationSelection>;
 };
