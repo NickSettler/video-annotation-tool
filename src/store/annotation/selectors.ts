@@ -3,11 +3,12 @@ import { TAnnotationState } from './types';
 import { moduleName } from './actions';
 import { createSelector } from '@reduxjs/toolkit';
 import { videoCurrentFrameSelector } from '../video';
-import { filter, flattenDepth, groupBy, omitBy, uniqBy } from 'lodash';
 import {
   filter,
+  find,
   flattenDepth,
   groupBy,
+  map,
   omitBy,
   some,
   uniqBy,
@@ -36,6 +37,11 @@ export const selectAnnotationsById = createSelector(
   selectAllFlattenedAnnotations,
   (annotations) => uniqBy(annotations, 'id'),
 );
+
+export const selectAnnotationById = (id: string) =>
+  createSelector(selectAnnotationsById, (annotations) =>
+    find(annotations, { id }),
+  );
 
 export const selectAnnotationsGrouped = createSelector(
   selectAllFlattenedAnnotations,
@@ -104,4 +110,14 @@ export const selectSelectionAnnotations = createSelector(
       ),
       1,
     ),
+);
+
+export const selectAnnotationTypes = createSelector(
+  annotationState,
+  (annotation) => annotation.types,
+);
+
+export const selectAnnotationTypesKeys = createSelector(
+  selectAnnotationTypes,
+  (types) => map(types, 'type'),
 );

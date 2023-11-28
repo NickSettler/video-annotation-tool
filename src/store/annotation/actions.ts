@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
-import { TAnnotation } from './types';
+import { TAnnotation, TAnnotationSelection, TAnnotationType } from './types';
 import { DeepPartial, OmitByValue } from 'utility-types';
 
 export const moduleName = 'annotation';
@@ -12,10 +12,14 @@ export enum E_ANNOTATION_ACTIONS {
   ADD_FRAME_ANNOTATION = `${moduleName}/ADD_FRAME_ANNOTATION`,
   UPDATE_POLYGON_COORDINATES = `${moduleName}/UPDATE_POLYGON_COORDINATES`,
   UPDATE_FRAME_POLYGON = `${moduleName}/UPDATE_FRAME_POLYGON`,
+  UPDATE_POLYGON = `${moduleName}/UPDATE_POLYGON`,
 
   TOGGLE_SELECTION_ITEM = `${moduleName}/TOGGLE_SELECTION_ITEM`,
   GROUP_SELECTION = `${moduleName}/GROUP_SELECTION`,
   CLEAR_SELECTION = `${moduleName}/CLEAR_SELECTION`,
+
+  SET_ANNOTATION_TYPES = `${moduleName}/SET_ANNOTATION_TYPES`,
+  ADD_ANNOTATION_TYPE = `${moduleName}/ADD_ANNOTATION_TYPE`,
 }
 
 export const initAnnotationsAction = createAction<{
@@ -54,6 +58,11 @@ export const updateFramePolygonAction = createAction<{
   payload: OmitByValue<DeepPartial<TAnnotation>, undefined>;
 }>(E_ANNOTATION_ACTIONS.UPDATE_FRAME_POLYGON);
 
+export const updatePolygonAction = createAction<{
+  polygonID: string;
+  payload: OmitByValue<DeepPartial<TAnnotation>, undefined>;
+}>(E_ANNOTATION_ACTIONS.UPDATE_POLYGON);
+
 export const toggleSelectionItemAction = createAction<TAnnotationSelection>(
   E_ANNOTATION_ACTIONS.TOGGLE_SELECTION_ITEM,
 );
@@ -65,3 +74,11 @@ export const groupSelectionAction = createAction(
 export const clearSelectionAction = createAction(
   E_ANNOTATION_ACTIONS.CLEAR_SELECTION,
 );
+
+export const setAnnotationTypesAction = createAction<{
+  types: Array<TAnnotationType>;
+}>(E_ANNOTATION_ACTIONS.SET_ANNOTATION_TYPES);
+
+export const addAnnotationTypeAction = createAction<{
+  type: TAnnotationType;
+}>(E_ANNOTATION_ACTIONS.ADD_ANNOTATION_TYPE);
