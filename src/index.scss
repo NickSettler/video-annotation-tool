@@ -1,4 +1,5 @@
 @import 'video.js/dist/video-js.min.css';
+@import "vis-timeline/dist/vis-timeline-graph2d.min.css";
 @import 'src/assets/fonts/include.scss';
 
 body {
@@ -14,4 +15,21 @@ body {
 
 [role="button"] {
   cursor: pointer;
+}
+
+.vis-group > .vis-item {
+  --color: #000;
+
+  &.vis-range {
+    color: #000;
+    border-color: var(--color);
+    background: color-mix(in srgb, var(--color) 50%, transparent);
+  }
+
+  &.vis-point {
+
+    & > .vis-dot {
+      border-color: var(--color);
+    }
+  }
 }

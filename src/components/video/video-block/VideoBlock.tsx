@@ -244,7 +244,7 @@ export const VideoBlock = (): JSX.Element => {
   } = useControls(video, frequency);
 
   return (
-    <Stack spacing={2}>
+    <Stack spacing={2} sx={{ p: 3 }}>
       <Box sx={{ width: '100%', position: 'relative' }}>
         {!isLoaded && <VideoOverlay isLoading={isLoading} />}
         <VideosBox
