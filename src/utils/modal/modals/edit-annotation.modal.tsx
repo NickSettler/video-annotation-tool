@@ -19,7 +19,7 @@ import {
   updatePolygonAction,
 } from '../../../store/annotation';
 import { Path } from '../../types/path.type';
-import { isUndefined, set } from 'lodash';
+import { isUndefined, omit, set } from 'lodash';
 import { deepClone } from '@mui/x-data-grid/utils/utils';
 import { AnnotationTypeSelect } from '../../../components/annotation/annotation-type-select/AnnotationTypeSelect';
 
@@ -137,7 +137,7 @@ const EditAnnotationModal = ({
       dispatch(
         updatePolygonAction({
           polygonID: id,
-          payload: editAnnotation,
+          payload: omit(editAnnotation, ['properties.frame']),
         }),
       );
     }

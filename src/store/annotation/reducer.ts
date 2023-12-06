@@ -14,7 +14,6 @@ import {
   updatePolygonAction,
 } from './actions';
 import {
-  assign,
   constant,
   find,
   flattenDepth,
@@ -83,7 +82,9 @@ export const annotationReducer = createReducer(initialState, (builder) =>
         ...state,
         annotations: state.annotations.map((frameAnnotations) =>
           frameAnnotations.map((polygon) =>
-            polygon.id === polygonID ? assign({}, polygon, payload) : polygon,
+            polygon.id === polygonID
+              ? merge(JSON.parse(JSON.stringify(polygon)), payload)
+              : polygon,
           ),
         ),
       }),
