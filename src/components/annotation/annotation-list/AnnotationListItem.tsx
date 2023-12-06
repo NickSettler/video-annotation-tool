@@ -60,7 +60,6 @@ export const AnnotationListItem = ({
     <ListItem
       key={`${annotation.id}-${annotation.properties.frame}`}
       onClick={handleClick}
-      onDoubleClick={() => console.log('SsSS')}
       {...(rest.isSelectable && { selected: rest.isSelected })}
     >
       <ListItemIcon sx={{ minWidth: 24, height: 24, mr: 1 }}>

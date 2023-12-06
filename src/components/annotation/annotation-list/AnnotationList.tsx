@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from '../../../store/store';
 import {
   selectAnnotationsGrouped,
   selectCurrentFrameAnnotation,
-  selectUngroupedAnnotations,
+  selectAnnotationsUngrouped,
   setAllAnnotationsAction,
   setFrameAnnotationsAction,
   TAnnotation,
@@ -40,7 +40,7 @@ export const AnnotationList = ({
   const groupedAnnotations: Record<string, Array<TAnnotation>> = useAppSelector(
     selectAnnotationsGrouped,
   );
-  const ungroupedAnnotations = useAppSelector(selectUngroupedAnnotations);
+  const ungroupedAnnotations = useAppSelector(selectAnnotationsUngrouped);
   const currentFrameAnnotations = useAppSelector(selectCurrentFrameAnnotation);
 
   const processFrameAnnotations = (

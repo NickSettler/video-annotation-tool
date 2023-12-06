@@ -51,7 +51,7 @@ export const selectAnnotationsGrouped = createSelector(
 export const selectAnnotationsGroupedById = (id: string) =>
   createSelector(selectAnnotationsGrouped, (annotations) => annotations[id]);
 
-export const selectUngroupedAnnotations = createSelector(
+export const selectAnnotationsUngrouped = createSelector(
   selectAllFlattenedAnnotations,
   selectAnnotationsGrouped,
   (annotations, groupedAnnotations) =>
