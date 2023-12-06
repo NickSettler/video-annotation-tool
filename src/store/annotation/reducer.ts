@@ -19,6 +19,7 @@ import {
   find,
   flattenDepth,
   isEqual,
+  merge,
   some,
   times,
   xorWith,
@@ -67,11 +68,11 @@ export const annotationReducer = createReducer(initialState, (builder) =>
         ...state,
         annotations: [
           ...state.annotations.slice(0, frame),
-          state.annotations[frame].map((polygon) => {
-            return polygon.id === polygonID
-              ? assign({}, polygon, payload)
-              : polygon;
-          }),
+          state.annotations[frame].map((polygon) =>
+            polygon.id === polygonID
+              ? merge(JSON.parse(JSON.stringify(polygon)), payload)
+              : polygon,
+          ),
           ...state.annotations.slice(frame + 1),
         ],
       }),

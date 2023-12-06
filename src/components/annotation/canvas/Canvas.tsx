@@ -27,6 +27,7 @@ import {
   copyAnnotation,
   pasteAnnotation,
 } from '../../../utils/annotation/clipboard';
+import toast from 'react-hot-toast';
 
 export const CanvasBox = styled(Box)({
   display: 'flex',
@@ -80,7 +81,13 @@ export const Canvas = (): JSX.Element => {
       }
 
       if (event[getCopyKey()] && code === 'KeyV') {
-        const annotation = await pasteAnnotation();
+        const annotation = await pasteAnnotation().catch((e) => {
+          toast.error(e);
+
+          return null;
+        });
+
+        if (!annotation) return;
 
         dispatch(
           addFrameAnnotationAction({

@@ -203,7 +203,7 @@ export const ExistingAnnotationOverlay = ({
       e.target.position({ x: 0, y: 0 });
 
       setRenderPoints(result);
-      setPoints(renderPoints);
+      setPoints(result);
     }
   };
 

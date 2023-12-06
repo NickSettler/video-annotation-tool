@@ -24,7 +24,7 @@ export const pasteAnnotation = async () =>
     try {
       annotation = JSON.parse(clipboard);
     } catch (e) {
-      reject('Clipboard does not contain a valid annotation');
+      reject('Clipboard does not contain a valid JSON annotation');
     }
 
     if (!annotation) {
