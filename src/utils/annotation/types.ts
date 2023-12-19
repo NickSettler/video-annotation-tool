@@ -1,0 +1,4 @@
+export enum E_ANNOTATION_DISPLAY_TYPE {
+  POINT = 'POINT',
+  RANGE = 'RANGE',
+}
