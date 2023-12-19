@@ -192,7 +192,10 @@ export const Timeline = (): JSX.Element => {
       `Frame: ${videoCurrentTime * videoFPS}`,
       timelineCurrentTimeName,
     );
-    if (window.end.getTime() - time.getTime() < 1000) {
+    if (
+      window.end.getTime() - time.getTime() < 1000 ||
+      window.start.getTime() - time.getTime() > 1000
+    ) {
       timeline.moveTo(time, {
         animation: false,
       });
