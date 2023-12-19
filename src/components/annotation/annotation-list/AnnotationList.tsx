@@ -3,8 +3,8 @@ import { JSX } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import {
   selectAnnotationsGrouped,
-  selectCurrentFrameAnnotation,
   selectAnnotationsUngrouped,
+  selectCurrentFrameAnnotation,
   setAllAnnotationsAction,
   setFrameAnnotationsAction,
   TAnnotation,
@@ -22,6 +22,7 @@ import { FeatureCollection } from 'geojson';
 import { entries, isArray, some } from 'lodash';
 import { AnnotationGroupListItem } from './AnnotationGroupListItem';
 import { AnnotationListItem } from './AnnotationListItem';
+import { E_ANNOTATION_DISPLAY_TYPE } from '../../../utils/annotation/types';
 
 export type TAnnotationListProps = {
   selection: Array<TAnnotationSelection>;
@@ -136,7 +137,7 @@ export const AnnotationList = ({
 
   return (
     <List dense disablePadding>
-      {entries(groupedAnnotations).map(([id, annotations]) => (
+      {entries(groupedAnnotations).map(([id]) => (
         <AnnotationGroupListItem key={`group-${id}`} id={id} />
       ))}
       {!!entries(groupedAnnotations).length &&
@@ -145,6 +146,7 @@ export const AnnotationList = ({
         <AnnotationListItem
           key={`${annotation.id}-${annotation.properties.frame}-${index}`}
           annotation={annotation}
+          type={E_ANNOTATION_DISPLAY_TYPE.POINT}
           isEditable
           isSelectable
           isSelected={some(selection, {

@@ -1,4 +1,4 @@
-import { JSX } from 'react';
+import { JSX, useMemo } from 'react';
 import { TAnnotation } from '../../../store/annotation';
 import {
   IconButton,
@@ -12,11 +12,11 @@ import { useModal } from '../../../hooks/modal/useModal';
 import { E_MODALS } from '../../../store/modals';
 import { setVideoCurrentFrameAction } from '../../../store/video';
 import { useAppDispatch } from '../../../store/store';
+import { E_ANNOTATION_DISPLAY_TYPE } from '../../../utils/annotation/types';
 
 type TAnnotationListItemPropsSelectable =
   | {
       isSelectable: true;
-      isSelected: boolean;
       onSelected(id: string): void;
     }
   | {
@@ -31,9 +31,23 @@ type TAnnotationListItemPropsEditable =
       isEditable?: false;
     };
 
-export type TAnnotationListItemProps = {
-  annotation: TAnnotation;
-} & (TAnnotationListItemPropsEditable & TAnnotationListItemPropsSelectable);
+type TAnnotationListItemPropsRanged =
+  | {
+      type: E_ANNOTATION_DISPLAY_TYPE.POINT;
+    }
+  | {
+      type: E_ANNOTATION_DISPLAY_TYPE.RANGE;
+      startFrame: number;
+      endFrame: number;
+      selectedFrames?: Array<number>;
+    };
+
+export type TAnnotationListItemProps = TAnnotationListItemPropsEditable &
+  TAnnotationListItemPropsRanged &
+  TAnnotationListItemPropsSelectable & {
+    annotation: TAnnotation;
+    isSelected?: boolean;
+  };
 
 export const AnnotationListItem = ({
   annotation,
@@ -44,6 +58,21 @@ export const AnnotationListItem = ({
   );
 
   const dispatch = useAppDispatch();
+
+  const primaryText = useMemo(() => annotation.properties?.name, [annotation]);
+
+  const secondaryText = useMemo(() => {
+    if (rest.type === E_ANNOTATION_DISPLAY_TYPE.POINT)
+      return `Frame: ${annotation.properties.frame}`;
+
+    const selectionText = !!rest.selectedFrames?.length
+      ? `Selected: ${rest.selectedFrames?.join(', ')}`
+      : null;
+
+    return `Frames: ${rest.startFrame} - ${rest.endFrame}${
+      selectionText ? `. ${selectionText}` : ''
+    }`;
+  }, [annotation, rest]);
 
   const handleClick = () => {
     if (rest.isSelectable) rest.onSelected(`${annotation.id}`);
@@ -60,14 +89,14 @@ export const AnnotationListItem = ({
     <ListItem
       key={`${annotation.id}-${annotation.properties.frame}`}
       onClick={handleClick}
-      {...(rest.isSelectable && { selected: rest.isSelected })}
+      selected={rest.isSelected}
     >
       <ListItemIcon sx={{ minWidth: 24, height: 24, mr: 1 }}>
         <Circle sx={{ color: annotation.properties.color }} />
       </ListItemIcon>
       <ListItemText
-        primary={annotation.properties?.name ?? <i>Nso Name</i>}
-        secondary={`Frame: ${annotation.properties.frame}`}
+        primary={primaryText ?? <i>Nso Name</i>}
+        secondary={secondaryText}
       />
       {rest.isEditable && (
         <ListItemSecondaryAction>
