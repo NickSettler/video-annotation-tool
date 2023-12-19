@@ -1,5 +1,5 @@
 import React, { JSX } from 'react';
-import { alpha, Box, Button, ButtonGroup, styled } from '@mui/material';
+import { Box, Button, ButtonGroup, styled } from '@mui/material';
 import {
   FastForward,
   FastRewind,
@@ -12,6 +12,16 @@ import {
 import { useModal } from '../../../hooks/modal/useModal';
 import { E_MODALS } from '../../../store/modals';
 
+const VideoButtonGroup = styled(ButtonGroup)(({ theme }) => ({
+  borderLeft: `1px solid ${theme.palette.divider}`,
+  borderRight: `1px solid ${theme.palette.divider}`,
+  borderRadius: 0,
+
+  '& > .MuiButton-root': {
+    borderColor: theme.palette.divider,
+  },
+}));
+
 const VideoControlButton = styled(Button)(({ theme }) => ({
   '&': {
     height: theme.spacing(4),
@@ -20,10 +30,10 @@ const VideoControlButton = styled(Button)(({ theme }) => ({
   },
 
   '&.Mui-disabled': {
-    borderColor: alpha(theme.palette.primary.main, 0.5),
+    borderColor: theme.palette.divider,
 
     '&.MuiButtonGroup-middleButton': {
-      borderRightColor: 'transparent',
+      borderRightColor: theme.palette.divider,
     },
   },
 
@@ -62,7 +72,7 @@ export const VideoControls = ({
 
   return (
     <Box justifyContent={'center'}>
-      <ButtonGroup size={'small'} variant={'outlined'}>
+      <VideoButtonGroup size={'small'} variant={'text'}>
         <VideoControlButton onClick={onFirstStep}>
           <FastRewind />
         </VideoControlButton>
@@ -82,7 +92,7 @@ export const VideoControls = ({
         <VideoControlButton onClick={handleFrameJumpClick}>
           <Redo />
         </VideoControlButton>
-      </ButtonGroup>
+      </VideoButtonGroup>
     </Box>
   );
 };

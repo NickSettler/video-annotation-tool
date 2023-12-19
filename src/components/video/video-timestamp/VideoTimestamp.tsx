@@ -77,13 +77,16 @@ export const VideoTimestamp = (): JSX.Element => {
   };
 
   return (
-    <Stack onContextMenu={handleRightClick}>
+    <Stack direction={'row'} onContextMenu={handleRightClick}>
       <VideoTimestampText variant={'captionMono'}>
         {currentTimeStampMode === E_VIDEO_TIMESTAMP_MODE.SMPTE ? (
           <>{currentSMPTETimestamp}</>
         ) : (
           <>{currentFrameTimestamp}</>
         )}
+      </VideoTimestampText>
+      <VideoTimestampText variant={'captionMono'}>
+        &nbsp;/&nbsp;
       </VideoTimestampText>
       <VideoTimestampText variant={'captionMono'}>
         {currentTimeStampMode === E_VIDEO_TIMESTAMP_MODE.SMPTE ? (

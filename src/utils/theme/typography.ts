@@ -1,11 +1,10 @@
 import { TypographyOptions } from '@mui/material/styles/createTypography';
 import { Components } from '@mui/material/styles/components';
-import { CSSProperties } from 'react';
 
 export const themeTypography: TypographyOptions = {
   captionMono: {
     fontFamily: 'JetBrains Mono',
-    fontSize: '1rem',
+    fontSize: '1.2rem',
     fontVariant: 'all-small-caps',
   },
 };

@@ -34,6 +34,13 @@ import { Canvas } from '../../annotation/canvas/Canvas';
 import { VideoToolbar } from '../video-toolbar/VideoToolbar';
 import { initAnnotationsAction } from '../../../store/annotation';
 
+const VideoContainer = styled(Box)(({ theme }) => ({
+  boxSizing: 'border-box',
+  width: '100%',
+  position: 'relative',
+  padding: theme.spacing(0, 3),
+}));
+
 const VideosBox = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'orientation' && prop !== 'aspect',
 })<{ orientation?: TOrientation; aspect?: string }>(
@@ -244,8 +251,8 @@ export const VideoBlock = (): JSX.Element => {
   } = useControls(video, frequency);
 
   return (
-    <Stack spacing={2} sx={{ p: 3 }}>
-      <Box sx={{ width: '100%', position: 'relative' }}>
+    <Stack spacing={2} sx={{ pt: 3 }}>
+      <VideoContainer>
         {!isLoaded && <VideoOverlay isLoading={isLoading} />}
         <VideosBox
           orientation={orientation}
@@ -259,7 +266,7 @@ export const VideoBlock = (): JSX.Element => {
             <Canvas />
           </CanvasBox>
         )}
-      </Box>
+      </VideoContainer>
       <VideoToolbar
         isPlaying={isPlaying}
         onFirstStep={handleFirstStep}
