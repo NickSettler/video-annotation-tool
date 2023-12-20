@@ -8,12 +8,8 @@ import {
   videoFPSSelector,
   videoTotalFramesSelector,
 } from '../../../store/video';
-import { useLocalStorage } from 'usehooks-ts';
-import { E_LOCAL_STORAGE_KEYS } from '../../../utils/local-storage';
-import {
-  E_VIDEO_TIMESTAMP_MODE,
-  defaultUserSettings,
-} from '../../../utils/settings';
+import { E_VIDEO_TIMESTAMP_MODE } from '../../../utils/settings';
+import { useUserSettings } from '../../../hooks/settings/useUserSettings';
 
 const VideoTimestampText = styled(Typography)({
   lineHeight: '70%',
@@ -26,15 +22,7 @@ export const VideoTimestamp = (): JSX.Element => {
   const currentFrame = useAppSelector(videoCurrentFrameSelector);
   const totalFrames = useAppSelector(videoTotalFramesSelector);
 
-  const [userSettings, setUserSettings] = useLocalStorage(
-    E_LOCAL_STORAGE_KEYS.SETTINGS,
-    defaultUserSettings,
-  );
-
-  const currentTimeStampMode = useMemo(
-    () => userSettings.timestampMode,
-    [userSettings],
-  );
+  const { timestampMode, setTimestampMode } = useUserSettings();
 
   const maxDigits = useMemo(() => {
     return totalFrames.toString().length;
@@ -66,20 +54,17 @@ export const VideoTimestamp = (): JSX.Element => {
     e.preventDefault();
 
     const newMode =
-      currentTimeStampMode === E_VIDEO_TIMESTAMP_MODE.FRAME
+      timestampMode === E_VIDEO_TIMESTAMP_MODE.FRAME
         ? E_VIDEO_TIMESTAMP_MODE.SMPTE
         : E_VIDEO_TIMESTAMP_MODE.FRAME;
 
-    setUserSettings((prev) => ({
-      ...prev,
-      timestampMode: newMode,
-    }));
+    setTimestampMode(newMode);
   };
 
   return (
     <Stack direction={'row'} onContextMenu={handleRightClick}>
       <VideoTimestampText variant={'captionMono'}>
-        {currentTimeStampMode === E_VIDEO_TIMESTAMP_MODE.SMPTE ? (
+        {timestampMode === E_VIDEO_TIMESTAMP_MODE.SMPTE ? (
           <>{currentSMPTETimestamp}</>
         ) : (
           <>{currentFrameTimestamp}</>
@@ -89,7 +74,7 @@ export const VideoTimestamp = (): JSX.Element => {
         &nbsp;/&nbsp;
       </VideoTimestampText>
       <VideoTimestampText variant={'captionMono'}>
-        {currentTimeStampMode === E_VIDEO_TIMESTAMP_MODE.SMPTE ? (
+        {timestampMode === E_VIDEO_TIMESTAMP_MODE.SMPTE ? (
           <>{endSMPTETimestamp}</>
         ) : (
           <>{frameTimestamp}</>
