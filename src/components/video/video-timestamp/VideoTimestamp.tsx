@@ -12,7 +12,7 @@ import { E_VIDEO_TIMESTAMP_MODE } from '../../../utils/settings';
 import { useUserSettings } from '../../../hooks/settings/useUserSettings';
 
 const VideoTimestampText = styled(Typography)({
-  lineHeight: '70%',
+  lineHeight: '100%',
 });
 
 export const VideoTimestamp = (): JSX.Element => {
@@ -62,7 +62,12 @@ export const VideoTimestamp = (): JSX.Element => {
   };
 
   return (
-    <Stack direction={'row'} onContextMenu={handleRightClick}>
+    <Stack
+      direction={'row'}
+      onContextMenu={handleRightClick}
+      sx={{ height: '100%' }}
+      alignItems={'center'}
+    >
       <VideoTimestampText variant={'captionMono'}>
         {timestampMode === E_VIDEO_TIMESTAMP_MODE.SMPTE ? (
           <>{currentSMPTETimestamp}</>

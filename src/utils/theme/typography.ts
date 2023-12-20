@@ -4,8 +4,7 @@ import { Components } from '@mui/material/styles/components';
 export const themeTypography: TypographyOptions = {
   captionMono: {
     fontFamily: 'JetBrains Mono',
-    fontSize: '1.2rem',
-    fontVariant: 'all-small-caps',
+    fontSize: '0.9rem',
   },
 };
 
