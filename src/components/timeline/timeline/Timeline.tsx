@@ -20,10 +20,14 @@ import {
 import {
   timelineAfterInit,
   timelineCurrentTimeName,
+  timelineLabelsFormat,
+  timelineMinorLabelsFormat,
   timelineOptions,
 } from '../../../utils/timeline/options';
 import { useTimelineHandlers } from '../../../hooks/timeline/useTimelineHandlers';
 import { entries, flattenDepth, map, maxBy, minBy, reduce } from 'lodash';
+import { useUserSettings } from '../../../hooks/settings/useUserSettings';
+import { E_TIMELINE_LABELS_FORMAT } from '../../../utils/settings';
 
 const TimelineStyledBox = styled(Box)(({ theme }) => ({
   flexGrow: 1,
@@ -56,6 +60,9 @@ export const Timeline = (): JSX.Element => {
   const ungroupedAnnotations = useAppSelector(selectAnnotationsUngrouped);
 
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const { timelineLabelsFormat: settingsTimelineLabelsFormat } =
+    useUserSettings();
 
   const [timeline, setTimeline] = useState<VISTimeline | null>(null);
 
@@ -209,6 +216,21 @@ export const Timeline = (): JSX.Element => {
       max: new Date(videoDuration * 1000),
     });
   }, [timeline, videoDuration]);
+
+  useEffect(() => {
+    if (!timeline || !videoFPS) return;
+
+    console.log('here');
+
+    timeline.setOptions({
+      format: {
+        minorLabels:
+          settingsTimelineLabelsFormat === E_TIMELINE_LABELS_FORMAT.TIME
+            ? timelineLabelsFormat
+            : timelineMinorLabelsFormat(videoFPS),
+      },
+    });
+  }, [timeline, timelineItems, settingsTimelineLabelsFormat, videoFPS]);
 
   useEffect(() => {
     if (!timeline) return;

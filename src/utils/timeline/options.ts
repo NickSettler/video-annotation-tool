@@ -1,6 +1,26 @@
-import { Timeline, TimelineOptions } from 'vis-timeline';
+import {
+  Timeline,
+  TimelineFormatLabelsOption,
+  TimelineOptions,
+} from 'vis-timeline';
+import moment from 'moment/moment';
 
 export const timelineCurrentTimeName = 'currentTime';
+
+export const timelineLabelsFormat: Record<
+  keyof TimelineFormatLabelsOption,
+  string
+> = {
+  millisecond: 'mm:ss.SSS',
+  second: 'mm:ss',
+  minute: 'HH:mm',
+  hour: 'HH:mm',
+  weekday: 'HH:mm',
+  day: 'HH:mm',
+  week: 'HH:mm',
+  month: 'HH:mm',
+  year: 'HH:mm',
+};
 
 export const timelineOptions: TimelineOptions = {
   align: 'auto',
@@ -16,19 +36,27 @@ export const timelineOptions: TimelineOptions = {
   snap: null,
   stack: false,
   format: {
-    minorLabels: {
-      millisecond: 'mm:ss.SSS',
-      second: 'mm:ss',
-      minute: 'HH:mm',
-      hour: 'HH:mm',
-      weekday: 'HH:mm',
-      day: 'HH:mm',
-      week: 'HH:mm',
-      month: 'HH:mm',
-      year: 'HH:mm',
-    },
+    minorLabels: timelineLabelsFormat,
   },
 };
+
+export const timelineMinorLabelsFormat =
+  (fps: number) =>
+  (date: Date, scale: string): string => {
+    const momentTime = moment(date);
+
+    if (scale !== 'millisecond')
+      return momentTime.format(
+        timelineLabelsFormat[scale as keyof TimelineFormatLabelsOption],
+      );
+
+    const frequency = 1000 / fps;
+    const timeFromStart = momentTime.diff(moment(new Date(0)), 'milliseconds');
+
+    const frameNumber = Math.floor(timeFromStart / frequency);
+
+    return `${frameNumber}`;
+  };
 
 export const timelineAfterInit = (timeline: Timeline) => {
   timeline.addCustomTime(new Date(0), timelineCurrentTimeName);

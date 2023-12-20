@@ -9,14 +9,24 @@ import {
 } from 'react';
 import { BaseModal, TCommonModalProps } from '../base-modal';
 import { E_MODALS, TDynModalMeta } from '../../../store/modals';
-import { Box, Button, FormGroup, Stack, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import {
   selectAnnotationTypes,
   setAnnotationTypesAction,
   TAnnotationType,
 } from '../../../store/annotation';
-import { unionBy } from 'lodash';
+import { startCase, unionBy, values } from 'lodash';
 import { Circle } from '@mui/icons-material';
 import {
   DataGrid,
@@ -24,6 +34,8 @@ import {
   GridRenderEditCellParams,
   useGridApiContext,
 } from '@mui/x-data-grid';
+import { useUserSettings } from '../../../hooks/settings/useUserSettings';
+import { E_TIMELINE_LABELS_FORMAT } from '../../settings';
 
 const ColorEditComponent = (props: GridRenderEditCellParams) => {
   const { id, value, field } = props;
@@ -61,6 +73,8 @@ const ProjectSettingsModal = ({
   const dispatch = useAppDispatch();
   const colorsMap = useAppSelector(selectAnnotationTypes);
 
+  const { timelineLabelsFormat, setTimelineLabelsFormat } = useUserSettings();
+
   const [rows, setRows] = useState<Array<TAnnotationType>>([]);
 
   useEffect(() => {
@@ -86,6 +100,12 @@ const ProjectSettingsModal = ({
     setRows((prevRows) => unionBy([newRow], prevRows, 'type'));
 
     return newRow;
+  };
+
+  const handleTimelineFormatChange = (
+    event: SelectChangeEvent<E_TIMELINE_LABELS_FORMAT>,
+  ) => {
+    setTimelineLabelsFormat(event.target.value as E_TIMELINE_LABELS_FORMAT);
   };
 
   const columns: Array<GridColDef> = [
@@ -142,10 +162,24 @@ const ProjectSettingsModal = ({
             getRowId={(r) => r.type}
           />
         </Stack>
+        <Stack gap={1}>
+          <Typography variant={'h6'}>Timeline</Typography>
+          <FormControl>
+            <InputLabel>Format</InputLabel>
+            <Select
+              label={'Format'}
+              value={timelineLabelsFormat}
+              onChange={handleTimelineFormatChange}
+            >
+              {values(E_TIMELINE_LABELS_FORMAT).map((format) => (
+                <MenuItem key={format} value={format}>
+                  {startCase(format)}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Stack>
       </Stack>
-      <FormGroup sx={{ pt: 1, gap: 2 }}>
-        <Stack direction={'column'} gap={2}></Stack>
-      </FormGroup>
     </BaseModal>
   );
 };
