@@ -220,8 +220,6 @@ export const Timeline = (): JSX.Element => {
   useEffect(() => {
     if (!timeline || !videoFPS) return;
 
-    console.log('here');
-
     timeline.setOptions({
       format: {
         minorLabels:
