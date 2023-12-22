@@ -1,7 +1,8 @@
 import { ChangeEvent, FormEvent, JSX, useState } from 'react';
 import { BaseModal, TCommonModalProps } from '../base-modal';
 import { E_MODALS, TDynModalMeta } from '../../../store/modals';
-import { Box, Button, FormGroup, Stack, TextField } from '@mui/material';
+import { FormGroup, Stack, TextField } from '@mui/material';
+import { BaseModalFooter } from '../base-modal-footer';
 
 export type TJumpToFrameModalProps = TCommonModalProps &
   TDynModalMeta<E_MODALS.JUMP_TO_FRAME>;
@@ -23,24 +24,20 @@ const JumpToFrameModal = ({
     onClose();
   };
 
-  const footer = (): JSX.Element => (
-    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-      <Button type={'button'} color={'muted'} onClick={onClose}>
-        Cancel
-      </Button>
-      <Button type={'submit'} color={'primary'} onClick={handleApply}>
-        Go
-      </Button>
-    </Box>
-  );
-
   return (
     <BaseModal
       show
       title={'Project settings'}
       onClose={onClose}
       onSubmit={handleApply}
-      footer={footer()}
+      footer={
+        <BaseModalFooter
+          cancelTitle={'Cancel'}
+          onCancel={onClose}
+          applyTitle={'Go'}
+          onApply={handleApply}
+        />
+      }
     >
       <FormGroup sx={{ pt: 1, gap: 2 }}>
         <Stack direction={'column'} gap={2}>

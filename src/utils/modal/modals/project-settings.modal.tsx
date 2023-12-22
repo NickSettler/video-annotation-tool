@@ -10,8 +10,6 @@ import {
 import { BaseModal, TCommonModalProps } from '../base-modal';
 import { E_MODALS, TDynModalMeta } from '../../../store/modals';
 import {
-  Box,
-  Button,
   FormControl,
   InputLabel,
   MenuItem,
@@ -36,6 +34,7 @@ import {
 } from '@mui/x-data-grid';
 import { useUserSettings } from '../../../hooks/settings/useUserSettings';
 import { E_TIMELINE_LABELS_FORMAT } from '../../settings';
+import { BaseModalFooter } from '../base-modal-footer';
 
 const ColorEditComponent = (props: GridRenderEditCellParams) => {
   const { id, value, field } = props;
@@ -132,24 +131,20 @@ const ProjectSettingsModal = ({
     },
   ];
 
-  const footer = (): JSX.Element => (
-    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-      <Button type={'button'} color={'muted'} onClick={onClose}>
-        Cancel
-      </Button>
-      <Button type={'submit'} color={'primary'} onClick={handleApply}>
-        Apply
-      </Button>
-    </Box>
-  );
-
   return (
     <BaseModal
       show
       title={'Project settings'}
       onClose={onClose}
       onSubmit={handleApply}
-      footer={footer()}
+      footer={
+        <BaseModalFooter
+          cancelTitle={'Cancel'}
+          onCancel={onClose}
+          applyTitle={'Go'}
+          onApply={handleApply}
+        />
+      }
     >
       <Stack gap={2}>
         <Stack gap={1}>

@@ -1,7 +1,6 @@
 import { ChangeEvent, JSX, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Box,
-  Button,
   FormGroup,
   Stack,
   styled,
@@ -22,6 +21,7 @@ import { Path } from '../../types/path.type';
 import { isUndefined, omit, set } from 'lodash';
 import { deepClone } from '@mui/x-data-grid/utils/utils';
 import { AnnotationTypeSelect } from '../../../components/annotation/annotation-type-select/AnnotationTypeSelect';
+import { BaseModalFooter } from '../base-modal-footer';
 
 export const EditAnnotationModalColorBox = styled(Typography, {
   shouldForwardProp: (prop) => prop !== 'annotationColor',
@@ -145,24 +145,20 @@ const EditAnnotationModal = ({
     onClose();
   };
 
-  const footer = (): JSX.Element => (
-    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-      <Button type={'button'} color={'muted'} onClick={onClose}>
-        Cancel
-      </Button>
-      <Button type={'submit'} color={'primary'} onClick={handleApply}>
-        Apply
-      </Button>
-    </Box>
-  );
-
   return (
     <BaseModal
       show
       title={modalTitle}
       onClose={onClose}
       onSubmit={handleApply}
-      footer={footer()}
+      footer={
+        <BaseModalFooter
+          cancelTitle={'Cancel'}
+          onCancel={onClose}
+          applyTitle={'Go'}
+          onApply={handleApply}
+        />
+      }
     >
       <FormGroup sx={{ pt: 1, gap: 2 }}>
         color: {editAnnotation.properties.color}
