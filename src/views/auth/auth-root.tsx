@@ -1,13 +1,8 @@
 import '../../assets/styles/animations.scss';
 
-import { JSX, useEffect, useState } from 'react';
+import { JSX } from 'react';
 import { Box, styled } from '@mui/material';
 import { Outlet } from 'react-router-dom';
-import {
-  TransitionGroup,
-  CSSTransition,
-  SwitchTransition,
-} from 'react-transition-group';
 
 const AuthContainer = styled(Box)(({ theme }) => ({
   width: '100%',

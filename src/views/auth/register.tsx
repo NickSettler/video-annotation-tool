@@ -9,15 +9,16 @@ import {
   Stack,
   TextField,
 } from '@mui/material';
-import { useAuthMutations } from '../../../hooks/auth/useAuthMutations';
-import { E_USER_ENTITY_KEYS } from '../../../api/user/types';
-import { Link } from '../../../utils/router/link';
-import { routesPaths } from '../../../utils/router';
+import { useAuthMutations } from '../../hooks/auth/useAuthMutations';
+import { E_USER_ENTITY_KEYS } from '../../api/user/types';
+import { Link } from '../../utils/router/link';
+import { routesPaths } from '../../utils/router';
 
-export const LoginPage = (): JSX.Element => {
-  const { loginMutation } = useAuthMutations();
+export const RegisterPage = (): JSX.Element => {
+  const { registerMutation } = useAuthMutations();
 
   const [data, setData] = useState({
+    [E_USER_ENTITY_KEYS.EMAIL]: '',
     [E_USER_ENTITY_KEYS.USERNAME]: '',
     [E_USER_ENTITY_KEYS.PASSWORD]: '',
   });
@@ -31,7 +32,7 @@ export const LoginPage = (): JSX.Element => {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
-    loginMutation.mutate(data);
+    registerMutation.mutate(data);
   };
 
   return (
@@ -42,12 +43,18 @@ export const LoginPage = (): JSX.Element => {
       onChange={handleChange}
       onSubmit={handleSubmit}
     >
-      <CardHeader title={'Login'} />
+      <CardHeader title={'Register'} />
       <CardContent>
         <Stack spacing={2}>
           <TextField
+            value={data[E_USER_ENTITY_KEYS.EMAIL]}
+            label={'E-Mail'}
+            name={E_USER_ENTITY_KEYS.EMAIL}
+            autoComplete={'email'}
+          />
+          <TextField
             value={data[E_USER_ENTITY_KEYS.USERNAME]}
-            label={'Username or E-Mail'}
+            label={'Username'}
             name={E_USER_ENTITY_KEYS.USERNAME}
             autoComplete={'username'}
           />
@@ -56,7 +63,7 @@ export const LoginPage = (): JSX.Element => {
             value={data[E_USER_ENTITY_KEYS.PASSWORD]}
             label={'Password'}
             name={E_USER_ENTITY_KEYS.PASSWORD}
-            autoComplete={'current-password'}
+            autoComplete={'new-password'}
           />
         </Stack>
       </CardContent>
@@ -64,16 +71,15 @@ export const LoginPage = (): JSX.Element => {
         <Button
           variant={'text'}
           color={'primary'}
-          type={'submit'}
           component={Link}
-          to={[routesPaths.auth.root, routesPaths.auth.register].join('/')}
+          to={[routesPaths.auth.root, routesPaths.auth.login].join('/')}
           unstable_viewTransition
         >
-          Register
+          Login
         </Button>
         <Box sx={{ flexGrow: 1 }} />
         <Button variant={'text'} color={'primary'} type={'submit'}>
-          Login
+          Register
         </Button>
       </CardActions>
     </Card>
