@@ -26,4 +26,6 @@ export type TAnnotationState = {
   types: Array<TAnnotationType>;
   selection: Array<TAnnotationSelection>;
   typeFilter: string | null;
+  startFrameFilter: number | null;
+  endFrameFilter: number | null;
 };

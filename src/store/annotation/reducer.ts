@@ -9,7 +9,9 @@ import {
   setAllAnnotationsAction,
   setAnnotationTypeFilterAction,
   setAnnotationTypesAction,
+  setEndFrameFilterAction,
   setFrameAnnotationsAction,
+  setStartFrameFilterAction,
   toggleSelectionItemAction,
   updateFramePolygonAction,
   updatePolygonAction,
@@ -31,6 +33,8 @@ const initialState: TAnnotationState = {
   selection: [],
   types: [],
   typeFilter: null,
+  startFrameFilter: null,
+  endFrameFilter: null,
 };
 
 export const annotationReducer = createReducer(initialState, (builder) =>
@@ -164,5 +168,13 @@ export const annotationReducer = createReducer(initialState, (builder) =>
     .addCase(setAnnotationTypeFilterAction, (state, { payload: { type } }) => ({
       ...state,
       typeFilter: type,
+    }))
+    .addCase(setStartFrameFilterAction, (state, { payload: { frame } }) => ({
+      ...state,
+      startFrameFilter: frame,
+    }))
+    .addCase(setEndFrameFilterAction, (state, { payload: { frame } }) => ({
+      ...state,
+      endFrameFilter: frame,
     })),
 );

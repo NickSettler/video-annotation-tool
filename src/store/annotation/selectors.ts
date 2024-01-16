@@ -24,19 +24,36 @@ export const selectAnnotationTypeFilter = createSelector(
   ({ typeFilter }) => typeFilter,
 );
 
+export const selectAnnotationStartFrameFilter = createSelector(
+  annotationState,
+  ({ startFrameFilter }) => startFrameFilter,
+);
+
+export const selectAnnotationEndFrameFilter = createSelector(
+  annotationState,
+  ({ endFrameFilter }) => endFrameFilter,
+);
+
 export const selectIsAnnotationsFiltered = createSelector(
   selectAnnotationTypeFilter,
-  (typeFilter) => !!typeFilter,
+  selectAnnotationStartFrameFilter,
+  selectAnnotationEndFrameFilter,
+  (typeFilter, startFrameFilter, endFrameFilter) =>
+    typeFilter !== null || startFrameFilter !== null || endFrameFilter !== null,
 );
 
 export const selectAllAnnotations = createSelector(
   annotationState,
   selectIsAnnotationsFiltered,
   selectAnnotationTypeFilter,
-  (annotation, isFiltered, typeFilter) =>
+  selectAnnotationStartFrameFilter,
+  selectAnnotationEndFrameFilter,
+  (annotation, isFiltered, typeFilter, startFrame, endFrame) =>
     isFiltered
       ? filterAnnotations(annotation.annotations, {
           type: typeFilter,
+          from: startFrame,
+          to: endFrame,
         })
       : annotation.annotations,
 );

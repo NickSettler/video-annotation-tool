@@ -22,6 +22,8 @@ export enum E_ANNOTATION_ACTIONS {
   ADD_ANNOTATION_TYPE = `${moduleName}/ADD_ANNOTATION_TYPE`,
 
   SET_ANNOTATION_TYPE_FILTER = `${moduleName}/SET_ANNOTATION_TYPE_FILTER`,
+  SET_START_FRAME_FILTER = `${moduleName}/SET_START_FRAME_FILTER`,
+  SET_END_FRAME_FILTER = `${moduleName}/SET_END_FRAME_FILTER`,
 }
 
 export const initAnnotationsAction = createAction<{
@@ -88,3 +90,11 @@ export const addAnnotationTypeAction = createAction<{
 export const setAnnotationTypeFilterAction = createAction<{
   type: string | null;
 }>(E_ANNOTATION_ACTIONS.SET_ANNOTATION_TYPE_FILTER);
+
+export const setStartFrameFilterAction = createAction<{
+  frame: number | null;
+}>(E_ANNOTATION_ACTIONS.SET_START_FRAME_FILTER);
+
+export const setEndFrameFilterAction = createAction<{
+  frame: number | null;
+}>(E_ANNOTATION_ACTIONS.SET_END_FRAME_FILTER);
