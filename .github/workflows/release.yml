@@ -6,12 +6,40 @@ on:
       - published
 
 env:
+  GENERATE_SOURCEMAP: true
   REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
 
 jobs:
+  sentry_release:
+    name: Sentry release
+    runs-on: ubuntu-latest
+    env:
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+      SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+      SENTRY_DEPLOY_ENVIRONMENT: ${{ secrets.SENTRY_DEPLOY_ENVIRONMENT }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1.0.0
+      - name: Create release
+        run: |
+          # Install Sentry CLI
+          curl -sL https://sentry.io/get-cli/ | bash
+          
+          # Create release
+          sentry-cli releases new "${{ github.event.release.tag_name }}"
+          sentry-cli releases set-commits --auto "${{ github.event.release.tag_name }}"
+          sentry-cli releases finalize "${{ github.event.release.tag_name }}"
+          
+          # Create deploy
+          sentry-cli releases deploys "${{ github.event.release.tag_name }}" new -e $SENTRY_DEPLOY_ENVIRONMENT
+
   build:
     name: Build
     runs-on: self-hosted
+    needs: sentry_release
+    env:
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2

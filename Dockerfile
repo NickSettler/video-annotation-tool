@@ -10,7 +10,7 @@ RUN yarn install --freeze-lockfile --network-timeout 3600000
 
 COPY . .
 
-RUN yarn build
+RUN yarn build:prod
 
 FROM nginx:1.18-alpine
 
