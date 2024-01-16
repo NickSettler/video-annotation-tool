@@ -25,4 +25,5 @@ export type TAnnotationState = {
   annotations: Array<Array<TAnnotation>>;
   types: Array<TAnnotationType>;
   selection: Array<TAnnotationSelection>;
+  typeFilter: string | null;
 };

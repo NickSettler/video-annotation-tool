@@ -7,6 +7,7 @@ import {
   groupSelectionAction,
   initAnnotationsAction,
   setAllAnnotationsAction,
+  setAnnotationTypeFilterAction,
   setAnnotationTypesAction,
   setFrameAnnotationsAction,
   toggleSelectionItemAction,
@@ -29,6 +30,7 @@ const initialState: TAnnotationState = {
   annotations: [],
   selection: [],
   types: [],
+  typeFilter: null,
 };
 
 export const annotationReducer = createReducer(initialState, (builder) =>
@@ -158,5 +160,9 @@ export const annotationReducer = createReducer(initialState, (builder) =>
     .addCase(addAnnotationTypeAction, (state, { payload: { type } }) => ({
       ...state,
       types: [...state.types, type],
+    }))
+    .addCase(setAnnotationTypeFilterAction, (state, { payload: { type } }) => ({
+      ...state,
+      typeFilter: type,
     })),
 );

@@ -14,13 +14,31 @@ import {
   uniqBy,
 } from 'lodash';
 import { isAnnotationSelectionGroupable } from '../../utils/annotation/group';
+import { filterAnnotations } from '../../utils/annotation/filter';
 
 const annotationState = (state: TAppState): TAnnotationState =>
   state[moduleName];
 
+export const selectAnnotationTypeFilter = createSelector(
+  annotationState,
+  ({ typeFilter }) => typeFilter,
+);
+
+export const selectIsAnnotationsFiltered = createSelector(
+  selectAnnotationTypeFilter,
+  (typeFilter) => !!typeFilter,
+);
+
 export const selectAllAnnotations = createSelector(
   annotationState,
-  (annotation) => annotation.annotations,
+  selectIsAnnotationsFiltered,
+  selectAnnotationTypeFilter,
+  (annotation, isFiltered, typeFilter) =>
+    isFiltered
+      ? filterAnnotations(annotation.annotations, {
+          type: typeFilter,
+        })
+      : annotation.annotations,
 );
 
 export const selectAllFlattenedAnnotations = createSelector(

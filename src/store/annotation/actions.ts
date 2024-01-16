@@ -20,6 +20,8 @@ export enum E_ANNOTATION_ACTIONS {
 
   SET_ANNOTATION_TYPES = `${moduleName}/SET_ANNOTATION_TYPES`,
   ADD_ANNOTATION_TYPE = `${moduleName}/ADD_ANNOTATION_TYPE`,
+
+  SET_ANNOTATION_TYPE_FILTER = `${moduleName}/SET_ANNOTATION_TYPE_FILTER`,
 }
 
 export const initAnnotationsAction = createAction<{
@@ -82,3 +84,7 @@ export const setAnnotationTypesAction = createAction<{
 export const addAnnotationTypeAction = createAction<{
   type: TAnnotationType;
 }>(E_ANNOTATION_ACTIONS.ADD_ANNOTATION_TYPE);
+
+export const setAnnotationTypeFilterAction = createAction<{
+  type: string | null;
+}>(E_ANNOTATION_ACTIONS.SET_ANNOTATION_TYPE_FILTER);
