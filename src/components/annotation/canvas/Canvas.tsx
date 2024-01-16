@@ -3,6 +3,7 @@ import { Box, styled } from '@mui/material';
 import { Layer, Stage } from 'react-konva';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import {
+  setVideoCurrentFrameAction,
   videoCurrentFrameSelector,
   videoViewportHeightSelector,
   videoViewportWidthSelector,
@@ -73,6 +74,14 @@ export const Canvas = (): JSX.Element => {
         setPosition([0, 0]);
         setIsPolyComplete(false);
         setPoints([]);
+      }
+
+      if (code === 'ArrowLeft') {
+        dispatch(setVideoCurrentFrameAction(currentFrame - 1));
+      }
+
+      if (code === 'ArrowRight') {
+        dispatch(setVideoCurrentFrameAction(currentFrame + 1));
       }
 
       if (event[getCopyKey()] && code === 'KeyC') {
