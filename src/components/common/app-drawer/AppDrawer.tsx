@@ -1,9 +1,12 @@
-import { JSX, useMemo } from 'react';
+import { JSX, useMemo, useState } from 'react';
 import {
   Box,
   Button,
   ButtonGroup,
+  Collapse,
   Drawer,
+  Fade,
+  IconButton,
   Stack,
   Toolbar,
   Typography,
@@ -17,18 +20,23 @@ import {
   selectAnnotationsSelection,
   selectIsAnnotationSelectionGroupable,
   selectIsAnnotationSelectionInterpolatable,
+  selectIsAnnotationsFiltered,
   selectSelectionAnnotations,
   TAnnotationSelection,
   toggleSelectionItemAction,
 } from '../../../store/annotation';
 import { forEach } from 'lodash';
 import { interpolatePolygons } from '../../../utils/polygons/interpolation';
+import { Close, ExpandLess, FilterAlt } from '@mui/icons-material';
+import { AnnotationFilters } from '../../annotation/annotation-filters/AnnotationFilters';
+import { AnnotationFiltersOverview } from '../../annotation/annotation-filters/AnnotationFiltersOverview';
 
 const drawerWidth = '40%';
 
 export const AppDrawer = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
+  const isAnnotationsFiltered = useAppSelector(selectIsAnnotationsFiltered);
   const annotationSelection = useAppSelector(selectAnnotationsSelection);
   const annotationsSelection = useAppSelector(selectSelectionAnnotations);
   const isGroupable = useAppSelector(selectIsAnnotationSelectionGroupable);
@@ -36,10 +44,20 @@ export const AppDrawer = (): JSX.Element => {
     selectIsAnnotationSelectionInterpolatable,
   );
 
+  const [isFiltersVisible, setIsFiltersVisible] = useState(false);
+
   const someButtonVisible = useMemo(
     () => isGroupable || isInterpolatable,
     [isGroupable, isInterpolatable],
   );
+
+  const handleFilterToggle = () => {
+    setIsFiltersVisible((prev) => !prev);
+  };
+
+  const handleFilterClose = () => {
+    setIsFiltersVisible(false);
+  };
 
   const handleSelectionChange = (selection: TAnnotationSelection) => {
     dispatch(toggleSelectionItemAction(selection));
@@ -110,6 +128,34 @@ export const AppDrawer = (): JSX.Element => {
     >
       <Toolbar />
       <Box sx={{ overflow: 'auto', py: 2 }}>
+        <Collapse in={isAnnotationsFiltered || isFiltersVisible}>
+          <Stack direction={'column'} sx={{ px: 2, mb: 3 }}>
+            <Stack
+              direction={'row'}
+              alignItems={'center'}
+              justifyContent={'space-between'}
+              spacing={2}
+              sx={{ mb: 2 }}
+            >
+              <Typography variant={'h6'}>Filters</Typography>
+              {isFiltersVisible ? (
+                <IconButton size={'small'} onClick={handleFilterClose}>
+                  {isAnnotationsFiltered ? <ExpandLess /> : <Close />}
+                </IconButton>
+              ) : (
+                <IconButton size={'small'} onClick={handleFilterToggle}>
+                  <FilterAlt />
+                </IconButton>
+              )}
+            </Stack>
+            <Collapse in={!isFiltersVisible}>
+              <AnnotationFiltersOverview />
+            </Collapse>
+            <Collapse in={isFiltersVisible}>
+              <AnnotationFilters />
+            </Collapse>
+          </Stack>
+        </Collapse>
         <Stack
           direction={'row'}
           alignItems={'center'}
@@ -126,6 +172,11 @@ export const AppDrawer = (): JSX.Element => {
               )}
             </ButtonGroup>
           )}
+          <Fade in={!isAnnotationsFiltered && !isFiltersVisible}>
+            <IconButton size={'small'} onClick={handleFilterToggle}>
+              <FilterAlt />
+            </IconButton>
+          </Fade>
         </Stack>
         <AnnotationList
           selection={annotationSelection}
