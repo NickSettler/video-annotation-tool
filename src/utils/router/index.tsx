@@ -1,7 +1,7 @@
-import { createBrowserRouter, Navigate, RouteObject } from 'react-router-dom';
+import { Navigate, RouteObject } from 'react-router-dom';
 import { LoginPage } from '../../views/auth/login';
 import App from '../../App';
-import { AuthRootPage } from '../../views/auth';
+import { AuthRootPage } from '../../views/auth/auth-root';
 import { StudioPage } from '../../views/studio';
 import { NotFoundPage } from '../../views/error/404';
 import { ProtectedRoute } from './protected-route';
