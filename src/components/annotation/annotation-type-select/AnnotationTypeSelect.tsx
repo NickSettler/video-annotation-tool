@@ -14,7 +14,7 @@ import {
   TAnnotationType,
 } from '../../../store/annotation';
 import { find } from 'lodash';
-import { Circle } from '@mui/icons-material';
+import { AnnotationTypeListItem } from '../annotation-type-list-item/AnnotationTypeListItem';
 
 export type TAnnotationTypeSelectProps = {
   value: string | null;
@@ -99,13 +99,7 @@ export const AnnotationTypeSelect = ({
           {...params}
           {...(option.color === '$NEW$' && { sx: { color: 'gray' } })}
         >
-          <Circle
-            sx={{
-              color: option.color === '$NEW$' ? 'transparent' : option.color,
-              mr: 1,
-            }}
-          />
-          {option.type}
+          <AnnotationTypeListItem annotation={option} />
         </MenuItem>
       )}
       renderInput={(params) => <TextField {...params} label={'Type'} />}
