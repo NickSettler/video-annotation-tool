@@ -1,5 +1,8 @@
 FROM node:18-alpine AS build
 
+ARG SENTRY_AUTH_TOKEN
+ENV SENTRY_AUTH_TOKEN ${SENTRY_AUTH_TOKEN}
+
 WORKDIR /build
 
 COPY package.json .

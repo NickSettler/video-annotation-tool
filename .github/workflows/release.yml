@@ -8,13 +8,13 @@ on:
 env:
   GENERATE_SOURCEMAP: true
   REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
 jobs:
   sentry_release:
     name: Sentry release
     runs-on: ubuntu-latest
     env:
-      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
       SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
       SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
       SENTRY_DEPLOY_ENVIRONMENT: ${{ secrets.SENTRY_DEPLOY_ENVIRONMENT }}
@@ -38,8 +38,6 @@ jobs:
     name: Build
     runs-on: self-hosted
     needs: sentry_release
-    env:
-      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -56,3 +54,5 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: nicksettler/itt-frontend:${{ github.event.release.tag_name }}
+          build-args: |
+            "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}"
