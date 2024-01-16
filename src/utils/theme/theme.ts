@@ -1,10 +1,9 @@
 import { createTheme } from '@mui/material';
 import { grey } from '@mui/material/colors';
-// import { CSSProperties } from "@mui/material/styles/createTypography";
-import { CSSProperties } from 'react';
 import { themeTypography, themeTypographyComponent } from './typography';
+import { overrideComponents } from './components';
 
-export const theme = createTheme({
+const theme = createTheme({
   typography: {
     ...themeTypography,
   },
@@ -22,3 +21,9 @@ export const theme = createTheme({
     },
   },
 });
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+theme.components = overrideComponents(theme);
+
+export { theme };

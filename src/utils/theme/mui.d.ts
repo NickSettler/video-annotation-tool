@@ -3,6 +3,13 @@ import '@mui/material/styles';
 import '@mui/material/Button';
 import '@mui/material/Typography';
 import { CSSProperties } from 'react';
+import { Theme as SystemTheme } from '@mui/system/createTheme/createTheme';
+import { Mixins } from '@mui/material/styles/createMixins';
+import { Palette } from '@mui/material/styles/createPalette';
+import { Shadows } from '@mui/material/styles/shadows';
+import { Transitions } from '@mui/material/styles/createTransitions';
+import { Typography } from '@mui/material/styles/createTypography';
+import { ZIndex } from '@mui/material/styles/zIndex';
 
 declare module '@mui/material/styles' {
   // eslint-disable-next-line @typescript-eslint/naming-convention,@typescript-eslint/consistent-type-definitions
@@ -57,4 +64,22 @@ declare module '@mui/material/Typography' {
   interface TypographyPropsVariantOverrides {
     captionMono: true;
   }
+}
+
+declare module '@mui/material/Chip' {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions,@typescript-eslint/naming-convention
+  interface ChipPropsVariantOverrides {
+    soft: true;
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions,@typescript-eslint/naming-convention
+export interface BaseTheme extends SystemTheme {
+  mixins: Mixins;
+  palette: Palette;
+  shadows: Shadows;
+  transitions: Transitions;
+  typography: Typography;
+  zIndex: ZIndex;
+  unstable_strictMode?: boolean;
 }
