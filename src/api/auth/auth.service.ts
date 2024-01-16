@@ -29,7 +29,7 @@ export class AuthService extends BaseService {
       TAuthLoginResponse
     >(`${this.endpoint}/sign-in`, {
       [E_USER_ENTITY_KEYS.USERNAME]: usernameOrEmail,
-      password,
+      [E_USER_ENTITY_KEYS.PASSWORD]: password,
     });
   }
 
@@ -42,9 +42,9 @@ export class AuthService extends BaseService {
       TAuthRegisterMutationVariables,
       TAuthLoginResponse
     >(`${this.endpoint}/sign-up`, {
-      [E_USER_ENTITY_KEYS.EMAIL]: username,
+      [E_USER_ENTITY_KEYS.EMAIL]: email,
       [E_USER_ENTITY_KEYS.USERNAME]: username,
-      password,
+      [E_USER_ENTITY_KEYS.PASSWORD]: password,
     });
   }
 }
