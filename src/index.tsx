@@ -18,10 +18,12 @@ import { routes } from './utils/router';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { client } from './utils/react-query/client';
 import * as Sentry from '@sentry/react';
+import pkg from '../package.json';
 
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_DSN,
   environment: process.env.NODE_ENV,
+  release: `${pkg.version}`,
   tracePropagationTargets: [
     'localhost',
     /^https:\/\/api\.video\.settler\.tech/,
