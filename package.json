@@ -61,12 +61,10 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build:test": "react-scripts build",
-    "build:prod": "react-scripts build && yarn sentry:sourcemaps",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.{ts,tsx,js,jsx}\" --fix",
-    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org video-annotator --project video-annotator-frontend ./build && sentry-cli sourcemaps upload --org video-annotator --project video-annotator-frontend ./build"
+    "lint": "eslint \"{src,apps,libs,test}/**/*.{ts,tsx,js,jsx}\" --fix"
   },
   "eslintConfig": {
     "extends": [

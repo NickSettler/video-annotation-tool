@@ -42,7 +42,7 @@ jobs:
         run: yarn install --freeze-lockfile
 
       - name: Build
-        run: yarn build:test
+        run: yarn build
 
       - name: Archive production artifacts
         if: github.event.pull_request.merged == true

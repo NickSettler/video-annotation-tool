@@ -56,3 +56,4 @@ jobs:
           tags: nicksettler/itt-frontend:${{ github.event.release.tag_name }}
           build-args: |
             "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}"
+            "VERSION=${{ github.event.release.tag_name }}"
