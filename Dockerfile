@@ -16,8 +16,8 @@ COPY . .
 
 RUN yarn build
 
-RUN sentry-cli sourcemaps inject --org video-annotator --project video-annotator-frontend -r $VERSION ./build && \
-    sentry-cli sourcemaps upload --org video-annotator --project video-annotator-frontend -r $VERSION ./build
+RUN yarn run sentry-cli sourcemaps inject --org video-annotator --project video-annotator-frontend -r $VERSION ./build && \
+    yarn run sentry-cli sourcemaps upload --org video-annotator --project video-annotator-frontend -r $VERSION ./build
 
 FROM nginx:1.18-alpine
 
