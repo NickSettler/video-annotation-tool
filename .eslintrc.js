@@ -43,7 +43,15 @@ module.exports = {
       },
     ],
     'no-shadow': 'off',
-    'max-len': ['warn', { code: 120, ignoreComments: true, ignoreUrls: true }],
+    'max-len': [
+      'warn',
+      {
+        code: 120,
+        ignoreComments: true,
+        ignoreUrls: true,
+        ignorePattern: '^import\\W.*',
+      },
+    ],
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
     'import/prefer-default-export': 'off',
