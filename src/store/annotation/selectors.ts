@@ -15,6 +15,7 @@ import {
 } from 'lodash';
 import { isAnnotationSelectionGroupable } from '../../utils/annotation/group';
 import { filterAnnotations } from '../../utils/annotation/filter';
+import { E_IMPORT_ANNOTATIONS_FILE_TYPE } from '../../utils/annotation/import';
 
 const annotationState = (state: TAppState): TAnnotationState =>
   state[moduleName];
@@ -160,4 +161,27 @@ export const selectAnnotationTypesKeys = createSelector(
 export const selectExportAnnotations = createSelector(
   annotationState,
   (annotation) => annotation.annotations,
+);
+
+export const selectImportJSON = createSelector(
+  annotationState,
+  (annotation) => annotation.importJSON,
+);
+
+export const selectImportFileMetadata = createSelector(
+  annotationState,
+  (annotation) => annotation.importFileMetadata,
+);
+
+export const selectImportFileType = createSelector(
+  annotationState,
+  (annotation) =>
+    annotation.importFileType
+      ? E_IMPORT_ANNOTATIONS_FILE_TYPE[annotation.importFileType]
+      : null,
+);
+
+export const selectImportFileMap = createSelector(
+  annotationState,
+  (annotation) => annotation.importFileMap,
 );

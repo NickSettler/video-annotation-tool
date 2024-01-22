@@ -6,6 +6,7 @@ export enum E_MODALS {
   PROJECT_SETTINGS = 'project-settings.modal',
   JUMP_TO_FRAME = 'jump-to-frame.modal',
   EDIT_ANNOTATION = 'edit-annotation.modal',
+  IMPORT_ANNOTATIONS = 'import-annotations.modal',
 }
 
 export type TModalMapItem = {
@@ -24,6 +25,9 @@ export type TModalMetaMap = {
   [E_MODALS.EDIT_ANNOTATION]: {
     id: string;
     frame?: number;
+  };
+  [E_MODALS.IMPORT_ANNOTATIONS]: {
+    //
   };
 };
 

@@ -9,9 +9,10 @@ import {
   Stack,
   styled,
   Toolbar,
+  Tooltip,
   Typography,
 } from '@mui/material';
-import { Link, Settings } from '@mui/icons-material';
+import { Link, Settings, Upload } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import {
   setVideoUrlAction,
@@ -79,7 +80,12 @@ export const AppToolbar = (): JSX.Element => {
   const storeUrl = useAppSelector(videoUrlSelector);
   const isVideoLoading = useAppSelector(videoIsLoadingSelector);
 
-  const { onOpen: handleModalOpen } = useModal(E_MODALS.PROJECT_SETTINGS);
+  const { onOpen: handleSettingsModalOpen } = useModal(
+    E_MODALS.PROJECT_SETTINGS,
+  );
+  const { onOpen: handleImportModalOpen } = useModal(
+    E_MODALS.IMPORT_ANNOTATIONS,
+  );
 
   const [url, setUrl] = useState('https://www.fit.vutbr.cz/~iklima/out.mp4');
 
@@ -130,7 +136,12 @@ export const AppToolbar = (): JSX.Element => {
           </Button>
         </Stack>
         <Stack direction={'row'} spacing={1}>
-          <IconButton color={'inherit'} onClick={handleModalOpen}>
+          <Tooltip title={'Import'}>
+            <IconButton color={'inherit'} onClick={handleImportModalOpen}>
+              <Upload />
+            </IconButton>
+          </Tooltip>
+          <IconButton color={'inherit'} onClick={handleSettingsModalOpen}>
             <Settings />
           </IconButton>
         </Stack>

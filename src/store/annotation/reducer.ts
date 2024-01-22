@@ -1,4 +1,4 @@
-import { TAnnotationState } from './types';
+import { TAnnotationState, TAnnotationType } from './types';
 import { createReducer } from '@reduxjs/toolkit';
 import {
   addAnnotationTypeAction,
@@ -6,24 +6,38 @@ import {
   clearSelectionAction,
   groupSelectionAction,
   initAnnotationsAction,
+  populateFromImportAction,
   setAllAnnotationsAction,
   setAnnotationTypeFilterAction,
   setAnnotationTypesAction,
   setEndFrameFilterAction,
   setFrameAnnotationsAction,
+  setImportFileMapAction,
+  setImportFileMetadataAction,
+  setImportFileTypeAction,
+  setImportJSONAction,
   setStartFrameFilterAction,
   toggleSelectionItemAction,
   updateFramePolygonAction,
   updatePolygonAction,
 } from './actions';
 import {
+  assign,
+  chain,
   constant,
+  filter,
   find,
   flattenDepth,
+  fromPairs,
   isEqual,
+  isNull,
+  map,
   merge,
+  omitBy,
   some,
   times,
+  toPairs,
+  uniqBy,
   xorWith,
 } from 'lodash';
 import { isAnnotationSelectionGroupable } from '../../utils/annotation/group';
@@ -35,6 +49,10 @@ const initialState: TAnnotationState = {
   typeFilter: null,
   startFrameFilter: null,
   endFrameFilter: null,
+  importJSON: null,
+  importFileMetadata: null,
+  importFileType: null,
+  importFileMap: {},
 };
 
 export const annotationReducer = createReducer(initialState, (builder) =>
@@ -165,6 +183,7 @@ export const annotationReducer = createReducer(initialState, (builder) =>
       ...state,
       types: [...state.types, type],
     }))
+    // Filters
     .addCase(setAnnotationTypeFilterAction, (state, { payload: { type } }) => ({
       ...state,
       typeFilter: type,
@@ -176,5 +195,49 @@ export const annotationReducer = createReducer(initialState, (builder) =>
     .addCase(setEndFrameFilterAction, (state, { payload: { frame } }) => ({
       ...state,
       endFrameFilter: frame,
-    })),
+    }))
+    // Import
+    .addCase(setImportJSONAction, (state, { payload: importJSON }) => ({
+      ...state,
+      importJSON,
+    }))
+    .addCase(
+      setImportFileMetadataAction,
+      (state, { payload: importFileMetadata }) => ({
+        ...state,
+        importFileMetadata,
+      }),
+    )
+    .addCase(setImportFileTypeAction, (state, { payload: importFileType }) => ({
+      ...state,
+      importFileType,
+    }))
+    .addCase(setImportFileMapAction, (state, { payload: importFileMap }) => ({
+      ...state,
+      importFileMap,
+    }))
+    .addCase(populateFromImportAction, (state, { payload: annotations }) => {
+      const types: Array<TAnnotationType> = uniqBy(
+        filter(
+          map(
+            flattenDepth(annotations, 1),
+            (annotation): TAnnotationType | null =>
+              annotation.properties.type
+                ? {
+                    type: annotation.properties.type,
+                    color: annotation.properties.color,
+                  }
+                : null,
+          ),
+          (type): type is TAnnotationType => !!type,
+        ),
+        'type',
+      );
+
+      return {
+        ...state,
+        annotations,
+        types,
+      };
+    }),
 );

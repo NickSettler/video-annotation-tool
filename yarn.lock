@@ -5615,6 +5615,11 @@ get-tsconfig@^4.5.0:
   dependencies:
     resolve-pkg-maps "^1.0.0"
 
+get-wild@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/get-wild/-/get-wild-3.0.2.tgz#af187f9fa83dce35afd1b8ed87cda142a200bbcb"
+  integrity sha512-3zLEGhy+IJ5dAuC2mAVWyqQxyEsAVKyGI5fkvfO++svL+LzEsJ1GG0MTr33qwpedpmy3AcyPh4UTVlt9yjB5eg==
+
 glob-parent@^5.1.2, glob-parent@~5.1.2:
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/glob-parent/-/glob-parent-5.1.2.tgz#869832c58034fe68a4093c17dc15e8340d8401c4"
