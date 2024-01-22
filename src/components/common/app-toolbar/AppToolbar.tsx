@@ -87,7 +87,7 @@ export const AppToolbar = (): JSX.Element => {
     E_MODALS.IMPORT_ANNOTATIONS,
   );
 
-  const [url, setUrl] = useState('https://www.fit.vutbr.cz/~iklima/out.mp4');
+  const [url, setUrl] = useState('');
 
   useEffect(() => {
     if (storeUrl) setUrl(storeUrl);
