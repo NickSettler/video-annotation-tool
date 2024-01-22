@@ -2310,10 +2310,10 @@
     lz-string "^1.5.0"
     pretty-format "^27.0.2"
 
-"@testing-library/jest-dom@^6.2.0":
-  version "6.2.0"
-  resolved "https://registry.yarnpkg.com/@testing-library/jest-dom/-/jest-dom-6.2.0.tgz#b572bd5cd6b29314487bac7ba393188e4987b4f7"
-  integrity sha512-+BVQlJ9cmEn5RDMUS8c2+TU6giLvzaHZ8sU/x0Jj7fk+6/46wPdwlgOPcpxS17CjcanBi/3VmGMqVr2rmbUmNw==
+"@testing-library/jest-dom@^6.2.1":
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/@testing-library/jest-dom/-/jest-dom-6.2.1.tgz#0beba7515caad06de8733e1dd5a040fe34ad212d"
+  integrity sha512-Nuy/uFFDe9h/2jwoUuMKgoxvgkUv4S9jI9bARj6dGUKJ3euRhg8JFi5sciYbrayoxkadEOZednRT9+vo6LvvxQ==
   dependencies:
     "@adobe/css-tools" "^4.3.2"
     "@babel/runtime" "^7.9.2"
@@ -5614,11 +5614,6 @@ get-tsconfig@^4.5.0:
   integrity sha512-wuMsz4leaj5hbGgg4IvDU0bqJagpftG5l5cXIAvo8uZrqn0NJqwtfupTN00VnkQJPcIRrxYrm1Ue24btpCha2A==
   dependencies:
     resolve-pkg-maps "^1.0.0"
-
-get-wild@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/get-wild/-/get-wild-3.0.2.tgz#af187f9fa83dce35afd1b8ed87cda142a200bbcb"
-  integrity sha512-3zLEGhy+IJ5dAuC2mAVWyqQxyEsAVKyGI5fkvfO++svL+LzEsJ1GG0MTr33qwpedpmy3AcyPh4UTVlt9yjB5eg==
 
 glob-parent@^5.1.2, glob-parent@~5.1.2:
   version "5.1.2"
