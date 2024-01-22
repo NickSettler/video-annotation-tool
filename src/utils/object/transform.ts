@@ -31,15 +31,11 @@ export const swapKeys = <SK extends PropertyKey, DK extends PropertyKey>(
  * @param map map of object keys to new keys
  * @returns transformed object
  */
-export const transformKeys = <
-  DK extends PropertyKey,
-  D extends Record<PropertyKey, any> = Record<PropertyKey, any>,
-  Return extends Record<DK, any> = Record<DK, any>,
->(
-  object: D,
-  map: Partial<Record<DK, keyof D>>,
-): Partial<Return> => {
-  const result: Partial<Return> = {};
+export const transformKeys = <DK extends PropertyKey>(
+  object: Record<PropertyKey, any>,
+  map: Partial<Record<DK, PropertyKey>>,
+): Partial<Record<DK, any>> => {
+  const result: ReturnType<typeof transformKeys> = {};
 
   for (const key in map) {
     const value = map[key];
