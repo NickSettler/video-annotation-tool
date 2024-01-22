@@ -156,3 +156,8 @@ export const selectAnnotationTypesKeys = createSelector(
   selectAnnotationTypes,
   (types) => map(types, 'type'),
 );
+
+export const selectExportAnnotations = createSelector(
+  annotationState,
+  (annotation) => annotation.annotations,
+);

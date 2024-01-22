@@ -18,6 +18,7 @@ import {
   clearSelectionAction,
   groupSelectionAction,
   selectAnnotationsSelection,
+  selectExportAnnotations,
   selectIsAnnotationSelectionGroupable,
   selectIsAnnotationSelectionInterpolatable,
   selectIsAnnotationsFiltered,
@@ -27,15 +28,22 @@ import {
 } from '../../../store/annotation';
 import { forEach } from 'lodash';
 import { interpolatePolygons } from '../../../utils/polygons/interpolation';
-import { Close, ExpandLess, FilterAlt } from '@mui/icons-material';
+import {
+  Close,
+  ExpandLess,
+  FileDownload,
+  FilterAlt,
+} from '@mui/icons-material';
 import { AnnotationFilters } from '../../annotation/annotation-filters/AnnotationFilters';
 import { AnnotationFiltersOverview } from '../../annotation/annotation-filters/AnnotationFiltersOverview';
+import { downloadAsJson } from '../../../utils/files/download';
 
 const drawerWidth = '40%';
 
 export const AppDrawer = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
+  const exportAnnotations = useAppSelector(selectExportAnnotations);
   const isAnnotationsFiltered = useAppSelector(selectIsAnnotationsFiltered);
   const annotationSelection = useAppSelector(selectAnnotationsSelection);
   const annotationsSelection = useAppSelector(selectSelectionAnnotations);
@@ -50,6 +58,11 @@ export const AppDrawer = (): JSX.Element => {
     () => isGroupable || isInterpolatable,
     [isGroupable, isInterpolatable],
   );
+
+  const handleExport = () => {
+    const name = new Date().toISOString();
+    downloadAsJson(exportAnnotations, name);
+  };
 
   const handleFilterToggle = () => {
     setIsFiltersVisible((prev) => !prev);
@@ -172,11 +185,16 @@ export const AppDrawer = (): JSX.Element => {
               )}
             </ButtonGroup>
           )}
-          <Fade in={!isAnnotationsFiltered && !isFiltersVisible}>
-            <IconButton size={'small'} onClick={handleFilterToggle}>
-              <FilterAlt />
+          <Stack direction={'row'} spacing={1}>
+            <IconButton size={'small'} onClick={handleExport}>
+              <FileDownload />
             </IconButton>
-          </Fade>
+            <Fade in={!isAnnotationsFiltered && !isFiltersVisible}>
+              <IconButton size={'small'} onClick={handleFilterToggle}>
+                <FilterAlt />
+              </IconButton>
+            </Fade>
+          </Stack>
         </Stack>
         <AnnotationList
           selection={annotationSelection}
