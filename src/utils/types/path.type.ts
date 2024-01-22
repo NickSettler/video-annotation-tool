@@ -6,9 +6,8 @@ export type IsAny<T> = unknown extends T
   : false;
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-type ExcludeArrayKeys<T> = T extends ArrayLike<any>
-  ? Exclude<keyof T, keyof Array<any>>
-  : keyof T;
+type ExcludeArrayKeys<T> =
+  T extends ArrayLike<any> ? Exclude<keyof T, keyof Array<any>> : keyof T;
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 type PathImpl<T, Key extends keyof T> = Key extends string
@@ -42,3 +41,22 @@ export type Choose<
     ? Choose<T[U], Rest>
     : never
   : T[K];
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export type DotPrefix<T extends string> = T extends '' ? '' : `.${T}`;
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export type DotNestedKeys<T> = T extends Array<any> | Date
+  ? ''
+  : (
+        T extends object
+          ? {
+              [K in Exclude<
+                keyof T,
+                symbol
+              >]: `${K}${DotPrefix<DotNestedKeys<T[K]>>}`;
+            }[Exclude<keyof T, symbol>]
+          : ''
+      ) extends infer D
+    ? Extract<D, string>
+    : never;
