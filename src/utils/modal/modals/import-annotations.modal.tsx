@@ -14,7 +14,10 @@ import {
   selectImportFileMap,
   selectImportFileType,
   selectImportJSON,
+  setImportFileMapAction,
+  setImportFileMetadataAction,
   setImportFileTypeAction,
+  setImportJSONAction,
   TAnnotation,
 } from '../../../store/annotation';
 import { ImportModalFileUpload } from '../../../components/annotation/import-modal/import-modal-file-upload/ImportModalFileUpload';
@@ -116,6 +119,12 @@ const ImportAnnotationsModal = ({
     if (!convertedData.length) return;
 
     dispatch(populateFromImportAction(convertedData));
+    dispatch(setImportJSONAction(null));
+    dispatch(setImportFileMetadataAction(null));
+    dispatch(setImportFileTypeAction(null));
+    dispatch(setImportFileMapAction({}));
+
+    onClose();
   };
 
   return (
