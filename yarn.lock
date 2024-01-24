@@ -2904,10 +2904,10 @@
   resolved "https://registry.yarnpkg.com/@ungap/structured-clone/-/structured-clone-1.2.0.tgz#756641adb587851b5ccb3e095daf27ae581c8406"
   integrity sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==
 
-"@videojs/http-streaming@3.9.1":
-  version "3.9.1"
-  resolved "https://registry.yarnpkg.com/@videojs/http-streaming/-/http-streaming-3.9.1.tgz#7072b9826e1b0dbda8f4fdfbef03945157b4f45e"
-  integrity sha512-bNKlbs+b4NTyZlU3iLXj2glEHfAErjKqQryeEoDQ8FqnlFHzza7ijhMB+d/5BMrfRyiL2SvKrTDjD1CbH8QOFQ==
+"@videojs/http-streaming@3.10.0":
+  version "3.10.0"
+  resolved "https://registry.yarnpkg.com/@videojs/http-streaming/-/http-streaming-3.10.0.tgz#b20eaf7246cc014f2715c967a9cdc4240b6e7e61"
+  integrity sha512-Lf1rmhTalV4Gw0bJqHmH4lfk/FlepUDs9smuMtorblAYnqDlE2tbUOb7sBXVYoXGdbWbdTW8jH2cnS+6HWYJ4Q==
   dependencies:
     "@babel/runtime" "^7.12.5"
     "@videojs/vhs-utils" "4.0.0"
@@ -10397,13 +10397,13 @@ vary@~1.1.2:
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==
 
-"video.js@^7 || ^8", video.js@^8.9.0:
-  version "8.9.0"
-  resolved "https://registry.yarnpkg.com/video.js/-/video.js-8.9.0.tgz#0d8ea582e8d10eccf82ae16760b3829fa91442e3"
-  integrity sha512-zkDymz4aCGSdPgOoG48W+UqoYU/JYXIr78HLWkjkXvIs0rrvx0hay3w+X9/OzWNM0/5M75somsdxrvQGr/U1TA==
+"video.js@^7 || ^8", video.js@^8.10.0:
+  version "8.10.0"
+  resolved "https://registry.yarnpkg.com/video.js/-/video.js-8.10.0.tgz#603a49909ef33f839264da8b73513f9daf592b57"
+  integrity sha512-7UeG/flj/pp8tNGW8WKPP1VJb3x2FgLoqUWzpZqkoq5YIyf6MNzmIrKtxprl438T5RVkcj+OzV8IX4jYSAn4Sw==
   dependencies:
     "@babel/runtime" "^7.12.5"
-    "@videojs/http-streaming" "3.9.1"
+    "@videojs/http-streaming" "3.10.0"
     "@videojs/vhs-utils" "^4.0.0"
     "@videojs/xhr" "2.6.0"
     aes-decrypter "^4.0.1"
