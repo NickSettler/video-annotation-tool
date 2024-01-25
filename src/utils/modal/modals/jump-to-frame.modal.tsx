@@ -27,7 +27,7 @@ const JumpToFrameModal = ({
   return (
     <BaseModal
       show
-      title={'Project settings'}
+      title={'Jump to frame'}
       onClose={onClose}
       onSubmit={handleApply}
       footer={
