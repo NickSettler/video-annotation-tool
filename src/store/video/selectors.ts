@@ -57,6 +57,20 @@ export const videoViewportHeightSelector = createSelector(
   (video) => video.viewportHeight,
 );
 
+export const videoWidthRatioSelector = createSelector(
+  videoWidthSelector,
+  videoViewportWidthSelector,
+  (width, viewportWidth) =>
+    width && viewportWidth ? width / viewportWidth : 1,
+);
+
+export const videoHeightRatioSelector = createSelector(
+  videoHeightSelector,
+  videoViewportHeightSelector,
+  (height, viewportHeight) =>
+    height && viewportHeight ? height / viewportHeight : 1,
+);
+
 export const videoCurrentTimeSelector = createSelector(
   videoState,
   (video) => video.currentTime,
