@@ -6,19 +6,13 @@ import { store } from './store/store';
 import { ModalProvider } from './utils/modal/modal-provider';
 import { ThemeProvider } from '@mui/material';
 import { theme } from './utils/theme/theme';
-import {
-  createBrowserRouter,
-  createRoutesFromChildren,
-  matchRoutes,
-  RouterProvider,
-  useLocation,
-  useNavigationType,
-} from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { routes } from './utils/router';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { client } from './utils/react-query/client';
 import * as Sentry from '@sentry/react';
 import pkg from '../package.json';
+import { browserTracingIntegration, replayIntegration } from '@sentry/react';
 
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_DSN,
@@ -29,16 +23,8 @@ Sentry.init({
     /^https:\/\/api\.video\.settler\.tech/,
   ],
   integrations: [
-    new Sentry.BrowserTracing({
-      routingInstrumentation: Sentry.reactRouterV6Instrumentation(
-        React.useEffect,
-        useLocation,
-        useNavigationType,
-        createRoutesFromChildren,
-        matchRoutes,
-      ),
-    }),
-    new Sentry.Replay({
+    browserTracingIntegration(),
+    replayIntegration({
       maskAllText: false,
       blockAllMedia: false,
     }),
