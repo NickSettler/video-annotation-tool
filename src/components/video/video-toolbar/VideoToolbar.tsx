@@ -5,6 +5,7 @@ import {
   TVideoControlsProps,
   VideoControls,
 } from '../video-controls/VideoControls';
+import { VideoJumpControls } from '../video-jump-controls/VideoJumpControls';
 
 export type TVideoToolbarProps = TVideoControlsProps;
 
@@ -23,7 +24,7 @@ export const VideoToolbar = (props: TVideoToolbarProps): JSX.Element => {
     <VideoToolbarStyled direction={'row'} alignItems={'center'}>
       <VideoTimestamp />
       <VideoControls {...props} />
-      <div />
+      <VideoJumpControls />
     </VideoToolbarStyled>
   );
 };

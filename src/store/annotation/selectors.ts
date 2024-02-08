@@ -102,6 +102,23 @@ export const selectCurrentFrameAnnotation = createSelector(
   (annotations, frame) => annotations[frame],
 );
 
+export const selectNextUngroupedAnnotation = createSelector(
+  selectAnnotationsUngrouped,
+  videoCurrentFrameSelector,
+  (annotations, frame) =>
+    annotations.find((annotation) => annotation.properties.frame > frame),
+);
+
+export const selectPreviousUngroupedAnnotation = createSelector(
+  selectAnnotationsUngrouped,
+  videoCurrentFrameSelector,
+  (annotations, frame) =>
+    annotations
+      .slice()
+      .reverse()
+      .find((annotation) => annotation.properties.frame < frame),
+);
+
 // Selection
 export const selectAnnotationsSelection = createSelector(
   annotationState,

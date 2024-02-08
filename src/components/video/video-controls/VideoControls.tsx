@@ -12,7 +12,7 @@ import {
 import { useModal } from '../../../hooks/modal/useModal';
 import { E_MODALS } from '../../../store/modals';
 
-const VideoButtonGroup = styled(ButtonGroup)(({ theme }) => ({
+export const VideoButtonGroup = styled(ButtonGroup)(({ theme }) => ({
   borderLeft: `1px solid ${theme.palette.divider}`,
   borderRight: `1px solid ${theme.palette.divider}`,
   borderRadius: 0,
@@ -22,7 +22,7 @@ const VideoButtonGroup = styled(ButtonGroup)(({ theme }) => ({
   },
 }));
 
-const VideoControlButton = styled(Button)(({ theme }) => ({
+export const VideoControlButton = styled(Button)(({ theme }) => ({
   '&': {
     height: theme.spacing(4),
     padding: theme.spacing(0.5),
@@ -32,7 +32,7 @@ const VideoControlButton = styled(Button)(({ theme }) => ({
   '&.Mui-disabled': {
     borderColor: theme.palette.divider,
 
-    '&.MuiButtonGroup-middleButton': {
+    '&.MuiButtonGroup-middleButton, &.MuiButtonGroup-firstButton': {
       borderRightColor: theme.palette.divider,
     },
   },
