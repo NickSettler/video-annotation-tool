@@ -20,6 +20,7 @@ import { E_IMPORT_ANNOTATIONS_FILE_TYPE } from '../../utils/annotation/import';
 const annotationState = (state: TAppState): TAnnotationState =>
   state[moduleName];
 
+// Filters
 export const selectAnnotationTypeFilter = createSelector(
   annotationState,
   ({ typeFilter }) => typeFilter,
@@ -43,6 +44,7 @@ export const selectIsAnnotationsFiltered = createSelector(
     typeFilter !== null || startFrameFilter !== null || endFrameFilter !== null,
 );
 
+// Annotations
 export const selectAllAnnotations = createSelector(
   annotationState,
   selectIsAnnotationsFiltered,
@@ -100,6 +102,7 @@ export const selectCurrentFrameAnnotation = createSelector(
   (annotations, frame) => annotations[frame],
 );
 
+// Selection
 export const selectAnnotationsSelection = createSelector(
   annotationState,
   (annotation) => annotation.selection,
@@ -148,6 +151,7 @@ export const selectSelectionAnnotations = createSelector(
     ),
 );
 
+// Types
 export const selectAnnotationTypes = createSelector(
   annotationState,
   (annotation) => annotation.types,
@@ -158,6 +162,7 @@ export const selectAnnotationTypesKeys = createSelector(
   (types) => map(types, 'type'),
 );
 
+// Import / Export
 export const selectExportAnnotations = createSelector(
   annotationState,
   (annotation) => annotation.annotations,
