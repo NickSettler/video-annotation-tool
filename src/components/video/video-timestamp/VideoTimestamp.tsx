@@ -6,6 +6,7 @@ import {
   videoCurrentFrameSelector,
   videoDurationSelector,
   videoFPSSelector,
+  videoIsLoadedSelector,
   videoTotalFramesSelector,
 } from '../../../store/video';
 import { E_VIDEO_TIMESTAMP_MODE } from '../../../utils/settings';
@@ -16,6 +17,7 @@ const VideoTimestampText = styled(Typography)({
 });
 
 export const VideoTimestamp = (): JSX.Element => {
+  const isLoaded = useAppSelector(videoIsLoadedSelector);
   const fps = useAppSelector(videoFPSSelector);
   const videoDuration = useAppSelector(videoDurationSelector);
 
@@ -67,6 +69,7 @@ export const VideoTimestamp = (): JSX.Element => {
       onContextMenu={handleRightClick}
       sx={{ height: '100%' }}
       alignItems={'center'}
+      color={isLoaded ? 'text.primary' : 'divider'}
     >
       <VideoTimestampText variant={'captionMono'}>
         {timestampMode === E_VIDEO_TIMESTAMP_MODE.SMPTE ? (

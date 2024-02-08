@@ -11,6 +11,8 @@ import {
 } from '@mui/icons-material';
 import { useModal } from '../../../hooks/modal/useModal';
 import { E_MODALS } from '../../../store/modals';
+import { useAppSelector } from '../../../store/store';
+import { videoIsLoadedSelector } from '../../../store/video';
 
 export const VideoButtonGroup = styled(ButtonGroup)(({ theme }) => ({
   borderLeft: `1px solid ${theme.palette.divider}`,
@@ -64,6 +66,8 @@ export const VideoControls = ({
 }: TVideoControlsProps): JSX.Element => {
   const { onOpen: openFrameJumpModal } = useModal(E_MODALS.JUMP_TO_FRAME);
 
+  const isLoaded = useAppSelector(videoIsLoadedSelector);
+
   const handleFrameJumpClick = () => {
     openFrameJumpModal({
       onSuccess: onFrameJump,
@@ -72,7 +76,7 @@ export const VideoControls = ({
 
   return (
     <Box justifyContent={'center'}>
-      <VideoButtonGroup size={'small'} variant={'text'}>
+      <VideoButtonGroup size={'small'} variant={'text'} disabled={!isLoaded}>
         <VideoControlButton onClick={onFirstStep}>
           <FastRewind />
         </VideoControlButton>
