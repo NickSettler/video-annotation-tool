@@ -3,15 +3,7 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   base: "/",
-  plugins: [
-    react({
-        babel: {
-          babelrc: true
-        }
-      }
-    ),
-    splitVendorChunkPlugin()
-  ],
+  plugins: [react()],
   build: {
     sourcemap: true
   },
