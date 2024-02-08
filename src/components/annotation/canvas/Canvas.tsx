@@ -5,8 +5,10 @@ import { useAppDispatch, useAppSelector } from '../../../store/store';
 import {
   setVideoCurrentFrameAction,
   videoCurrentFrameSelector,
+  videoHeightRatioSelector,
   videoViewportHeightSelector,
   videoViewportWidthSelector,
+  videoWidthRatioSelector,
 } from '../../../store/video';
 import { AnnotationOverlay } from '../annotation-overlay/AnnotationOverlay';
 import Konva from 'konva';
@@ -19,7 +21,7 @@ import {
   selectSelectionAnnotations,
 } from '../../../store/annotation';
 import { ExistingAnnotationOverlay } from '../annotation-overlay/ExistingAnnotationOverlay';
-import { isEmpty } from 'lodash';
+import { isEmpty, some } from 'lodash';
 import { v4 as uuidV4 } from 'uuid';
 import { NEW_POLYGON_NAME } from '../../../utils/annotation/name';
 import { getPolygonColor } from '../../../utils/annotation/palette';
@@ -42,6 +44,8 @@ export const Canvas = (): JSX.Element => {
 
   const videoViewportWidth = useAppSelector(videoViewportWidthSelector);
   const videoViewportHeight = useAppSelector(videoViewportHeightSelector);
+  const widthRatio = useAppSelector(videoWidthRatioSelector);
+  const heightRatio = useAppSelector(videoHeightRatioSelector);
   const uniqAnnotations = useAppSelector(selectAnnotationsById);
   const currentFrame = useAppSelector(videoCurrentFrameSelector);
   const currentFrameAnnotations = useAppSelector((state) =>
@@ -61,7 +65,10 @@ export const Canvas = (): JSX.Element => {
     () =>
       points
         .concat(isPolyComplete ? [] : position)
-        .reduce((a, b) => a.concat(b), []),
+        .reduce((a, b) => a.concat(b), [])
+        .map((point, index) =>
+          index % 2 === 0 ? point / widthRatio : point / heightRatio,
+        ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [points],
   );
@@ -165,8 +172,8 @@ export const Canvas = (): JSX.Element => {
 
   const getMousePos = (stage: Konva.Stage) => {
     return [
-      stage.getPointerPosition()?.x ?? 0,
-      stage.getPointerPosition()?.y ?? 0,
+      (stage.getPointerPosition()?.x ?? 0) * widthRatio,
+      (stage.getPointerPosition()?.y ?? 0) * heightRatio,
     ];
   };
 

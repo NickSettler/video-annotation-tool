@@ -10,7 +10,11 @@ import { getPolygonName, isGroupName } from '../../../utils/annotation/name';
 import Konva from 'konva';
 import { minMax } from '../../../utils/annotation/min-max';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
-import { videoCurrentFrameSelector } from '../../../store/video';
+import {
+  videoCurrentFrameSelector,
+  videoHeightRatioSelector,
+  videoWidthRatioSelector,
+} from '../../../store/video';
 import { alpha } from '@mui/material';
 import { compare } from '../../../utils/object/compare';
 import { getPolygonCentroid } from '../../../utils/polygons/centroid';
@@ -28,6 +32,8 @@ export const ExistingAnnotationOverlay = ({
   const isAnnotationsSelected = useAppSelector(
     selectIsAnnotationSelected(annotation.id, annotation.properties.frame),
   );
+  const widthRatio = useAppSelector(videoWidthRatioSelector);
+  const heightRatio = useAppSelector(videoHeightRatioSelector);
 
   const vertexRadius = 3;
 
@@ -45,8 +51,10 @@ export const ExistingAnnotationOverlay = ({
   ]);
 
   const center = useMemo(() => {
-    return getPolygonCentroid(renderPoints);
-  }, [renderPoints]);
+    const [centerX, centerY] = getPolygonCentroid(renderPoints);
+
+    return [centerX / widthRatio, centerY / heightRatio];
+  }, [heightRatio, renderPoints, widthRatio]);
 
   const updateAnnotation = useCallback(() => {
     dispatch(
@@ -68,14 +76,14 @@ export const ExistingAnnotationOverlay = ({
   }, [points]);
 
   useEffect(() => {
-    const arrX = renderPoints.map((p) => p[0]);
-    const arrY = renderPoints.map((p) => p[1]);
+    const arrX = renderPoints.map((p) => p[0] / widthRatio);
+    const arrY = renderPoints.map((p) => p[1] / heightRatio);
 
     const _minMaxX = minMax(arrX);
     const _minMaxY = minMax(arrY);
 
     setSelectionRect([_minMaxX[0], _minMaxY[0], _minMaxX[1], _minMaxY[1]]);
-  }, [renderPoints]);
+  }, [heightRatio, renderPoints, widthRatio]);
 
   const handleGroupMouseDown = () => {
     dispatch(
@@ -130,10 +138,10 @@ export const ExistingAnnotationOverlay = ({
 
     let { x, y } = pos;
 
-    if (pos.x + vertexRadius > stageWidth) x = stageWidth;
-    if (pos.x - vertexRadius < 0) x = 0;
-    if (pos.y + vertexRadius > stageHeight) y = stageHeight;
-    if (pos.y - vertexRadius < 0) y = 0;
+    if (x + vertexRadius > stageWidth) x = stageWidth;
+    if (x - vertexRadius < 0) x = 0;
+    if (y + vertexRadius > stageHeight) y = stageHeight;
+    if (y - vertexRadius < 0) y = 0;
 
     return { x, y };
   };
@@ -144,12 +152,15 @@ export const ExistingAnnotationOverlay = ({
     if (!_stage) return;
 
     const index = e.target.index - 1;
-    const pos = [e.target._lastPos?.x ?? 0, e.target._lastPos?.y ?? 0];
+    const pos = [
+      (e.target._lastPos?.x ?? 0) * widthRatio,
+      (e.target._lastPos?.y ?? 0) * heightRatio,
+    ];
 
-    if (pos[0] < 0) pos[0] = 0;
-    if (pos[1] < 0) pos[1] = 0;
-    if (pos[0] > _stage.width()) pos[0] = _stage.width();
-    if (pos[1] > _stage.height()) pos[1] = _stage.height();
+    /** 0 <= pos[w] <= stage.width() * widthRatio */
+    pos[0] = Math.min(Math.max(pos[0], 0), _stage.width() * widthRatio);
+    /** 0 <= pos[h] <= stage.height() * heightRatio */
+    pos[1] = Math.min(Math.max(pos[1], 0), _stage.height() * heightRatio);
 
     const result = [
       ...renderPoints.slice(0, index),
@@ -165,22 +176,25 @@ export const ExistingAnnotationOverlay = ({
   };
 
   const handleGroupDragStart = useCallback(() => {
-    const arrX = renderPoints.map((p) => p[0]);
-    const arrY = renderPoints.map((p) => p[1]);
+    const arrX = renderPoints.map((p) => p[0] / widthRatio);
+    const arrY = renderPoints.map((p) => p[1] / heightRatio);
     setMinMaxX(minMax(arrX));
     setMinMaxY(minMax(arrY));
-  }, [renderPoints]);
+  }, [heightRatio, renderPoints, widthRatio]);
 
   const handleGroupDragMove = (e: Konva.KonvaEventObject<DragEvent>) => {
     const result: Array<Array<number>> = [];
     const copyPoints = [...renderPoints];
 
     copyPoints.map((point) =>
-      result.push([point[0] + e.target.x(), point[1] + e.target.y()]),
+      result.push([
+        point[0] + e.target.x() * widthRatio,
+        point[1] + e.target.y() * heightRatio,
+      ]),
     );
 
-    const arrX = result.map((p) => p[0]);
-    const arrY = result.map((p) => p[1]);
+    const arrX = result.map((p) => p[0] / widthRatio);
+    const arrY = result.map((p) => p[1] / heightRatio);
 
     setSelectionRect([
       minMax(arrX)[0],
@@ -198,7 +212,10 @@ export const ExistingAnnotationOverlay = ({
       const copyPoints = [...renderPoints];
 
       copyPoints.map((point) =>
-        result.push([point[0] + e.target.x(), point[1] + e.target.y()]),
+        result.push([
+          point[0] + e.target.x() * widthRatio,
+          point[1] + e.target.y() * heightRatio,
+        ]),
       );
       e.target.position({ x: 0, y: 0 });
 
@@ -208,8 +225,13 @@ export const ExistingAnnotationOverlay = ({
   };
 
   const flattenedPoints = useMemo(
-    () => renderPoints.reduce((a, b) => a.concat(b), []),
-    [renderPoints],
+    () =>
+      renderPoints
+        .reduce((a, b) => a.concat(b), [])
+        .map((point, index) =>
+          index % 2 === 0 ? point / widthRatio : point / heightRatio,
+        ),
+    [heightRatio, renderPoints, widthRatio],
   );
 
   const fill = useMemo(() => {
@@ -239,8 +261,8 @@ export const ExistingAnnotationOverlay = ({
           />
 
           {renderPoints.map((point, index) => {
-            const x = point[0] - vertexRadius / 2;
-            const y = point[1] - vertexRadius / 2;
+            const x = (point[0] - vertexRadius / 2) / widthRatio;
+            const y = (point[1] - vertexRadius / 2) / heightRatio;
             return (
               <Circle
                 name={`polygon-${annotation.id}-point-${index}`}
