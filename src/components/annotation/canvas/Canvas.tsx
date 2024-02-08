@@ -98,6 +98,13 @@ export const Canvas = (): JSX.Element => {
 
         if (!annotation) return;
 
+        const currentFrameHasAnnotation = some(currentFrameAnnotations, [
+          'id',
+          annotation.id,
+        ]);
+
+        if (currentFrameHasAnnotation) return;
+
         dispatch(
           addFrameAnnotationAction({
             frame: currentFrame,
