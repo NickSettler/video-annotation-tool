@@ -1,7 +1,6 @@
 import { E_MODAL_ROLE } from './types';
 import { FormEvent, JSX } from 'react';
 import { Box, Button } from '@mui/material';
-import { assign } from 'lodash';
 
 type TBaseModalFooterCancelProps =
   | {
