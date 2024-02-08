@@ -1,12 +1,14 @@
+import { lazy } from 'react';
 import { Navigate, RouteObject } from 'react-router-dom';
-import { LoginPage } from '../../views/auth/login';
 import App from '../../App';
-import { AuthRootPage } from '../../views/auth/auth-root';
-import { StudioPage } from '../../views/studio';
-import { NotFoundPage } from '../../views/error/404';
-import { ProtectedRoute } from './protected-route';
-import { PublicOnlyRoute } from './public-only-route';
-import { RegisterPage } from '../../views/auth/register';
+
+const AuthRootPage = lazy(async () => import('../../views/auth/auth-root'));
+const StudioPage = lazy(async () => import('../../views/studio'));
+const NotFoundPage = lazy(async () => import('../../views/error/404'));
+const LoginPage = lazy(async () => import('../../views/auth/login'));
+const RegisterPage = lazy(async () => import('../../views/auth/register'));
+const ProtectedRoute = lazy(async () => import('./protected-route'));
+const PublicOnlyRoute = lazy(async () => import('./public-only-route'));
 
 export const routesPaths = {
   root: '/',

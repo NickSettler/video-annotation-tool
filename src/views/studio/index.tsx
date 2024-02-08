@@ -5,7 +5,7 @@ import { VideoBlock } from '../../components/video/video-block/VideoBlock';
 import { Timeline } from '../../components/timeline/timeline/Timeline';
 import { AppDrawer } from '../../components/common/app-drawer/AppDrawer';
 
-export const StudioPage = (): JSX.Element => {
+const StudioPage = (): JSX.Element => {
   return (
     <>
       <AppToolbar />
@@ -20,3 +20,5 @@ export const StudioPage = (): JSX.Element => {
     </>
   );
 };
+
+export default StudioPage;

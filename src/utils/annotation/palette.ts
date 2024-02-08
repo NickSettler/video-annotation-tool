@@ -1,14 +1,14 @@
-import { Color } from '@mui/material';
 import {
-  blue,
   cyan,
-  green,
   orange,
-  pink,
   purple,
-  red,
   yellow,
+  blue,
+  green,
+  pink,
+  red,
 } from '@mui/material/colors';
+import { Color } from '@mui/material';
 
 const primaryShade: keyof Color = 400;
 const secondaryShade: keyof Color = 700;

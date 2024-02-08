@@ -4,9 +4,9 @@ import { parseJWT } from '../../utils/jwt';
 import { Toast, toast } from 'react-hot-toast';
 import { TApiError } from './types';
 import { flatten, map, startCase, values } from 'lodash';
-import { Box, IconButton, Stack, Typography } from '@mui/material';
-import { Close } from '@mui/icons-material';
+import Close from '@mui/icons-material/Close';
 import { routesPaths } from '../../utils/router';
+import { Box, IconButton, Stack, Typography } from '@mui/material';
 
 /**
  * API class (Singleton)
@@ -27,7 +27,7 @@ export default class Api {
 
   private constructor() {
     this._axiosInstance = axios.create({
-      baseURL: process.env.REACT_APP_API_URL,
+      baseURL: import.meta.env.VITE_APP_API_URL,
     });
 
     this._axiosInstance.interceptors.request.use((config) => {

@@ -9,7 +9,7 @@ const NotFoundContainer = styled(Stack)({
   justifyContent: 'center',
 });
 
-export const NotFoundPage = (): JSX.Element => {
+const NotFoundPage = (): JSX.Element => {
   return (
     <NotFoundContainer>
       <Typography variant={'h2'}>404</Typography>
@@ -17,3 +17,5 @@ export const NotFoundPage = (): JSX.Element => {
     </NotFoundContainer>
   );
 };
+
+export default NotFoundPage;

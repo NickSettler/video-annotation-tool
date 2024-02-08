@@ -14,7 +14,7 @@ import { E_USER_ENTITY_KEYS } from '../../api/user/types';
 import { Link } from '../../utils/router/link';
 import { routesPaths } from '../../utils/router';
 
-export const RegisterPage = (): JSX.Element => {
+const RegisterPage = (): JSX.Element => {
   const { registerMutation } = useAuthMutations();
 
   const [data, setData] = useState({
@@ -85,3 +85,5 @@ export const RegisterPage = (): JSX.Element => {
     </Card>
   );
 };
+
+export default RegisterPage;

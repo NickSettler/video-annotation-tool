@@ -14,10 +14,10 @@ import {
 } from 'lodash';
 import { transformKeys } from '../object/transform';
 import { v4 as uuidV4 } from 'uuid';
-import { red } from '@mui/material/colors';
 import { DeepPartial } from 'utility-types';
 import { get } from 'get-wild';
 import { checkAnnotation } from './validation';
+import { red } from '@mui/material/colors';
 
 export enum E_IMPORT_ANNOTATIONS_FILE_TYPE {
   APPLICATION_JSON = 'APPLICATION_JSON',

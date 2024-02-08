@@ -14,7 +14,7 @@ import { E_USER_ENTITY_KEYS } from '../../api/user/types';
 import { Link } from '../../utils/router/link';
 import { routesPaths } from '../../utils/router';
 
-export const LoginPage = (): JSX.Element => {
+const LoginPage = (): JSX.Element => {
   const { loginMutation } = useAuthMutations();
 
   const [data, setData] = useState({
@@ -78,3 +78,5 @@ export const LoginPage = (): JSX.Element => {
     </Card>
   );
 };
+
+export default LoginPage;

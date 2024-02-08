@@ -16,10 +16,12 @@ const AuthContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
-export const AuthRootPage = (): JSX.Element => {
+const AuthRootPage = (): JSX.Element => {
   return (
     <AuthContainer>
       <Outlet />
     </AuthContainer>
   );
 };
+
+export default AuthRootPage;

@@ -1,5 +1,5 @@
+import { Components } from '@mui/material';
 import { TypographyOptions } from '@mui/material/styles/createTypography';
-import { Components } from '@mui/material/styles/components';
 
 export const themeTypography: TypographyOptions = {
   captionMono: {

@@ -7,8 +7,7 @@ import '@fontsource/roboto/700.css';
 import '@fontsource/roboto/900.css';
 import { Box, CssBaseline } from '@mui/material';
 import { Toaster } from 'react-hot-toast';
-import { Outlet, useLocation, useRoutes } from 'react-router-dom';
-import { routes } from './utils/router';
+import { Outlet, useLocation } from 'react-router-dom';
 
 const App = (): JSX.Element => {
   const location = useLocation();

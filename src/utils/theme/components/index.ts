@@ -1,6 +1,6 @@
-import { Components } from '@mui/material/styles/components';
 import { ChipComponentOverride } from './Chip';
 import { BaseTheme } from '../mui';
+import { Components } from '@mui/material';
 
 export const overrideComponents = <T extends BaseTheme>(
   theme: T,

@@ -1,13 +1,5 @@
 import { ChangeEvent, JSX } from 'react';
-import {
-  IconButton,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { SelectChangeEvent } from '@mui/material/Select';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import {
   selectAnnotationEndFrameFilter,
@@ -18,10 +10,18 @@ import {
   setEndFrameFilterAction,
   setStartFrameFilterAction,
 } from '../../../store/annotation';
-import { Close } from '@mui/icons-material';
+import Close from '@mui/icons-material/Close';
 import { AnnotationTypeListItem } from '../annotation-type-list-item/AnnotationTypeListItem';
 import { isEmpty } from 'lodash';
 import { videoTotalFramesSelector } from '../../../store/video';
+import {
+  IconButton,
+  Typography,
+  Select,
+  MenuItem,
+  Stack,
+  TextField,
+} from '@mui/material';
 
 export const AnnotationFilters = (): JSX.Element => {
   const dispatch = useAppDispatch();

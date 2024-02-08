@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.scss';
 import { Provider } from 'react-redux';
@@ -12,11 +12,12 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { client } from './utils/react-query/client';
 import * as Sentry from '@sentry/react';
 import pkg from '../package.json';
+import SpinnerFullScreen from './views/common/spinner-full-screen';
 import { browserTracingIntegration, replayIntegration } from '@sentry/react';
 
 Sentry.init({
-  dsn: process.env.REACT_APP_SENTRY_DSN,
-  environment: process.env.NODE_ENV,
+  dsn: import.meta.env.VITE_APP_SENTRY_DSN,
+  environment: import.meta.env.MODE,
   release: `${pkg.version}`,
   tracePropagationTargets: [
     'localhost',
@@ -30,7 +31,7 @@ Sentry.init({
     }),
   ],
   tracesSampleRate: 1.0,
-  replaysSessionSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
+  replaysSessionSampleRate: import.meta.env.MODE === 'production' ? 0.1 : 1.0,
   replaysOnErrorSampleRate: 1.0,
 });
 
@@ -46,13 +47,15 @@ root.render(
     <Provider store={store}>
       <QueryClientProvider client={client}>
         <ModalProvider>
-          <RouterProvider
-            router={router}
-            future={{
-              // eslint-disable-next-line camelcase
-              v7_startTransition: true,
-            }}
-          />
+          <Suspense fallback={<SpinnerFullScreen />}>
+            <RouterProvider
+              router={router}
+              future={{
+                // eslint-disable-next-line camelcase
+                v7_startTransition: true,
+              }}
+            />
+          </Suspense>
         </ModalProvider>
       </QueryClientProvider>
     </Provider>

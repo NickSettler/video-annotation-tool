@@ -7,8 +7,8 @@ on:
 
 env:
   GENERATE_SOURCEMAP: true
-  REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
-  REACT_APP_SENTRY_DSN: ${{ secrets.REACT_APP_SENTRY_DSN }}
+  VITE_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+  VITE_APP_SENTRY_DSN: ${{ secrets.REACT_APP_SENTRY_DSN }}
   SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
 jobs:
@@ -58,5 +58,5 @@ jobs:
           build-args: |
             "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}"
             "VERSION=${{ github.event.release.tag_name }}"
-            "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}"
-            "REACT_APP_SENTRY_DSN=${{ secrets.REACT_APP_SENTRY_DSN }}"
+            "VITE_APP_API_URL=${{ secrets.REACT_APP_API_URL }}"
+            "VITE_APP_SENTRY_DSN=${{ secrets.REACT_APP_SENTRY_DSN }}"
