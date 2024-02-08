@@ -19,6 +19,15 @@ export const copyAnnotation = async (
 
 export const pasteAnnotation = async () =>
   new Promise<TAnnotation>(async (resolve, reject) => {
+    const currentElement = document.activeElement as HTMLElement;
+
+    if (
+      currentElement.tagName === 'INPUT' ||
+      currentElement.tagName === 'TEXTAREA'
+    ) {
+      return;
+    }
+
     const clipboard = await navigator.clipboard.readText();
     let annotation: any;
     try {
