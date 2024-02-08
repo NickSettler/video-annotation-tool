@@ -3,9 +3,9 @@ import { Box, Button, ButtonGroup, styled } from '@mui/material';
 import {
   FastForward,
   FastRewind,
+  MoveUp,
   Pause,
   PlayArrow,
-  Redo,
   SkipNext,
   SkipPrevious,
 } from '@mui/icons-material';
@@ -90,7 +90,7 @@ export const VideoControls = ({
         </VideoControlButton>
         <VideoControlButton disabled />
         <VideoControlButton onClick={handleFrameJumpClick}>
-          <Redo />
+          <MoveUp sx={{ transform: 'rotate(90deg)' }} />
         </VideoControlButton>
       </VideoButtonGroup>
     </Box>
