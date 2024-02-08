@@ -22,21 +22,15 @@ import {
   updatePolygonAction,
 } from './actions';
 import {
-  assign,
-  chain,
   constant,
   filter,
   find,
   flattenDepth,
-  fromPairs,
   isEqual,
-  isNull,
   map,
   merge,
-  omitBy,
   some,
   times,
-  toPairs,
   uniqBy,
   xorWith,
 } from 'lodash';
@@ -216,22 +210,26 @@ export const annotationReducer = createReducer(initialState, (builder) =>
       ...state,
       importFileMap,
     }))
-    .addCase(populateFromImportAction, (state, { payload: annotations }) => {
+    .addCase(populateFromImportAction, (state, { payload }) => {
       const types: Array<TAnnotationType> = uniqBy(
         filter(
-          map(
-            flattenDepth(annotations, 1),
-            (annotation): TAnnotationType | null =>
-              annotation.properties.type
-                ? {
-                    type: annotation.properties.type,
-                    color: annotation.properties.color,
-                  }
-                : null,
+          map(flattenDepth(payload, 1), (annotation): TAnnotationType | null =>
+            annotation?.properties?.type
+              ? {
+                  type: annotation.properties.type,
+                  color: annotation.properties.color,
+                }
+              : null,
           ),
           (type): type is TAnnotationType => !!type,
         ),
         'type',
+      );
+
+      const annotations = times(state.annotations.length, constant([])).map(
+        (frameAnnotations, index) => {
+          return payload[index]?.length > 0 ? payload[index] : frameAnnotations;
+        },
       );
 
       return {
