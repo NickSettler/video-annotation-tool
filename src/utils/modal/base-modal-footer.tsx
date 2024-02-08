@@ -54,9 +54,10 @@ const defaultModalFooterProps: Partial<TBaseModalFooterProps> = {
 };
 
 export const BaseModalFooter = (props: TBaseModalFooterProps): JSX.Element => {
-  assign(props, defaultModalFooterProps);
-
-  const { role, ...rest } = props;
+  const { role, ...rest } = {
+    ...defaultModalFooterProps,
+    ...props,
+  };
 
   return (
     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
