@@ -1,6 +1,6 @@
 import { JSX, useCallback, useEffect, useRef, useState } from 'react';
 import { Box, Stack, styled } from '@mui/material';
-import { useAppDispatch, useAppSelector } from '../../../store/store';
+import { useAppDispatch, useAppSelector } from '../../../../store/store';
 import {
   setVideoCurrentTimeAction,
   setVideoDurationAction,
@@ -19,20 +19,23 @@ import {
   videoIsPlayingSelector,
   videoUrlSelector,
   videoWidthSelector,
-} from '../../../store/video';
-import { commonVideoOptions, computeMeta } from '../../../utils/video/video-js';
+} from '../../../../store/video';
+import {
+  commonVideoOptions,
+  computeMeta,
+} from '../../../../utils/video/video-js';
 import VideoJsPlayer from 'video.js';
-import { roundToDecimal } from '../../../utils/math/round';
+import { roundToDecimal } from '../../../../utils/math/round';
 import { VideoOverlay } from '../video-overlay/VideoOverlay';
-import { useControls } from '../../../hooks/video/useControls';
+import { useControls } from '../../../../hooks/video/useControls';
 import {
   TOrientation,
   useVideoOrientation,
-} from '../../../hooks/video/useVideoOrientation';
+} from '../../../../hooks/video/useVideoOrientation';
 import { throttle } from 'lodash';
-import { Canvas } from '../../annotation/canvas/Canvas';
+import { Canvas } from '../../../annotation/canvas/Canvas';
 import { VideoToolbar } from '../video-toolbar/VideoToolbar';
-import { initAnnotationsAction } from '../../../store/annotation';
+import { initAnnotationsAction } from '../../../../store/annotation';
 
 const VideoContainer = styled(Box)(({ theme }) => ({
   boxSizing: 'border-box',

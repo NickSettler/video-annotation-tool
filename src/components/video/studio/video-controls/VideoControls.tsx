@@ -9,10 +9,10 @@ import {
   SkipNext,
   SkipPrevious,
 } from '@mui/icons-material';
-import { useModal } from '../../../hooks/modal/useModal';
-import { E_MODALS } from '../../../store/modals';
-import { useAppSelector } from '../../../store/store';
-import { videoIsLoadedSelector } from '../../../store/video';
+import { useModal } from '../../../../hooks/modal/useModal';
+import { E_MODALS } from '../../../../store/modals';
+import { useAppSelector } from '../../../../store/store';
+import { videoIsLoadedSelector } from '../../../../store/video';
 
 export const VideoButtonGroup = styled(ButtonGroup)(({ theme }) => ({
   borderLeft: `1px solid ${theme.palette.divider}`,

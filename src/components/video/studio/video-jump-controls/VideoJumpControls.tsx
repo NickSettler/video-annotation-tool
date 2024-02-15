@@ -5,15 +5,15 @@ import {
   VideoControlButton,
 } from '../video-controls/VideoControls';
 import { Eject } from '@mui/icons-material';
-import { useAppDispatch, useAppSelector } from '../../../store/store';
+import { useAppDispatch, useAppSelector } from '../../../../store/store';
 import {
   selectNextUngroupedAnnotation,
   selectPreviousUngroupedAnnotation,
-} from '../../../store/annotation';
+} from '../../../../store/annotation';
 import {
   setVideoCurrentFrameAction,
   videoIsLoadedSelector,
-} from '../../../store/video';
+} from '../../../../store/video';
 
 export const VideoJumpControls = (): JSX.Element => {
   const dispatch = useAppDispatch();

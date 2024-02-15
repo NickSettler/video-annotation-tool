@@ -1,16 +1,16 @@
 import { JSX, useMemo, MouseEvent } from 'react';
 import { Stack, styled, Typography } from '@mui/material';
-import { getSMPTETimeCode } from '../../../utils/video/smpte';
-import { useAppSelector } from '../../../store/store';
+import { getSMPTETimeCode } from '../../../../utils/video/smpte';
+import { useAppSelector } from '../../../../store/store';
 import {
   videoCurrentFrameSelector,
   videoDurationSelector,
   videoFPSSelector,
   videoIsLoadedSelector,
   videoTotalFramesSelector,
-} from '../../../store/video';
-import { E_VIDEO_TIMESTAMP_MODE } from '../../../utils/settings';
-import { useUserSettings } from '../../../hooks/settings/useUserSettings';
+} from '../../../../store/video';
+import { E_VIDEO_TIMESTAMP_MODE } from '../../../../utils/settings';
+import { useUserSettings } from '../../../../hooks/settings/useUserSettings';
 
 const VideoTimestampText = styled(Typography)({
   lineHeight: '100%',
