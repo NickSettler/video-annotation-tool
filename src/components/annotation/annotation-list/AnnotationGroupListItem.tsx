@@ -15,6 +15,8 @@ import {
   selectAnnotationsGroupedById,
   selectAnnotationsSelection,
   TAnnotation,
+  TAnnotationSelection,
+  toggleSelectionItemAction,
 } from '../../../store/annotation';
 import { setVideoCurrentFrameAction } from '../../../store/video';
 import { useModal } from '../../../hooks/modal/useModal';
@@ -104,6 +106,10 @@ export const AnnotationGroupListItem = ({
     [annotations],
   );
 
+  const handleSelectionChange = (selection: TAnnotationSelection) => () => {
+    dispatch(toggleSelectionItemAction(selection));
+  };
+
   const handleToggleExpanded = () => {
     setIsExpanded(!isExpanded);
   };
@@ -160,7 +166,12 @@ export const AnnotationGroupListItem = ({
                 key={`group-${id}-${index}-${E_ANNOTATION_DISPLAY_TYPE.POINT}`}
                 annotation={annotation.annotation}
                 type={annotation.type}
+                isSelectable
                 isSelected={some(annotationSelection, {
+                  id: annotation.annotation.id,
+                  frame: annotation.annotation.properties.frame,
+                })}
+                onSelected={handleSelectionChange({
                   id: annotation.annotation.id,
                   frame: annotation.annotation.properties.frame,
                 })}
