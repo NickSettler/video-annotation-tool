@@ -1,4 +1,4 @@
-import { JSX, useMemo } from 'react';
+import React, { JSX, useMemo } from 'react';
 import { TAnnotation } from '../../../store/annotation';
 import {
   IconButton,
@@ -6,8 +6,9 @@ import {
   ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
+  Stack,
 } from '@mui/material';
-import { Circle, ModeEdit } from '@mui/icons-material';
+import { Circle, ModeEdit, MoveUp } from '@mui/icons-material';
 import { useModal } from '../../../hooks/modal/useModal';
 import { E_MODALS } from '../../../store/modals';
 import { setVideoCurrentFrameAction } from '../../../store/video';
@@ -85,6 +86,10 @@ export const AnnotationListItem = ({
       frame,
     });
 
+  const handleJumpTo = () => {
+    dispatch(setVideoCurrentFrameAction(annotation.properties.frame));
+  };
+
   return (
     <ListItem
       key={`${annotation.id}-${annotation.properties.frame}`}
@@ -98,17 +103,22 @@ export const AnnotationListItem = ({
         primary={primaryText ?? <i>Nso Name</i>}
         secondary={secondaryText}
       />
-      {rest.isEditable && (
-        <ListItemSecondaryAction>
-          <IconButton
-            color={'primary'}
-            size={'small'}
-            onClick={handleEdit(annotation.id, annotation.properties.frame)}
-          >
-            <ModeEdit />
+      <ListItemSecondaryAction>
+        <Stack direction={'row'} spacing={1}>
+          <IconButton color={'primary'} size={'small'} onClick={handleJumpTo}>
+            <MoveUp sx={{ transform: 'rotate(90deg)' }} />
           </IconButton>
-        </ListItemSecondaryAction>
-      )}
+          {rest.isEditable && (
+            <IconButton
+              color={'primary'}
+              size={'small'}
+              onClick={handleEdit(annotation.id, annotation.properties.frame)}
+            >
+              <ModeEdit />
+            </IconButton>
+          )}
+        </Stack>
+      </ListItemSecondaryAction>
     </ListItem>
   );
 };
