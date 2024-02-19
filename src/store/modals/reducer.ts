@@ -7,6 +7,7 @@ export enum E_MODALS {
   JUMP_TO_FRAME = 'jump-to-frame.modal',
   EDIT_ANNOTATION = 'edit-annotation.modal',
   IMPORT_ANNOTATIONS = 'import-annotations.modal',
+  VIDEO_UPLOAD = 'video-upload.modal',
 }
 
 export type TModalMapItem = {
@@ -27,6 +28,9 @@ export type TModalMetaMap = {
     frame?: number;
   };
   [E_MODALS.IMPORT_ANNOTATIONS]: {
+    //
+  };
+  [E_MODALS.VIDEO_UPLOAD]: {
     //
   };
 };
