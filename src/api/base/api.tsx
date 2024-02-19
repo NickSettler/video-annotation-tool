@@ -13,6 +13,8 @@ import { Box, IconButton, Stack, Typography } from '@mui/material';
  * @class Api
  */
 export default class Api {
+  public static readonly apiUrl = import.meta.env.VITE_APP_API_URL;
+
   /**
    * API instance
    * @private
@@ -27,7 +29,7 @@ export default class Api {
 
   private constructor() {
     this._axiosInstance = axios.create({
-      baseURL: import.meta.env.VITE_APP_API_URL,
+      baseURL: Api.apiUrl,
     });
 
     this._axiosInstance.interceptors.request.use((config) => {
