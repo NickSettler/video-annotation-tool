@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import LocalStorage, { E_LOCAL_STORAGE_KEYS } from '../../utils/local-storage';
 import { parseJWT } from '../../utils/jwt';
 import { Toast, toast } from 'react-hot-toast';
@@ -137,10 +137,14 @@ export default class Api {
   /**
    * Send GET request to API
    * @param url - API endpoint
+   * @param options - Axios request options
    */
-  public async get<Response>(url: string): Promise<Response> {
+  public async get<Response, Data = any>(
+    url: string,
+    options?: AxiosRequestConfig<Data>,
+  ): Promise<Response> {
     return await this._axiosInstance
-      .get<Response>(url)
+      .get<Response>(url, options)
       .then((response) => response.data);
   }
 
@@ -148,13 +152,15 @@ export default class Api {
    * Send POST request to API
    * @param url - API endpoint
    * @param data - Data to send
+   * @param options
    */
   public async post<Data, Response>(
     url: string,
     data: Data,
+    options?: AxiosRequestConfig<Data>,
   ): Promise<Response> {
     return await this._axiosInstance
-      .post<Response, AxiosResponse<Response>, Data>(url, data)
+      .post<Response, AxiosResponse<Response>, Data>(url, data, options)
       .then((response) => response.data);
   }
 
