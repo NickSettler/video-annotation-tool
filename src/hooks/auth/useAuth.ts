@@ -7,7 +7,15 @@ export const useAuth = () => {
     null,
   );
 
+  const logout = () => {
+    setAccessToken(null);
+    localStorage.removeItem(E_LOCAL_STORAGE_KEYS.ACCESS_TOKEN);
+    localStorage.removeItem(E_LOCAL_STORAGE_KEYS.REFRESH_TOKEN);
+    localStorage.removeItem(E_LOCAL_STORAGE_KEYS.SETTINGS);
+  };
+
   return {
     accessToken,
+    logout,
   };
 };
