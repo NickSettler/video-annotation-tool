@@ -6,7 +6,7 @@ import { routesPaths } from './index';
 const PublicOnlyRoute = (): JSX.Element => {
   const { accessToken } = useAuth();
 
-  if (accessToken) return <Navigate to={routesPaths.studio.root} replace />;
+  if (accessToken) return <Navigate to={routesPaths.dashboard.root} replace />;
 
   return <Outlet />;
 };

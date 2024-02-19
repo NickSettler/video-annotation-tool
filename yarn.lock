@@ -1242,6 +1242,13 @@
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.202.tgz#f09dbd2fb082d507178b2f2a5c7e74bd72ff98f8"
   integrity sha512-OvlIYQK9tNneDlS0VN54LLd5uiPCBOp7gS5Z0f1mjoJYBrtStzgmJBxONW3U6OZqdtNzZPmn9BS/7WI7BFFcFQ==
 
+"@types/mui-image@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@types/mui-image/-/mui-image-1.0.5.tgz#a46bc9293be4f8622c5fb7a15887db1053e61c8c"
+  integrity sha512-xbOpuowqvMyRiiM3U39AApyVj2xIoNH6egvMCWQ+d9AzILs0cT688x33AfPnQrnMqmJBclo4hRyUzpxGQwTqkQ==
+  dependencies:
+    "@types/react" "*"
+
 "@types/node@*", "@types/node@^20.11.19":
   version "20.11.19"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-20.11.19.tgz#b466de054e9cb5b3831bee38938de64ac7f81195"
@@ -3361,6 +3368,11 @@ mui-file-dropzone@^4.0.2:
     "@babel/runtime" "^7.4.4"
     clsx "^1.0.2"
     react-dropzone "^10.2.1"
+
+mui-image@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/mui-image/-/mui-image-1.0.7.tgz#f665432d2cbf6140a34903b9a5143560ebd4df27"
+  integrity sha512-U79TWMKMfMC1ZiGnv/M+SaVJeUpubEjXOdy7w53RsvidUAMZ+4nW+QmDG9yg5fgWeYy6YJgLHyI9BHSDw76iIg==
 
 mux.js@7.0.2, mux.js@^7.0.1:
   version "7.0.2"
