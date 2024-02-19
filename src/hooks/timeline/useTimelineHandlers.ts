@@ -39,7 +39,7 @@ export const useTimelineHandlers = (
 
       if (momentTime.unix() < 0) return;
 
-      if (what === 'axis') {
+      if (!what || what === 'axis' || what === 'background') {
         const timeFromStart = momentTime.diff(new Date(0), 'milliseconds');
         dispatch(setVideoCurrentTimeAction(timeFromStart / 1000));
       }
