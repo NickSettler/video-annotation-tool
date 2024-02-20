@@ -240,10 +240,10 @@ export const Canvas = (): JSX.Element => {
             handleMouseOverStartPoint={handleMouseOverStartPoint}
             handleMouseOutStartPoint={handleMouseOutStartPoint}
           />
-          {currentFrameAnnotations?.map((annotation) => (
+          {currentFrameAnnotations?.map((annotation, index) => (
             <ExistingAnnotationOverlay
               annotation={annotation}
-              key={`${currentFrame}-${annotation.id}`}
+              key={`${currentFrame}-${annotation.id}-${index}`}
             />
           ))}
         </Layer>
