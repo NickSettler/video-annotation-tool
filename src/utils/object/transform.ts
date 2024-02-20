@@ -1,4 +1,5 @@
 import { set } from 'lodash';
+import { get } from 'get-wild';
 
 /**
  * Swaps keys and values in an object.
@@ -44,7 +45,7 @@ export const transformKeys = <DK extends PropertyKey>(
       continue;
     }
 
-    set(result, key, object[value]);
+    set(result, key, get(object, value));
   }
 
   return result;
