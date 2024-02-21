@@ -12,12 +12,12 @@ import { minMax } from '../../../utils/annotation/min-max';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import {
   videoCurrentFrameSelector,
-  videoHeightRatioSelector,
-  videoWidthRatioSelector,
+  videoZoomSelector,
 } from '../../../store/video';
 import { alpha } from '@mui/material';
 import { compare } from '../../../utils/object/compare';
 import { getPolygonCentroid } from '../../../utils/polygons/centroid';
+import { useVideoRatio } from '../../../hooks/video/useVideoRatio';
 
 export type TExistingAnnotationOverlayProps = {
   annotation: TAnnotation;
@@ -32,8 +32,8 @@ export const ExistingAnnotationOverlay = ({
   const isAnnotationsSelected = useAppSelector(
     selectIsAnnotationSelected(annotation.id, annotation.properties.frame),
   );
-  const widthRatio = useAppSelector(videoWidthRatioSelector);
-  const heightRatio = useAppSelector(videoHeightRatioSelector);
+
+  const videoZoom = useAppSelector(videoZoomSelector);
 
   const vertexRadius = 3;
 
@@ -50,11 +50,13 @@ export const ExistingAnnotationOverlay = ({
     0, 0, 0, 0,
   ]);
 
+  const { widthRatio, heightRatio, maxRatio } = useVideoRatio();
+
   const center = useMemo(() => {
     const [centerX, centerY] = getPolygonCentroid(renderPoints);
 
-    return [centerX / widthRatio, centerY / heightRatio];
-  }, [heightRatio, renderPoints, widthRatio]);
+    return [centerX, centerY];
+  }, [renderPoints]);
 
   const updateAnnotation = useCallback(() => {
     dispatch(
@@ -76,14 +78,14 @@ export const ExistingAnnotationOverlay = ({
   }, [points]);
 
   useEffect(() => {
-    const arrX = renderPoints.map((p) => p[0] / widthRatio);
-    const arrY = renderPoints.map((p) => p[1] / heightRatio);
+    const arrX = renderPoints.map((p) => p[0]);
+    const arrY = renderPoints.map((p) => p[1]);
 
     const _minMaxX = minMax(arrX);
     const _minMaxY = minMax(arrY);
 
     setSelectionRect([_minMaxX[0], _minMaxY[0], _minMaxX[1], _minMaxY[1]]);
-  }, [heightRatio, renderPoints, widthRatio]);
+  }, [renderPoints]);
 
   const handleGroupMouseDown = () => {
     dispatch(
@@ -153,14 +155,20 @@ export const ExistingAnnotationOverlay = ({
 
     const index = e.target.index - 1;
     const pos = [
-      (e.target._lastPos?.x ?? 0) * widthRatio,
-      (e.target._lastPos?.y ?? 0) * heightRatio,
+      ((e.target._lastPos?.x ?? 0) * widthRatio) / videoZoom,
+      ((e.target._lastPos?.y ?? 0) * heightRatio) / videoZoom,
     ];
 
     /** 0 <= pos[w] <= stage.width() * widthRatio */
-    pos[0] = Math.min(Math.max(pos[0], 0), _stage.width() * widthRatio);
+    pos[0] = Math.min(
+      Math.max(pos[0], 0),
+      (_stage.width() * widthRatio) / videoZoom,
+    );
     /** 0 <= pos[h] <= stage.height() * heightRatio */
-    pos[1] = Math.min(Math.max(pos[1], 0), _stage.height() * heightRatio);
+    pos[1] = Math.min(
+      Math.max(pos[1], 0),
+      (_stage.height() * heightRatio) / videoZoom,
+    );
 
     const result = [
       ...renderPoints.slice(0, index),
@@ -176,25 +184,22 @@ export const ExistingAnnotationOverlay = ({
   };
 
   const handleGroupDragStart = useCallback(() => {
-    const arrX = renderPoints.map((p) => p[0] / widthRatio);
-    const arrY = renderPoints.map((p) => p[1] / heightRatio);
+    const arrX = renderPoints.map((p) => (p[0] / widthRatio) * videoZoom);
+    const arrY = renderPoints.map((p) => (p[1] / heightRatio) * videoZoom);
     setMinMaxX(minMax(arrX));
     setMinMaxY(minMax(arrY));
-  }, [heightRatio, renderPoints, widthRatio]);
+  }, [heightRatio, renderPoints, widthRatio, videoZoom]);
 
   const handleGroupDragMove = (e: Konva.KonvaEventObject<DragEvent>) => {
     const result: Array<Array<number>> = [];
     const copyPoints = [...renderPoints];
 
     copyPoints.map((point) =>
-      result.push([
-        point[0] + e.target.x() * widthRatio,
-        point[1] + e.target.y() * heightRatio,
-      ]),
+      result.push([point[0] + e.target.x(), point[1] + e.target.y()]),
     );
 
-    const arrX = result.map((p) => p[0] / widthRatio);
-    const arrY = result.map((p) => p[1] / heightRatio);
+    const arrX = result.map((p) => p[0]);
+    const arrY = result.map((p) => p[1]);
 
     setSelectionRect([
       minMax(arrX)[0],
@@ -212,10 +217,7 @@ export const ExistingAnnotationOverlay = ({
       const copyPoints = [...renderPoints];
 
       copyPoints.map((point) =>
-        result.push([
-          point[0] + e.target.x() * widthRatio,
-          point[1] + e.target.y() * heightRatio,
-        ]),
+        result.push([point[0] + e.target.x(), point[1] + e.target.y()]),
       );
       e.target.position({ x: 0, y: 0 });
 
@@ -228,10 +230,8 @@ export const ExistingAnnotationOverlay = ({
     () =>
       renderPoints
         .reduce((a, b) => a.concat(b), [])
-        .map((point, index) =>
-          index % 2 === 0 ? point / widthRatio : point / heightRatio,
-        ),
-    [heightRatio, renderPoints, widthRatio],
+        .map((point, index) => (index % 2 === 0 ? point : point)),
+    [renderPoints],
   );
 
   const fill = useMemo(() => {
@@ -254,25 +254,25 @@ export const ExistingAnnotationOverlay = ({
         <Group>
           <Line
             points={flattenedPoints}
-            strokeWidth={3}
+            strokeWidth={3 * maxRatio}
             stroke={annotation.properties.color}
             fill={fill}
             closed
           />
 
           {renderPoints.map((point, index) => {
-            const x = (point[0] - vertexRadius / 2) / widthRatio;
-            const y = (point[1] - vertexRadius / 2) / heightRatio;
+            const x = point[0] - (vertexRadius * maxRatio) / videoZoom / 2;
+            const y = point[1] - (vertexRadius * maxRatio) / videoZoom / 2;
             return (
               <Circle
                 name={`polygon-${annotation.id}-point-${index}`}
                 key={index}
                 x={x}
                 y={y}
-                radius={vertexRadius}
+                radius={(vertexRadius * maxRatio) / videoZoom}
                 fill='white'
                 stroke='black'
-                strokeWidth={2}
+                strokeWidth={(2 * maxRatio) / videoZoom}
                 draggable
                 onDragEnd={handlePointDragEnd}
                 onDragMove={handlePointDragMove}
@@ -283,13 +283,14 @@ export const ExistingAnnotationOverlay = ({
         </Group>
         <Group>
           <Label x={center[0]} y={center[1]} opacity={0.75}>
-            <Tag fill={annotation.properties.color} offsetX={50} />
+            <Tag fill={annotation.properties.color} offsetX={50 * maxRatio} />
             <Text
               fill={'black'}
               text={annotation.properties.name}
-              width={100}
-              offsetX={50}
-              padding={4}
+              width={100 * maxRatio}
+              offsetX={50 * maxRatio}
+              padding={4 * maxRatio}
+              fontSize={12 * maxRatio}
               align={'center'}
             />
           </Label>
@@ -303,7 +304,7 @@ export const ExistingAnnotationOverlay = ({
             width={selectionRect[2] - selectionRect[0]}
             height={selectionRect[3] - selectionRect[1]}
             stroke={'blue'}
-            strokeWidth={1}
+            strokeWidth={maxRatio}
             fillEnabled={false}
           />
         </Group>

@@ -46,6 +46,10 @@ const VideoContainer = styled(Box)({
   width: '100%',
   position: 'relative',
   overflow: 'hidden',
+  aspectRatio: '16/9',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
 });
 
 const VideosBox = styled(Box, {
@@ -55,8 +59,13 @@ const VideosBox = styled(Box, {
   aspect?: string;
 }>(({ orientation, aspect }) => ({
   position: 'relative',
-  aspectRatio: '16/9',
-  overflow: 'hidden',
+  aspectRatio: aspect,
+  ...(orientation === 'portrait' && {
+    height: '100%',
+  }),
+  ...(orientation === 'landscape' && {
+    width: '100%',
+  }),
 
   '& > div': {
     width: '100%',
@@ -268,11 +277,11 @@ export const VideoBlock = (): JSX.Element => {
       <VideoContainer>
         {!isLoaded && <VideoOverlay isLoading={isLoading} />}
         <VideosBox
+          orientation={orientation}
+          aspect={videoAspectRatio ?? '16/9'}
           style={{
             transform: `scale(${videoZoom}) translate(${videoTranslateX}px, ${videoTranslateY}px)`,
           }}
-          orientation={orientation}
-          aspect={videoAspectRatio ?? '16/9'}
         >
           <video ref={videoPreloadRef} />
           {isLoaded && <video ref={videoRef} />}

@@ -6,10 +6,7 @@ import { getPolygonColor } from '../../../utils/annotation/palette';
 import { useAppSelector } from '../../../store/store';
 import { selectAnnotationsById } from '../../../store/annotation';
 import { alpha } from '@mui/material';
-import {
-  videoHeightRatioSelector,
-  videoWidthRatioSelector,
-} from '../../../store/video';
+import { useVideoRatio } from '../../../hooks/video/useVideoRatio';
 
 export type TAnnotationOverlayProps = {
   points: Array<Array<number>>;
@@ -24,9 +21,9 @@ export const AnnotationOverlay = ({
   handleMouseOverStartPoint,
   handleMouseOutStartPoint,
 }: TAnnotationOverlayProps): JSX.Element => {
-  const widthRatio = useAppSelector(videoWidthRatioSelector);
-  const heightRatio = useAppSelector(videoHeightRatioSelector);
   const uniqAnnotations = useAppSelector(selectAnnotationsById);
+
+  const { maxRatio } = useVideoRatio();
 
   const vertexRadius = 4;
 
@@ -41,13 +38,13 @@ export const AnnotationOverlay = ({
       <Line
         points={flattenedPoints}
         stroke={newColor}
-        strokeWidth={3}
+        strokeWidth={3 * maxRatio}
         fill={fill}
       />
 
       {points.map((point, index) => {
-        const x = (point[0] - vertexRadius / 2) / widthRatio;
-        const y = (point[1] - vertexRadius / 2) / heightRatio;
+        const x = point[0] - (vertexRadius * maxRatio) / 2;
+        const y = point[1] - (vertexRadius * maxRatio) / 2;
         const startPointAttr =
           index === 0
             ? {
@@ -61,10 +58,10 @@ export const AnnotationOverlay = ({
             key={index}
             x={x}
             y={y}
-            radius={vertexRadius}
+            radius={vertexRadius * maxRatio}
             fill='white'
             stroke='black'
-            strokeWidth={2}
+            strokeWidth={2 * maxRatio}
             draggable
             {...startPointAttr}
           />

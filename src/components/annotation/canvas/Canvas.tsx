@@ -1,14 +1,20 @@
-import { JSX, useCallback, useEffect, useMemo, useState } from 'react';
+import { JSX, useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import { Box, styled } from '@mui/material';
 import { Layer, Stage } from 'react-konva';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import {
   setVideoCurrentFrameAction,
+  setVideoTranslateXAction,
+  setVideoTranslateYAction,
+  setVideoZoomAction,
   videoCurrentFrameSelector,
   videoHeightRatioSelector,
+  videoTranslateXSelector,
+  videoTranslateYSelector,
   videoViewportHeightSelector,
   videoViewportWidthSelector,
   videoWidthRatioSelector,
+  videoZoomSelector,
 } from '../../../store/video';
 import { AnnotationOverlay } from '../annotation-overlay/AnnotationOverlay';
 import Konva from 'konva';
@@ -31,8 +37,10 @@ import {
   pasteAnnotation,
 } from '../../../utils/annotation/clipboard';
 import toast from 'react-hot-toast';
+import { useVideoRatio } from '../../../hooks/video/useVideoRatio';
 
 export const CanvasBox = styled(Box)({
+  height: '100%',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -44,8 +52,6 @@ export const Canvas = (): JSX.Element => {
 
   const videoViewportWidth = useAppSelector(videoViewportWidthSelector);
   const videoViewportHeight = useAppSelector(videoViewportHeightSelector);
-  const widthRatio = useAppSelector(videoWidthRatioSelector);
-  const heightRatio = useAppSelector(videoHeightRatioSelector);
 
   const videoZoom = useAppSelector(videoZoomSelector);
   const videoTranslateX = useAppSelector(videoTranslateXSelector);
@@ -68,14 +74,14 @@ export const Canvas = (): JSX.Element => {
   const [isMouseOverPoint, setIsMouseOverPoint] = useState(false);
   const [isPolyComplete, setIsPolyComplete] = useState(false);
 
+  const { widthRatio, heightRatio } = useVideoRatio();
+
   const flattenedPoints = useMemo(
     () =>
       points
         .concat(isPolyComplete ? [] : position)
         .reduce((a, b) => a.concat(b), [])
-        .map((point, index) =>
-          index % 2 === 0 ? point / widthRatio : point / heightRatio,
-        ),
+        .map((point, index) => (index % 2 === 0 ? point : point)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [points],
   );
@@ -263,10 +269,15 @@ export const Canvas = (): JSX.Element => {
   return (
     <CanvasBox ref={boxRef}>
       <Stage
-        width={videoViewportWidth ?? 480}
-        height={videoViewportHeight ?? 480}
+        width={(videoViewportWidth ?? 480) * videoZoom}
+        height={(videoViewportHeight ?? 480) * videoZoom}
+        style={{
+          transform: `translate(calc(${videoTranslateX}px * ${videoZoom}), calc(${videoTranslateY}px * ${videoZoom}))`,
+        }}
         onMouseMove={handleMouseMove}
         onMouseDown={handleMouseDown}
+        scaleX={(1 / widthRatio) * videoZoom}
+        scaleY={(1 / heightRatio) * videoZoom}
       >
         <Layer>
           <AnnotationOverlay
