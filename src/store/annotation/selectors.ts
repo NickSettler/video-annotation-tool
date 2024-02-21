@@ -2,20 +2,25 @@ import { TAppState } from '../store';
 import { TAnnotationState } from './types';
 import { moduleName } from './actions';
 import { createSelector } from '@reduxjs/toolkit';
-import { videoCurrentFrameSelector } from '../video';
+import { videoCurrentFrameSelector, videoFPSSelector } from '../video';
 import {
+  entries,
   filter,
   find,
   flattenDepth,
   groupBy,
   map,
+  maxBy,
+  minBy,
   omitBy,
+  reduce,
   some,
   uniqBy,
 } from 'lodash';
 import { isAnnotationSelectionGroupable } from '../../utils/annotation/group';
 import { filterAnnotations } from '../../utils/annotation/filter';
 import { E_IMPORT_ANNOTATIONS_FILE_TYPE } from '../../utils/annotation/import';
+import { DataGroupCollectionType, DataItem } from 'vis-timeline';
 
 const annotationState = (state: TAppState): TAnnotationState =>
   state[moduleName];
@@ -117,6 +122,107 @@ export const selectPreviousUngroupedAnnotation = createSelector(
       .slice()
       .reverse()
       .find((annotation) => annotation.properties.frame < frame),
+);
+
+// Timeline
+
+export const selectTimelineGroups = createSelector(
+  selectAnnotationsById,
+  (annotations): DataGroupCollectionType =>
+    annotations.map((annotation) => ({
+      id: annotation.id,
+      content: annotation.properties.name ?? annotation.id.split('-')[0],
+      subgroupStack: true,
+    })),
+);
+
+export const selectTimelineRangeItems = createSelector(
+  selectAnnotationsGrouped,
+  videoFPSSelector,
+  (groupedAnnotations, videoFPS): Array<DataItem> => {
+    if (!videoFPS) return [];
+
+    return flattenDepth(
+      map(entries(groupedAnnotations), ([id, annotations]) => {
+        const minFrame = minBy(
+          annotations,
+          (annotation) => annotation.properties.frame,
+        );
+        const maxFrame = maxBy(
+          annotations,
+          (annotation) => annotation.properties.frame,
+        );
+
+        if (!minFrame || !maxFrame) return [];
+
+        return reduce(
+          annotations,
+          (acc, annotation, index) => {
+            if (index === 0) {
+              acc.push({
+                id: `${annotation.id}`,
+                group: id,
+                style: `--color: ${annotation.properties.color}`,
+                type: 'point',
+                content:
+                  annotation.properties.name ?? annotation.id.split('-')[0],
+                start: new Date((minFrame.properties.frame * 1000) / videoFPS),
+              });
+              return acc;
+            }
+
+            const prevAnnotation = annotations[index - 1];
+
+            if (
+              prevAnnotation.properties.frame + 1 !==
+              annotation.properties.frame
+            ) {
+              acc.push({
+                id: `${annotation.id}_${annotation.properties.frame}_${index}`,
+                group: id,
+                style: `--color: ${annotation.properties.color}`,
+                type: 'point',
+                content:
+                  annotation.properties.name ?? annotation.id.split('-')[0],
+                start: new Date(
+                  (annotation.properties.frame * 1000) / videoFPS,
+                ),
+              });
+            } else {
+              acc[acc.length - 1] = {
+                ...acc[acc.length - 1],
+                id: `${acc[acc.length - 1].id}_${annotation.properties.frame}_${index}`,
+                end: new Date((annotation.properties.frame * 1000) / videoFPS),
+                type: 'range',
+              };
+            }
+
+            return acc;
+          },
+          [] as Array<DataItem>,
+        );
+      }),
+      1,
+    );
+  },
+);
+
+export const selectTimelinePointItems = createSelector(
+  selectAnnotationsUngrouped,
+  videoFPSSelector,
+  (ungroupedAnnotations, videoFPS): Array<DataItem> => {
+    if (!videoFPS) return [];
+
+    return map(ungroupedAnnotations, (annotation) => ({
+      id: `${annotation.id}`,
+      group: `${annotation.id}`,
+      className: 'diamond',
+      style: `--color: ${annotation.properties.color}`,
+      content: annotation.properties.name ?? annotation.id.split('-')[0],
+      start: new Date((annotation.properties.frame * 1000) / videoFPS),
+      type: 'point',
+    }));
+  },
 );
 
 // Selection
