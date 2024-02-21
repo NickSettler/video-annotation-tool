@@ -7,6 +7,7 @@ export const commonVideoOptions = {
   muted: true,
   aspectRatio: '16:9',
   fill: true,
+  enableSmoothSeeking: true,
 };
 
 export const computeMeta = async (
