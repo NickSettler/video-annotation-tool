@@ -41,10 +41,16 @@ export const VideoJumpControls = (): JSX.Element => {
   return (
     <Box justifyContent={'end'}>
       <VideoButtonGroup size={'small'} variant={'text'} disabled={!isLoaded}>
-        <VideoControlButton onClick={handlePreviousFrameClick}>
+        <VideoControlButton
+          onClick={handlePreviousFrameClick}
+          disabled={!previousAnnotationFrame}
+        >
           <Eject sx={{ transform: 'rotate(-90deg)' }} />
         </VideoControlButton>
-        <VideoControlButton onClick={handleNextFrameClick}>
+        <VideoControlButton
+          onClick={handleNextFrameClick}
+          disabled={!nextAnnotationFrame}
+        >
           <Eject sx={{ transform: 'rotate(90deg)' }} />
         </VideoControlButton>
       </VideoButtonGroup>
