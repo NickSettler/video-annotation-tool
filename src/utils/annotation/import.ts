@@ -17,7 +17,7 @@ import { v4 as uuidV4 } from 'uuid';
 import { DeepPartial } from 'utility-types';
 import { get } from 'get-wild';
 import { checkAnnotation } from './validation';
-import { red } from '@mui/material/colors';
+import { getRandomColor } from './palette';
 
 export enum E_IMPORT_ANNOTATIONS_FILE_TYPE {
   APPLICATION_JSON = 'APPLICATION_JSON',
@@ -237,15 +237,19 @@ export const validateImportMap = <
   return true;
 };
 
-const processTransformedAnnotation = (
+const processTransformedAnnotation = <D extends Record<PropertyKey, any>>(
   partialData: Partial<TAnnotation>,
+  mapping: Partial<Record<DotNestedKeys<TAnnotation>, keyof D>>,
   uuid = uuidV4(),
 ): TAnnotation => {
+  const colorKey = get(mapping, 'properties.color');
+  const color = colorKey ? get(partialData, colorKey) : getRandomColor();
+
   const data: DeepPartial<TAnnotation> = {
     type: 'Feature',
     properties: {
       name: uuid,
-      color: red[400],
+      color: color,
       type: null,
     },
     id: uuid,
@@ -286,6 +290,7 @@ export const convertImportData = <
         frameData.reduce((polygonAcc: Array<TAnnotation>, item: D) => {
           let newItem = processTransformedAnnotation(
             transformKeys<DotNestedKeys<TAnnotation>>(item, mapping),
+            mapping,
           );
 
           const existingAnnotationType = find(flattenDepth(framesAcc, 1), [
@@ -317,6 +322,7 @@ export const convertImportData = <
       (acc: Array<TAnnotation>, item: D) => {
         let newItem = processTransformedAnnotation(
           transformKeys<DotNestedKeys<TAnnotation>>(item, mapping),
+          mapping,
         );
 
         const existingAnnotationType = find(acc, [
