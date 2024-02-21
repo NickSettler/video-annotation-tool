@@ -12,6 +12,9 @@ export type TVideoState = {
   videoDuration: number | null;
   viewportWidth: number | null;
   viewportHeight: number | null;
+  zoom: number;
+  translateX: number;
+  translateY: number;
   currentTime: number;
   isPlaying: boolean;
   isLoading: boolean;

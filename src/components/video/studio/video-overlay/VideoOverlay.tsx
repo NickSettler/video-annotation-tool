@@ -2,10 +2,9 @@ import { JSX } from 'react';
 import { Box, CircularProgress, styled, Typography } from '@mui/material';
 
 export const OverlayContainer = styled(Box)(({ theme }) => ({
-  width: `calc(100% - ${theme.spacing(3)} * 2)`,
+  width: '100%',
   height: '100%',
   position: 'absolute',
-  borderRadius: theme.spacing(2),
   border: `1px dashed ${theme.palette.divider}`,
   zIndex: 1,
   backgroundColor: theme.palette.background.paper,

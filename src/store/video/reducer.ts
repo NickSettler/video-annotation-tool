@@ -9,8 +9,11 @@ import {
   setVideoLoadingAction,
   setVideoPlayingAction,
   setVideoSizeAction,
+  setVideoTranslateXAction,
+  setVideoTranslateYAction,
   setVideoUrlAction,
   setVideoViewportSizeAction,
+  setVideoZoomAction,
 } from './actions';
 
 const initialState: TVideoState = {
@@ -21,6 +24,9 @@ const initialState: TVideoState = {
   viewportWidth: null,
   videoDuration: null,
   viewportHeight: null,
+  zoom: 1,
+  translateX: 0,
+  translateY: 0,
   currentTime: 0,
   isPlaying: false,
   isLoading: false,
@@ -50,6 +56,18 @@ export const videoReducer = createReducer(initialState, (builder) => {
       ...state,
       viewportWidth: payload.width,
       viewportHeight: payload.height,
+    }))
+    .addCase(setVideoZoomAction, (state, { payload }) => ({
+      ...state,
+      zoom: payload,
+    }))
+    .addCase(setVideoTranslateXAction, (state, { payload }) => ({
+      ...state,
+      translateX: payload,
+    }))
+    .addCase(setVideoTranslateYAction, (state, { payload }) => ({
+      ...state,
+      translateY: payload,
     }))
     .addCase(setVideoCurrentTimeAction, (state, { payload }) => ({
       ...state,

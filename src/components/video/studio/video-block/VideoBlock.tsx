@@ -10,6 +10,7 @@ import {
   setVideoPlayingAction,
   setVideoSizeAction,
   setVideoViewportSizeAction,
+  setVideoZoomAction,
   videoAspectRatioSelector,
   videoCurrentTimeSelector,
   videoFrequencySelector,
@@ -17,8 +18,11 @@ import {
   videoIsLoadedSelector,
   videoIsLoadingSelector,
   videoIsPlayingSelector,
+  videoTranslateXSelector,
+  videoTranslateYSelector,
   videoUrlSelector,
   videoWidthSelector,
+  videoZoomSelector,
 } from '../../../../store/video';
 import {
   commonVideoOptions,
@@ -37,41 +41,43 @@ import { Canvas } from '../../../annotation/canvas/Canvas';
 import { VideoToolbar } from '../video-toolbar/VideoToolbar';
 import { initAnnotationsAction } from '../../../../store/annotation';
 
-const VideoContainer = styled(Box)(({ theme }) => ({
+const VideoContainer = styled(Box)({
   boxSizing: 'border-box',
   width: '100%',
   position: 'relative',
-  padding: theme.spacing(0, 3),
-}));
+  overflow: 'hidden',
+});
 
 const VideosBox = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'orientation' && prop !== 'aspect',
-})<{ orientation?: TOrientation; aspect?: string }>(
-  ({ orientation, aspect }) => ({
-    position: 'relative',
-    aspectRatio: '16/9',
+})<{
+  orientation?: TOrientation;
+  aspect?: string;
+}>(({ orientation, aspect }) => ({
+  position: 'relative',
+  aspectRatio: '16/9',
+  overflow: 'hidden',
 
-    '& > div': {
-      width: '100%',
-      height: '100%',
-      paddingTop: '0 !important',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
+  '& > div': {
+    width: '100%',
+    height: '100%',
+    paddingTop: '0 !important',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
 
-      '& > video': {
-        position: 'absolute',
-        ...(orientation === 'portrait' && {
-          height: '100%',
-        }),
-        ...(orientation === 'landscape' && {
-          width: '100%',
-        }),
-        aspectRatio: aspect,
-      },
+    '& > video': {
+      position: 'absolute',
+      ...(orientation === 'portrait' && {
+        height: '100%',
+      }),
+      ...(orientation === 'landscape' && {
+        width: '100%',
+      }),
+      aspectRatio: aspect,
     },
-  }),
-);
+  },
+}));
 
 export const CanvasBox = styled(Box)({
   width: '100%',
@@ -87,6 +93,10 @@ export const VideoBlock = (): JSX.Element => {
   const videoWidth = useAppSelector(videoWidthSelector);
   const videoHeight = useAppSelector(videoHeightSelector);
   const videoAspectRatio = useAppSelector(videoAspectRatioSelector);
+
+  const videoZoom = useAppSelector(videoZoomSelector);
+  const videoTranslateX = useAppSelector(videoTranslateXSelector);
+  const videoTranslateY = useAppSelector(videoTranslateYSelector);
 
   const storeCurrentTime = useAppSelector(videoCurrentTimeSelector);
   const frequency = useAppSelector(videoFrequencySelector);
@@ -254,10 +264,13 @@ export const VideoBlock = (): JSX.Element => {
   } = useControls(video, frequency);
 
   return (
-    <Stack spacing={2} sx={{ pt: 3 }}>
+    <Stack>
       <VideoContainer>
         {!isLoaded && <VideoOverlay isLoading={isLoading} />}
         <VideosBox
+          style={{
+            transform: `scale(${videoZoom}) translate(${videoTranslateX}px, ${videoTranslateY}px)`,
+          }}
           orientation={orientation}
           aspect={videoAspectRatio ?? '16/9'}
         >

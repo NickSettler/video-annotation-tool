@@ -47,6 +47,21 @@ export const videoTotalFramesSelector = createSelector(
   (duration, frequency) => (duration ? Math.round(duration / frequency) : 0),
 );
 
+export const videoZoomSelector = createSelector(
+  videoState,
+  (video) => video.zoom,
+);
+
+export const videoTranslateXSelector = createSelector(
+  videoState,
+  (video) => video.translateX,
+);
+
+export const videoTranslateYSelector = createSelector(
+  videoState,
+  (video) => video.translateY,
+);
+
 export const videoViewportWidthSelector = createSelector(
   videoState,
   (video) => video.viewportWidth,
@@ -55,6 +70,18 @@ export const videoViewportWidthSelector = createSelector(
 export const videoViewportHeightSelector = createSelector(
   videoState,
   (video) => video.viewportHeight,
+);
+
+export const videoZoomedViewportWidthSelector = createSelector(
+  videoViewportWidthSelector,
+  videoZoomSelector,
+  (viewportWidth, zoom) => zoom * (viewportWidth ?? 1),
+);
+
+export const videoZoomedViewportHeightSelector = createSelector(
+  videoViewportHeightSelector,
+  videoZoomSelector,
+  (viewportHeight, zoom) => zoom * (viewportHeight ?? 1),
 );
 
 export const videoWidthRatioSelector = createSelector(
@@ -67,6 +94,20 @@ export const videoWidthRatioSelector = createSelector(
 export const videoHeightRatioSelector = createSelector(
   videoHeightSelector,
   videoViewportHeightSelector,
+  (height, viewportHeight) =>
+    height && viewportHeight ? height / viewportHeight : 1,
+);
+
+export const videoWidthRatioZoomedSelector = createSelector(
+  videoWidthSelector,
+  videoZoomedViewportWidthSelector,
+  (width, viewportWidth) =>
+    width && viewportWidth ? width / viewportWidth : 1,
+);
+
+export const videoHeightRatioZoomedSelector = createSelector(
+  videoHeightSelector,
+  videoZoomedViewportHeightSelector,
   (height, viewportHeight) =>
     height && viewportHeight ? height / viewportHeight : 1,
 );

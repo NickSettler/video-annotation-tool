@@ -31,7 +31,7 @@ const Dashboard = (): JSX.Element => {
       <DashboardDrawer />
       <Stack component='main' sx={{ width: '100%', height: '100vh' }}>
         <Toolbar />
-        <Stack sx={{ height: '100%', px: 3, py: 2 }}>
+        <Stack sx={{ height: '100%', px: 3, py: 2, overflowY: 'auto' }}>
           <Outlet />
         </Stack>
       </Stack>

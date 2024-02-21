@@ -46,6 +46,11 @@ export const Canvas = (): JSX.Element => {
   const videoViewportHeight = useAppSelector(videoViewportHeightSelector);
   const widthRatio = useAppSelector(videoWidthRatioSelector);
   const heightRatio = useAppSelector(videoHeightRatioSelector);
+
+  const videoZoom = useAppSelector(videoZoomSelector);
+  const videoTranslateX = useAppSelector(videoTranslateXSelector);
+  const videoTranslateY = useAppSelector(videoTranslateYSelector);
+
   const uniqAnnotations = useAppSelector(selectAnnotationsById);
   const currentFrame = useAppSelector(videoCurrentFrameSelector);
   const currentFrameAnnotations = useAppSelector((state) =>
@@ -55,6 +60,8 @@ export const Canvas = (): JSX.Element => {
   const currentFrameHasSelections = useAppSelector(
     selectCurrentFrameHasSelection,
   );
+
+  const boxRef = useRef<HTMLDivElement | null>(null);
 
   const [points, setPoints] = useState<Array<Array<number>>>([]);
   const [position, setPosition] = useState([0, 0]);
@@ -225,8 +232,36 @@ export const Canvas = (): JSX.Element => {
     setIsMouseOverPoint(false);
   };
 
+  const handleWheel = useCallback(
+    (e: WheelEvent) => {
+      e.preventDefault();
+
+      const { deltaX, deltaY, ctrlKey } = e;
+
+      if (ctrlKey) {
+        if (deltaY) dispatch(setVideoZoomAction(videoZoom + -deltaY / 100));
+      } else {
+        if (deltaX)
+          dispatch(setVideoTranslateXAction(videoTranslateX - deltaX));
+        if (deltaY)
+          dispatch(setVideoTranslateYAction(videoTranslateY - deltaY));
+      }
+    },
+    [dispatch, videoTranslateX, videoTranslateY, videoZoom],
+  );
+
+  useEffect(() => {
+    if (!boxRef.current) return;
+
+    const refValue = boxRef.current;
+
+    refValue.addEventListener('wheel', handleWheel, { passive: false });
+
+    return () => refValue.removeEventListener('wheel', handleWheel);
+  }, [handleWheel]);
+
   return (
-    <CanvasBox>
+    <CanvasBox ref={boxRef}>
       <Stage
         width={videoViewportWidth ?? 480}
         height={videoViewportHeight ?? 480}
