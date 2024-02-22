@@ -2,6 +2,7 @@ import { JSX, useMemo } from 'react';
 import { Card, CardContent, CardMedia, Stack, Typography } from '@mui/material';
 import { E_USER_ENTITY_KEYS, TUser } from '../../../api/user/types';
 import moment from 'moment';
+import { Link } from '../../../utils/router/link';
 
 export type TProjectCardProps = {
   poster: string;
@@ -28,7 +29,12 @@ const ProjectCard = ({
   }, [createdAt]);
 
   return (
-    <Card sx={{ maxWidth: 345 }} variant={'outlined'}>
+    <Card
+      component={Link}
+      to={'/studio'}
+      sx={{ width: '100%', appearance: 'auto', textDecoration: 'none' }}
+      variant={'outlined'}
+    >
       <CardMedia sx={{ height: 140 }} image={poster}></CardMedia>
       <CardContent
         sx={{ px: 1, py: 1, pb: (theme) => `${theme.spacing(1)} !important` }}
