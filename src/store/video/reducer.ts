@@ -1,6 +1,9 @@
 import { TVideoState } from './types';
 import { createReducer } from '@reduxjs/toolkit';
 import {
+  addVideoTranslateXAction,
+  addVideoTranslateYAction,
+  addVideoZoomAction,
   setVideoCurrentFrameAction,
   setVideoCurrentTimeAction,
   setVideoDurationAction,
@@ -9,11 +12,8 @@ import {
   setVideoLoadingAction,
   setVideoPlayingAction,
   setVideoSizeAction,
-  setVideoTranslateXAction,
-  setVideoTranslateYAction,
   setVideoUrlAction,
   setVideoViewportSizeAction,
-  setVideoZoomAction,
 } from './actions';
 
 const initialState: TVideoState = {
@@ -57,18 +57,17 @@ export const videoReducer = createReducer(initialState, (builder) => {
       viewportWidth: payload.width,
       viewportHeight: payload.height,
     }))
-    .addCase(setVideoZoomAction, (state, { payload }) => ({
+    .addCase(addVideoZoomAction, (state, { payload }) => ({
       ...state,
-      // 1 <= zoom <= 4
-      zoom: Math.min(4, Math.max(1, payload)),
+      zoom: Math.min(4, Math.max(1, state.zoom + payload)),
     }))
-    .addCase(setVideoTranslateXAction, (state, { payload }) => ({
+    .addCase(addVideoTranslateXAction, (state, { payload }) => ({
       ...state,
-      translateX: payload,
+      translateX: state.translateX + payload,
     }))
-    .addCase(setVideoTranslateYAction, (state, { payload }) => ({
+    .addCase(addVideoTranslateYAction, (state, { payload }) => ({
       ...state,
-      translateY: payload,
+      translateY: state.translateY + payload,
     }))
     .addCase(setVideoCurrentTimeAction, (state, { payload }) => ({
       ...state,

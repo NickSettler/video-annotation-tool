@@ -10,9 +10,9 @@ export enum E_VIDEO_ACTIONS {
   SET_VIDEO_DURATION = `${moduleName}/SET_VIDEO_DURATION`,
   SET_VIDEO_VIEWPORT_SIZE = `${moduleName}/SET_VIDEO_VIEWPORT_SIZE`,
 
-  SET_VIDEO_ZOOM = `${moduleName}/SET_VIDEO_ZOOM`,
-  SET_VIDEO_TRANSLATE_X = `${moduleName}/SET_VIDEO_TRANSLATE_X`,
-  SET_VIDEO_TRANSLATE_Y = `${moduleName}/SET_VIDEO_TRANSLATE_Y`,
+  ADD_VIDEO_ZOOM = `${moduleName}/ADD_VIDEO_ZOOM`,
+  ADD_VIDEO_TRANSLATE_X = `${moduleName}/ADD_VIDEO_TRANSLATE_X`,
+  ADD_VIDEO_TRANSLATE_Y = `${moduleName}/ADD_VIDEO_TRANSLATE_Y`,
 
   SET_VIDEO_CURRENT_TIME = `${moduleName}/SET_VIDEO_CURRENT_TIME`,
   SET_VIDEO_CURRENT_FRAME = `${moduleName}/SET_VIDEO_CURRENT_FRAME`,
@@ -42,16 +42,16 @@ export const setVideoViewportSizeAction = createAction<Omit<TVideoMeta, 'fps'>>(
   E_VIDEO_ACTIONS.SET_VIDEO_VIEWPORT_SIZE,
 );
 
-export const setVideoZoomAction = createAction<number>(
-  E_VIDEO_ACTIONS.SET_VIDEO_ZOOM,
+export const addVideoZoomAction = createAction<number>(
+  E_VIDEO_ACTIONS.ADD_VIDEO_ZOOM,
 );
 
-export const setVideoTranslateXAction = createAction<number>(
-  E_VIDEO_ACTIONS.SET_VIDEO_TRANSLATE_X,
+export const addVideoTranslateXAction = createAction<number>(
+  E_VIDEO_ACTIONS.ADD_VIDEO_TRANSLATE_X,
 );
 
-export const setVideoTranslateYAction = createAction<number>(
-  E_VIDEO_ACTIONS.SET_VIDEO_TRANSLATE_Y,
+export const addVideoTranslateYAction = createAction<number>(
+  E_VIDEO_ACTIONS.ADD_VIDEO_TRANSLATE_Y,
 );
 
 export const setVideoCurrentTimeAction = createAction<number>(
