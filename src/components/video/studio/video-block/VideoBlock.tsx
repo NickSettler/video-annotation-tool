@@ -62,6 +62,7 @@ const VideosBox = styled(Box, {
 }>(({ orientation, aspect }) => ({
   position: 'relative',
   aspectRatio: aspect,
+  willChange: 'transform',
   ...(orientation === 'portrait' && {
     height: '100%',
   }),

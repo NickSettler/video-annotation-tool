@@ -254,7 +254,7 @@ export const ExistingAnnotationOverlay = ({
         <Group>
           <Line
             points={flattenedPoints}
-            strokeWidth={3 * maxRatio}
+            strokeWidth={(3 * maxRatio) / videoZoom}
             stroke={annotation.properties.color}
             fill={fill}
             closed
@@ -283,14 +283,17 @@ export const ExistingAnnotationOverlay = ({
         </Group>
         <Group>
           <Label x={center[0]} y={center[1]} opacity={0.75}>
-            <Tag fill={annotation.properties.color} offsetX={50 * maxRatio} />
+            <Tag
+              fill={annotation.properties.color}
+              offsetX={(50 * maxRatio) / videoZoom}
+            />
             <Text
               fill={'black'}
               text={annotation.properties.name}
-              width={100 * maxRatio}
-              offsetX={50 * maxRatio}
-              padding={4 * maxRatio}
-              fontSize={12 * maxRatio}
+              width={(100 * maxRatio) / videoZoom}
+              offsetX={(50 * maxRatio) / videoZoom}
+              padding={(4 * maxRatio) / videoZoom}
+              fontSize={(12 * maxRatio) / videoZoom}
               align={'center'}
             />
           </Label>
@@ -304,7 +307,7 @@ export const ExistingAnnotationOverlay = ({
             width={selectionRect[2] - selectionRect[0]}
             height={selectionRect[3] - selectionRect[1]}
             stroke={'blue'}
-            strokeWidth={maxRatio}
+            strokeWidth={maxRatio / videoZoom}
             fillEnabled={false}
           />
         </Group>
