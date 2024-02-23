@@ -10,7 +10,6 @@ import {
   setVideoPlayingAction,
   setVideoSizeAction,
   setVideoViewportSizeAction,
-  setVideoZoomAction,
   videoAspectRatioSelector,
   videoCurrentTimeSelector,
   videoFrequencySelector,
@@ -149,28 +148,27 @@ export const VideoBlock = (): JSX.Element => {
       video.currentTime(storeCurrentTime);
   }, [isPlaying, storeCurrentTime, video]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const playerTicker = (
-    _: DOMHighResTimeStamp,
-    metadata: VideoFrameCallbackMetadata,
-  ) => {
-    if (!video) return;
+  const playerTicker = useCallback(
+    (_: DOMHighResTimeStamp, metadata: VideoFrameCallbackMetadata) => {
+      if (!video) return;
 
-    dispatch(setVideoCurrentTimeAction(metadata.mediaTime));
+      dispatch(setVideoCurrentTimeAction(metadata.mediaTime));
 
-    if (videoRef.current) {
-      videoRef.current.requestVideoFrameCallback(playerTicker);
-    }
-  };
+      if (videoRef.current) {
+        videoRef.current.requestVideoFrameCallback(playerTicker);
+      }
+    },
+    [dispatch, video],
+  );
 
-  const loadMetaDataCallback = useCallback(() => {
+  const loadMetaDataCallback = () => {
     const duration = videoRef.current?.duration;
 
     if (duration) {
       dispatch(setVideoDurationAction(duration));
       dispatch(initAnnotationsAction({ count: duration * (1 / frequency) }));
     }
-  }, [dispatch, frequency]);
+  };
 
   const videoOnReadyCallback = useCallback(() => {
     if (!videoRef.current || !video) return;
