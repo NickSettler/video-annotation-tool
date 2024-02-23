@@ -1,7 +1,8 @@
 import { JSX, useCallback, useEffect, useRef, useState } from 'react';
-import { Box, Stack, styled } from '@mui/material';
+import { Box, IconButton, Stack, styled } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../../store/store';
 import {
+  resetVideoTransformAction,
   setVideoCurrentTimeAction,
   setVideoDurationAction,
   setVideoFPSAction,
@@ -17,6 +18,7 @@ import {
   videoIsLoadedSelector,
   videoIsLoadingSelector,
   videoIsPlayingSelector,
+  videoIsTransformedSelector,
   videoTranslateXSelector,
   videoTranslateYSelector,
   videoUrlSelector,
@@ -39,6 +41,7 @@ import { throttle } from 'lodash';
 import { Canvas } from '../../../annotation/canvas/Canvas';
 import { VideoToolbar } from '../video-toolbar/VideoToolbar';
 import { initAnnotationsAction } from '../../../../store/annotation';
+import { SearchOff } from '@mui/icons-material';
 
 const VideoContainer = styled(Box)({
   boxSizing: 'border-box',
@@ -105,6 +108,7 @@ export const VideoBlock = (): JSX.Element => {
   const videoZoom = useAppSelector(videoZoomSelector);
   const videoTranslateX = useAppSelector(videoTranslateXSelector);
   const videoTranslateY = useAppSelector(videoTranslateYSelector);
+  const isTransformed = useAppSelector(videoIsTransformedSelector);
 
   const storeCurrentTime = useAppSelector(videoCurrentTimeSelector);
   const frequency = useAppSelector(videoFrequencySelector);
@@ -161,6 +165,7 @@ export const VideoBlock = (): JSX.Element => {
     [dispatch, video],
   );
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const loadMetaDataCallback = () => {
     const duration = videoRef.current?.duration;
 
@@ -270,6 +275,10 @@ export const VideoBlock = (): JSX.Element => {
     handleFrameJump,
   } = useControls(video, frequency);
 
+  const handleResetTransform = () => {
+    dispatch(resetVideoTransformAction());
+  };
+
   return (
     <Stack>
       <VideoContainer>
@@ -285,9 +294,22 @@ export const VideoBlock = (): JSX.Element => {
           {isLoaded && <video ref={videoRef} />}
         </VideosBox>
         {isLoaded && (
-          <CanvasBox>
-            <Canvas />
-          </CanvasBox>
+          <>
+            <CanvasBox>
+              <Canvas />
+            </CanvasBox>
+            {isTransformed && (
+              <Stack position='absolute' bottom={0} left={0} p={0.5}>
+                <IconButton
+                  onClick={handleResetTransform}
+                  size={'small'}
+                  color={'primary'}
+                >
+                  <SearchOff />
+                </IconButton>
+              </Stack>
+            )}
+          </>
         )}
       </VideoContainer>
       <VideoToolbar

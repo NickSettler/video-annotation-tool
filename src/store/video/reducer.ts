@@ -4,6 +4,7 @@ import {
   addVideoTranslateXAction,
   addVideoTranslateYAction,
   addVideoZoomAction,
+  resetVideoTransformAction,
   setVideoCurrentFrameAction,
   setVideoCurrentTimeAction,
   setVideoDurationAction,
@@ -68,6 +69,12 @@ export const videoReducer = createReducer(initialState, (builder) => {
     .addCase(addVideoTranslateYAction, (state, { payload }) => ({
       ...state,
       translateY: state.translateY + payload,
+    }))
+    .addCase(resetVideoTransformAction, (state) => ({
+      ...state,
+      zoom: 1,
+      translateX: 0,
+      translateY: 0,
     }))
     .addCase(setVideoCurrentTimeAction, (state, { payload }) => ({
       ...state,

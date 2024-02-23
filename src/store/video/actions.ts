@@ -13,6 +13,7 @@ export enum E_VIDEO_ACTIONS {
   ADD_VIDEO_ZOOM = `${moduleName}/ADD_VIDEO_ZOOM`,
   ADD_VIDEO_TRANSLATE_X = `${moduleName}/ADD_VIDEO_TRANSLATE_X`,
   ADD_VIDEO_TRANSLATE_Y = `${moduleName}/ADD_VIDEO_TRANSLATE_Y`,
+  RESET_VIDEO_TRANSFORM = `${moduleName}/RESET_VIDEO_TRANSFORM`,
 
   SET_VIDEO_CURRENT_TIME = `${moduleName}/SET_VIDEO_CURRENT_TIME`,
   SET_VIDEO_CURRENT_FRAME = `${moduleName}/SET_VIDEO_CURRENT_FRAME`,
@@ -52,6 +53,10 @@ export const addVideoTranslateXAction = createAction<number>(
 
 export const addVideoTranslateYAction = createAction<number>(
   E_VIDEO_ACTIONS.ADD_VIDEO_TRANSLATE_Y,
+);
+
+export const resetVideoTransformAction = createAction(
+  E_VIDEO_ACTIONS.RESET_VIDEO_TRANSFORM,
 );
 
 export const setVideoCurrentTimeAction = createAction<number>(
