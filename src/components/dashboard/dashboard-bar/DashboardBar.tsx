@@ -10,7 +10,7 @@ import {
 import { Logout, Person } from '@mui/icons-material';
 import { useAuth } from '../../../hooks/auth/useAuth';
 
-const DashboardBar = (): JSX.Element => {
+export const DashboardBar = (): JSX.Element => {
   const { logout } = useAuth();
 
   return (
@@ -34,5 +34,3 @@ const DashboardBar = (): JSX.Element => {
     </AppBar>
   );
 };
-
-export default DashboardBar;

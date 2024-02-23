@@ -30,7 +30,7 @@ const VideoRowItemImagePlaceholder = styled(Skeleton)({
   aspectRatio: '16 / 9',
 });
 
-const VideoRowItem = ({ video }: TVideoRowItemProps): JSX.Element => {
+export const VideoRowItem = ({ video }: TVideoRowItemProps): JSX.Element => {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
 
   const createdTimestamp = useMemo(
@@ -76,5 +76,3 @@ const VideoRowItem = ({ video }: TVideoRowItemProps): JSX.Element => {
     </Stack>
   );
 };
-
-export default VideoRowItem;

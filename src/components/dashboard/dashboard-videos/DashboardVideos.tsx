@@ -1,7 +1,7 @@
 import { JSX } from 'react';
 import { Button, Stack, Typography } from '@mui/material';
 import { Upload } from '@mui/icons-material';
-import VideoList from '../../video/dashboard/video-list/VideoList';
+import { VideoList } from '../../video/dashboard/video-list/VideoList';
 
 const DashboardVideos = (): JSX.Element => {
   return (

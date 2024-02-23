@@ -11,7 +11,7 @@ export type TProjectCardProps = {
   createdAt: Date;
 };
 
-const ProjectCard = ({
+export const ProjectCard = ({
   poster,
   title,
   createdBy,
@@ -51,5 +51,3 @@ const ProjectCard = ({
     </Card>
   );
 };
-
-export default ProjectCard;

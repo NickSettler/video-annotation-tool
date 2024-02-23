@@ -1,10 +1,10 @@
 import { JSX } from 'react';
 import { useVideos } from '../../../../hooks/video/useVideoQuery';
 import { Stack } from '@mui/material';
-import VideoRowItem from '../video-row-item/VideoRowItem';
+import { VideoRowItem } from '../video-row-item/VideoRowItem';
 import { E_VIDEO_ENTITY_KEYS } from '../../../../api/video/types';
 
-const VideoList = (): JSX.Element => {
+export const VideoList = (): JSX.Element => {
   const { data, isLoading } = useVideos();
 
   return (
@@ -17,5 +17,3 @@ const VideoList = (): JSX.Element => {
     </Stack>
   );
 };
-
-export default VideoList;

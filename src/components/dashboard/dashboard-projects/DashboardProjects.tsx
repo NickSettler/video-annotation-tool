@@ -1,6 +1,6 @@
 import { JSX } from 'react';
 import { Button, Grid, Stack, Typography } from '@mui/material';
-import ProjectCard from '../../projects/project-card/ProjectCard';
+import { ProjectCard } from '../../projects/project-card/ProjectCard';
 import Logo from '../../../../public/logo512.png';
 import { E_USER_ENTITY_KEYS } from '../../../api/user/types';
 

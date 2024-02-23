@@ -14,7 +14,7 @@ import { routesPaths } from '../../../utils/router';
 
 const drawerWidth = '25%';
 
-const DashboardDrawer = (): JSX.Element => {
+export const DashboardDrawer = (): JSX.Element => {
   return (
     <Drawer
       variant='permanent'
@@ -61,5 +61,3 @@ const DashboardDrawer = (): JSX.Element => {
     </Drawer>
   );
 };
-
-export default DashboardDrawer;

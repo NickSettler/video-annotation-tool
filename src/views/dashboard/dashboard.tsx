@@ -1,7 +1,7 @@
 import React, { JSX, useMemo } from 'react';
-import DashboardBar from '../../components/dashboard/dashboard-bar/DashboardBar';
+import { DashboardBar } from '../../components/dashboard/dashboard-bar/DashboardBar';
 import { Stack, Toolbar } from '@mui/material';
-import DashboardDrawer from '../../components/dashboard/dashboard-drawer/DashboardDrawer';
+import { DashboardDrawer } from '../../components/dashboard/dashboard-drawer/DashboardDrawer';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { isEmpty, reject } from 'lodash';
 import { routesPaths } from '../../utils/router';
