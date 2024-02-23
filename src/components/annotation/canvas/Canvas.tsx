@@ -3,17 +3,15 @@ import { Box, styled } from '@mui/material';
 import { Layer, Stage } from 'react-konva';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import {
+  addVideoTranslateXAction,
+  addVideoTranslateYAction,
+  addVideoZoomAction,
   setVideoCurrentFrameAction,
-  setVideoTranslateXAction,
-  setVideoTranslateYAction,
-  setVideoZoomAction,
   videoCurrentFrameSelector,
-  videoHeightRatioSelector,
   videoTranslateXSelector,
   videoTranslateYSelector,
   videoViewportHeightSelector,
   videoViewportWidthSelector,
-  videoWidthRatioSelector,
   videoZoomSelector,
 } from '../../../store/video';
 import { AnnotationOverlay } from '../annotation-overlay/AnnotationOverlay';
@@ -76,6 +74,19 @@ export const Canvas = (): JSX.Element => {
 
   const { widthRatio, heightRatio } = useVideoRatio();
 
+  const stageSize = useMemo(
+    () => [
+      (videoViewportWidth ?? 480) * videoZoom,
+      (videoViewportHeight ?? 480) * videoZoom,
+    ],
+    [videoViewportWidth, videoViewportHeight, videoZoom],
+  );
+
+  const stageScale = useMemo(
+    () => [(1 / widthRatio) * videoZoom, (1 / heightRatio) * videoZoom],
+    [widthRatio, heightRatio, videoZoom],
+  );
+
   const flattenedPoints = useMemo(
     () =>
       points
@@ -86,62 +97,59 @@ export const Canvas = (): JSX.Element => {
     [points],
   );
 
-  const handleDocumentKey = useCallback(
-    async (event: KeyboardEvent) => {
-      const { code } = event;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const handleDocumentKey = async (event: KeyboardEvent) => {
+    const { code } = event;
 
-      if (code === 'Escape') {
-        setPosition([0, 0]);
-        setIsPolyComplete(false);
-        setPoints([]);
-      }
+    if (code === 'Escape') {
+      setPosition([0, 0]);
+      setIsPolyComplete(false);
+      setPoints([]);
+    }
 
-      if (code === 'ArrowLeft') {
-        dispatch(setVideoCurrentFrameAction(currentFrame - 1));
-      }
+    if (code === 'ArrowLeft') {
+      dispatch(setVideoCurrentFrameAction(currentFrame - 1));
+    }
 
-      if (code === 'ArrowRight') {
-        dispatch(setVideoCurrentFrameAction(currentFrame + 1));
-      }
+    if (code === 'ArrowRight') {
+      dispatch(setVideoCurrentFrameAction(currentFrame + 1));
+    }
 
-      if (event[getCopyKey()] && code === 'KeyC') {
-        await copyAnnotation(selectionAnnotations);
-        dispatch(clearSelectionAction());
-      }
+    if (event[getCopyKey()] && code === 'KeyC') {
+      await copyAnnotation(selectionAnnotations);
+      dispatch(clearSelectionAction());
+    }
 
-      if (event[getCopyKey()] && code === 'KeyV') {
-        const annotation = await pasteAnnotation().catch((e) => {
-          toast.error(e);
+    if (event[getCopyKey()] && code === 'KeyV') {
+      const annotation = await pasteAnnotation().catch((e) => {
+        toast.error(e);
 
-          return null;
-        });
+        return null;
+      });
 
-        if (!annotation) return;
+      if (!annotation) return;
 
-        const currentFrameHasAnnotation = some(currentFrameAnnotations, [
-          'id',
-          annotation.id,
-        ]);
+      const currentFrameHasAnnotation = some(currentFrameAnnotations, [
+        'id',
+        annotation.id,
+      ]);
 
-        if (currentFrameHasAnnotation) return;
+      if (currentFrameHasAnnotation) return;
 
-        dispatch(
-          addFrameAnnotationAction({
-            frame: currentFrame,
-            annotation: {
-              ...annotation,
-              properties: {
-                ...annotation.properties,
-                frame: currentFrame,
-              },
+      dispatch(
+        addFrameAnnotationAction({
+          frame: currentFrame,
+          annotation: {
+            ...annotation,
+            properties: {
+              ...annotation.properties,
+              frame: currentFrame,
             },
-          }),
-        );
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentFrame, selectionAnnotations],
-  );
+          },
+        }),
+      );
+    }
+  };
 
   useEffect(() => {
     document.addEventListener('keydown', handleDocumentKey);
@@ -245,39 +253,42 @@ export const Canvas = (): JSX.Element => {
       const { deltaX, deltaY, ctrlKey } = e;
 
       if (ctrlKey) {
-        if (deltaY) dispatch(setVideoZoomAction(videoZoom + -deltaY / 100));
+        if (deltaY) dispatch(addVideoZoomAction(-deltaY / 100));
       } else {
-        if (deltaX)
-          dispatch(setVideoTranslateXAction(videoTranslateX - deltaX));
-        if (deltaY)
-          dispatch(setVideoTranslateYAction(videoTranslateY - deltaY));
+        if (deltaX) dispatch(addVideoTranslateXAction(-deltaX));
+        if (deltaY) dispatch(addVideoTranslateYAction(-deltaY));
       }
     },
-    [dispatch, videoTranslateX, videoTranslateY, videoZoom],
+    [dispatch],
   );
 
   useEffect(() => {
     if (!boxRef.current) return;
 
-    const refValue = boxRef.current;
+    const refValue = boxRef;
 
-    refValue.addEventListener('wheel', handleWheel, { passive: false });
+    refValue.current?.addEventListener('wheel', handleWheel, {
+      passive: false,
+    });
 
-    return () => refValue.removeEventListener('wheel', handleWheel);
+    return () => {
+      refValue.current?.removeEventListener('wheel', handleWheel);
+      refValue.current = null;
+    };
   }, [handleWheel]);
 
   return (
     <CanvasBox ref={boxRef}>
       <Stage
-        width={(videoViewportWidth ?? 480) * videoZoom}
-        height={(videoViewportHeight ?? 480) * videoZoom}
+        width={stageSize[0]}
+        height={stageSize[1]}
         style={{
-          transform: `translate(calc(${videoTranslateX}px * ${videoZoom}), calc(${videoTranslateY}px * ${videoZoom}))`,
+          transform: `translate(${videoTranslateX * videoZoom}px, ${videoTranslateY * videoZoom}px)`,
         }}
+        scaleX={stageScale[0]}
+        scaleY={stageScale[1]}
         onMouseMove={handleMouseMove}
         onMouseDown={handleMouseDown}
-        scaleX={(1 / widthRatio) * videoZoom}
-        scaleY={(1 / heightRatio) * videoZoom}
       >
         <Layer>
           <AnnotationOverlay
