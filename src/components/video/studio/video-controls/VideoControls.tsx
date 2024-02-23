@@ -84,7 +84,7 @@ export const VideoControls = ({
           <SkipPrevious />
         </VideoControlButton>
         <VideoControlButton onClick={onPlayPause}>
-          {isPlaying ? <PlayArrow /> : <Pause />}
+          {!isPlaying ? <PlayArrow /> : <Pause />}
         </VideoControlButton>
         <VideoControlButton onClick={onNextStep}>
           <SkipNext />
