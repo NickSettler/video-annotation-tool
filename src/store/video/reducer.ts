@@ -60,7 +60,7 @@ export const videoReducer = createReducer(initialState, (builder) => {
     }))
     .addCase(addVideoZoomAction, (state, { payload }) => ({
       ...state,
-      zoom: Math.min(4, Math.max(1, state.zoom + payload)),
+      zoom: Math.min(8, Math.max(1, state.zoom + payload)),
     }))
     .addCase(addVideoTranslateXAction, (state, { payload }) => ({
       ...state,
