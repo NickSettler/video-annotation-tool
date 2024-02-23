@@ -20,7 +20,7 @@ import {
 import { isAnnotationSelectionGroupable } from '../../utils/annotation/group';
 import { filterAnnotations } from '../../utils/annotation/filter';
 import { E_IMPORT_ANNOTATIONS_FILE_TYPE } from '../../utils/annotation/import';
-import { DataGroupCollectionType, DataItem } from 'vis-timeline';
+import { DataGroup, DataItem } from 'vis-timeline';
 
 const annotationState = (state: TAppState): TAnnotationState =>
   state[moduleName];
@@ -128,9 +128,10 @@ export const selectPreviousUngroupedAnnotation = createSelector(
 
 export const selectTimelineGroups = createSelector(
   selectAnnotationsById,
-  (annotations): DataGroupCollectionType =>
+  (annotations): Array<DataGroup> =>
     annotations.map((annotation) => ({
       id: annotation.id,
+      title: annotation.properties.name,
       content: annotation.properties.name ?? annotation.id.split('-')[0],
       subgroupStack: true,
     })),
@@ -208,20 +209,28 @@ export const selectTimelineRangeItems = createSelector(
 );
 
 export const selectTimelinePointItems = createSelector(
+  selectTimelineGroups,
   selectAnnotationsUngrouped,
   videoFPSSelector,
-  (ungroupedAnnotations, videoFPS): Array<DataItem> => {
+  (groups, ungroupedAnnotations, videoFPS): Array<DataItem> => {
     if (!videoFPS) return [];
 
-    return map(ungroupedAnnotations, (annotation) => ({
-      id: `${annotation.id}`,
-      group: `${annotation.id}`,
-      className: 'diamond',
-      style: `--color: ${annotation.properties.color}`,
-      content: annotation.properties.name ?? annotation.id.split('-')[0],
-      start: new Date((annotation.properties.frame * 1000) / videoFPS),
-      type: 'point',
-    }));
+    return map(ungroupedAnnotations, (annotation) => {
+      const currentGroup = find(groups, ['id', annotation.id]);
+
+      return {
+        id: `${annotation.id}`,
+        group: `${annotation.id}`,
+        className: 'diamond',
+        style: `--color: ${annotation.properties.color}`,
+        content:
+          currentGroup?.title !== annotation.properties.name
+            ? annotation.properties.name ?? annotation.id.split('-')[0]
+            : '',
+        start: new Date((annotation.properties.frame * 1000) / videoFPS),
+        type: 'point',
+      };
+    });
   },
 );
 
