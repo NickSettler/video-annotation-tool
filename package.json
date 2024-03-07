@@ -15,7 +15,7 @@
     "axios": "^1.6.7",
     "earcut": "^2.2.4",
     "get-wild": "^3.0.2",
-    "konva": "^9.3.5",
+    "konva": "^9.3.6",
     "lodash": "^4.17.21",
     "moment": "^2.30.1",
     "mui-file-dropzone": "^4.0.2",
