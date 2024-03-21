@@ -11,7 +11,7 @@
     "@mui/x-data-grid": "^6.19.8",
     "@reduxjs/toolkit": "^2.2.1",
     "@sentry/react": "^7.107.0",
-    "@tanstack/react-query": "^5.28.4",
+    "@tanstack/react-query": "^5.28.6",
     "axios": "^1.6.8",
     "earcut": "^2.2.4",
     "get-wild": "^3.0.2",
