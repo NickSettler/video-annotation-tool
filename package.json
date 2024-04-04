@@ -44,7 +44,7 @@
     "@types/jest": "^29.5.12",
     "@types/lodash": "^4.17.0",
     "@types/mui-image": "^1.0.5",
-    "@types/node": "^20.12.3",
+    "@types/node": "^20.12.4",
     "@types/react": "^18.2.74",
     "@types/react-dom": "^18.2.23",
     "@types/uuid": "^9.0.8",
