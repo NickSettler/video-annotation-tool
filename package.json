@@ -8,7 +8,7 @@
     "@fontsource/roboto": "^5.0.12",
     "@mui/icons-material": "^5.15.15",
     "@mui/material": "^5.15.15",
-    "@mui/x-data-grid": "^7.1.0",
+    "@mui/x-data-grid": "^7.1.1",
     "@reduxjs/toolkit": "^2.2.3",
     "@sentry/react": "^7.109.0",
     "@tanstack/react-query": "^5.28.14",
