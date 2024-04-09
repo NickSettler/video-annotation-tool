@@ -45,7 +45,7 @@
     "@types/lodash": "^4.17.0",
     "@types/mui-image": "^1.0.5",
     "@types/node": "^20.12.6",
-    "@types/react": "^18.2.74",
+    "@types/react": "^18.2.75",
     "@types/react-dom": "^18.2.24",
     "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
