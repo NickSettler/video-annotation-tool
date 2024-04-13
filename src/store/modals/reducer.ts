@@ -31,7 +31,7 @@ export type TModalMetaMap = {
     //
   };
   [E_MODALS.VIDEO_UPLOAD]: {
-    //
+    onSuccess?(video: TVideo): void;
   };
 };
 

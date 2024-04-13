@@ -11,9 +11,11 @@ import {
 import { Image } from 'mui-image';
 import { VideoService } from '../../../../api/video/video.service';
 import moment from 'moment';
+import { useVideoMutations } from '../../../../hooks/video/useVideoMutations';
 
 export type TVideoRowItemProps = {
   video: TVideo;
+  refetch(): Promise<void>;
 };
 
 const VideoRowItemImage = styled(Image)({
@@ -30,7 +32,14 @@ const VideoRowItemImagePlaceholder = styled(Skeleton)({
   aspectRatio: '16 / 9',
 });
 
-export const VideoRowItem = ({ video }: TVideoRowItemProps): JSX.Element => {
+export const VideoRowItem = ({
+  video,
+  refetch,
+}: TVideoRowItemProps): JSX.Element => {
+  const { deleteMutation } = useVideoMutations({
+    refetch,
+  });
+
   const [imageSrc, setImageSrc] = useState<string | null>(null);
 
   const createdTimestamp = useMemo(
@@ -38,9 +47,23 @@ export const VideoRowItem = ({ video }: TVideoRowItemProps): JSX.Element => {
     [video],
   );
 
+  const usedProjectsCaption = useMemo(() => {
+    const projects = video[E_VIDEO_ENTITY_KEYS.PROJECTS];
+
+    if (projects.length === 0) {
+      return 'Not used in any projects';
+    }
+
+    return `Used in ${projects.length} project${projects.length > 1 ? 's' : ''}`;
+  }, [video]);
+
   useEffect(() => {
     VideoService.getVideoPoster(video).then(setImageSrc);
-  }, []);
+  }, [video]);
+
+  const handleDeleteClick = () => {
+    deleteMutation.mutate(video[E_VIDEO_ENTITY_KEYS.ID]);
+  };
 
   return (
     <Stack direction={'row'} spacing={2}>
@@ -57,18 +80,17 @@ export const VideoRowItem = ({ video }: TVideoRowItemProps): JSX.Element => {
           <Typography variant={'caption'}>
             Created: {createdTimestamp}
           </Typography>
+          <Typography variant={'caption'}>{usedProjectsCaption}</Typography>
         </Stack>
       </Stack>
       <Box flexGrow={1} />
       <Stack direction={'row'} spacing={1} alignItems={'start'}>
-        <Button variant={'text'} size={'small'} disableElevation>
-          Edit
-        </Button>
         <Button
           variant={'text'}
           color={'error'}
           size={'small'}
           disableElevation
+          onClick={handleDeleteClick}
         >
           Delete
         </Button>

@@ -44,7 +44,7 @@ export const BaseModal = memo((props: TBaseModalProps) => {
       {...(onSubmit ? { component: 'form', onSubmit } : {})}
     >
       <DialogTitle>{title}</DialogTitle>
-      <DialogContent>{children}</DialogContent>
+      <DialogContent style={{ overflow: 'initial' }}>{children}</DialogContent>
       {footer && <DialogActions>{footer}</DialogActions>}
     </Dialog>,
     root,

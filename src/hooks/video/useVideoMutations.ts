@@ -19,6 +19,7 @@ export type TUseVideoMutations = {
     TApiError,
     TVideoCreateMutationVariables
   >;
+  deleteMutation: UseMutationResult<void, TApiError, string>;
 };
 
 export const useVideoMutations = ({
@@ -46,7 +47,22 @@ export const useVideoMutations = ({
     },
   });
 
+  const deleteMutation = useMutation<void, TApiError, string>({
+    mutationFn: async (videoID: string) => VideoService.deleteVideo(videoID),
+    onSuccess: async () => {
+      await refetch();
+
+      toast.success('Successfully deleted video');
+    },
+    onError: async () => {
+      await refetch();
+
+      toast.error('Failed to delete video');
+    },
+  });
+
   return {
     createMutation,
+    deleteMutation,
   };
 };

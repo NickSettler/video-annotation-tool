@@ -5,7 +5,7 @@ import { AxiosProgressEvent } from 'axios';
 
 export type TVideoCreateData = {
   [E_VIDEO_ENTITY_KEYS.NAME]: TVideo[E_VIDEO_ENTITY_KEYS.NAME];
-  file: File;
+  video: File;
 };
 
 export type TVideoCreateOptions = {
@@ -40,10 +40,14 @@ export class VideoService extends BaseService {
   ): Promise<TVideo> {
     const formData = new FormData();
     formData.append(E_VIDEO_ENTITY_KEYS.NAME, data[E_VIDEO_ENTITY_KEYS.NAME]);
-    formData.append('file', data.file);
+    formData.append('video', data.video);
 
     return Api.instance.post<FormData, TVideo>(this.endpoint, formData, {
       onUploadProgress: options?.onUploadProgress,
     });
+  }
+
+  public static async deleteVideo(id: string): Promise<void> {
+    return Api.instance.delete<void>(`${this.endpoint}/${id}`);
   }
 }

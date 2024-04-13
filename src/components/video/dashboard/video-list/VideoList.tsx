@@ -5,13 +5,17 @@ import { VideoRowItem } from '../video-row-item/VideoRowItem';
 import { E_VIDEO_ENTITY_KEYS } from '../../../../api/video/types';
 
 export const VideoList = (): JSX.Element => {
-  const { data, isLoading } = useVideos();
+  const { data, isLoading, refetch } = useVideos();
 
   return (
     <Stack spacing={3}>
       {data
         ? data.map((video) => (
-            <VideoRowItem key={video[E_VIDEO_ENTITY_KEYS.ID]} video={video} />
+            <VideoRowItem
+              key={video[E_VIDEO_ENTITY_KEYS.ID]}
+              video={video}
+              refetch={refetch}
+            />
           ))
         : null}
     </Stack>

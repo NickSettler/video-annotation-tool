@@ -1,4 +1,5 @@
 import { TUser } from '../user/types';
+import { TProject } from '../projects/types';
 
 export enum E_POSTER_ENTITY_KEYS {
   ID = 'id',
@@ -22,6 +23,7 @@ export enum E_VIDEO_ENTITY_KEYS {
   ASPECT_X = 'aspect_x',
   ASPECT_Y = 'aspect_y',
   POSTERS = 'posters',
+  PROJECTS = 'projects',
   CREATED_BY = 'created_by',
   CREATED_AT = 'created_at',
 }
@@ -48,6 +50,7 @@ export type TVideo = {
   [E_VIDEO_ENTITY_KEYS.ASPECT_X]: number | null;
   [E_VIDEO_ENTITY_KEYS.ASPECT_Y]: number | null;
   [E_VIDEO_ENTITY_KEYS.POSTERS]: Array<TPoster>;
+  [E_VIDEO_ENTITY_KEYS.PROJECTS]: Array<TProject>;
   [E_VIDEO_ENTITY_KEYS.CREATED_BY]: TUser;
   [E_VIDEO_ENTITY_KEYS.CREATED_AT]: Date;
 };
