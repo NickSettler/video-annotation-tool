@@ -6,11 +6,14 @@ export default defineConfig({
   base: "/",
   plugins: [react(), eslint()],
   build: {
-    sourcemap: true
+    sourcemap: true,
   },
   resolve: {
     alias: {
       "$fonts": "/src/assets/fonts"
     }
+  },
+  server: {
+    host: '::0',
   }
 });
