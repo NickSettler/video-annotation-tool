@@ -3,9 +3,7 @@ import {
   UseQueryOptions,
   UseQueryResult,
 } from '@tanstack/react-query';
-import { TVideo } from '../../api/video/types';
 import { TApiError } from '../../api/base/types';
-import { VideoService } from '../../api/video/video.service';
 import { map } from 'lodash';
 import {
   applyTransforms,

@@ -5,7 +5,7 @@ import { VideoRowItem } from '../video-row-item/VideoRowItem';
 import { E_VIDEO_ENTITY_KEYS } from '../../../../api/video/types';
 
 export const VideoList = (): JSX.Element => {
-  const { data, isLoading, refetch } = useVideos();
+  const { data, refetch } = useVideos();
 
   return (
     <Stack spacing={3}>

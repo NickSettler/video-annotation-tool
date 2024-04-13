@@ -33,99 +33,12 @@ export const AnnotationList = ({
   selection,
   onSelectionChange,
 }: TAnnotationListProps): JSX.Element => {
-  const dispatch = useAppDispatch();
-
   const isLoading = useAppSelector(videoIsLoadingSelector);
   const isLoaded = useAppSelector(videoIsLoadedSelector);
-  const currentFrame = useAppSelector(videoCurrentFrameSelector);
   const groupedAnnotations: Record<string, Array<TAnnotation>> = useAppSelector(
     selectAnnotationsGrouped,
   );
   const ungroupedAnnotations = useAppSelector(selectAnnotationsUngrouped);
-  const currentFrameAnnotations = useAppSelector(selectCurrentFrameAnnotation);
-
-  const processFrameAnnotations = (
-    annotations: Array<TAnnotation>,
-  ): FeatureCollection => ({
-    type: 'FeatureCollection',
-    features: annotations,
-  });
-
-  const handleImport = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'application/json';
-    input.onchange = () => {
-      const file = input.files?.[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const annotations = JSON.parse(reader.result as string);
-
-          if (!isArray(annotations)) {
-            dispatch(
-              setFrameAnnotationsAction({
-                frame: currentFrame,
-                annotations: annotations.features as Array<TAnnotation>,
-              }),
-            );
-          }
-
-          if (isArray(annotations)) {
-            dispatch(
-              setAllAnnotationsAction(
-                annotations.map(
-                  (annotation) => annotation.features as Array<TAnnotation>,
-                ),
-              ),
-            );
-          }
-        };
-        reader.readAsText(file);
-      }
-    };
-    input.click();
-  };
-
-  const handleExport = () => {
-    if (!currentFrameAnnotations?.length) return;
-
-    downloadAsJson(
-      processFrameAnnotations(currentFrameAnnotations),
-      `annotations-${currentFrame}`,
-    );
-  };
-
-  const handleExportAll = () => {
-    // if (!allAnnotations.length) return;
-    //
-    // downloadAsJson(
-    //   allAnnotations
-    //     .filter((annotation) => annotation)
-    //     .map((annotation) =>
-    //       annotation ? processFrameAnnotations(annotation) : [],
-    //     ),
-    //   'annotations',
-    // );
-  };
-
-  const menuActions: Array<TGenericMenuAction> = [
-    {
-      label: 'Import',
-      icon: FileUpload,
-      action: handleImport,
-    },
-    {
-      label: 'Export',
-      icon: FileDownload,
-      action: handleExport,
-    },
-    {
-      label: 'Export All',
-      icon: FileDownload,
-      action: handleExportAll,
-    },
-  ];
 
   const handleSelectionChange = (id: string, frame: number) => () => {
     onSelectionChange({ id, frame });

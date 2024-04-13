@@ -10,8 +10,6 @@ import { Toaster } from 'react-hot-toast';
 import { Outlet, useLocation } from 'react-router-dom';
 
 const App = (): JSX.Element => {
-  const location = useLocation();
-
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />

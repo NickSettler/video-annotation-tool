@@ -58,4 +58,4 @@ Once you have installed these dependencies, you can follow these steps:
 ## Environmental Variables
 
 The project uses an .env file to set environmental variables for both development and production.
-The .env file is ignored by git, so you need yo copy the .env.template file, rename it to .env and set the variables.
+The .env file is ignored by git, so you need to copy the .env.template file, rename it to .env and set the variables.

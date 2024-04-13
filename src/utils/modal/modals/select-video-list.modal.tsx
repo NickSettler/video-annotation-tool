@@ -2,15 +2,7 @@ import { BaseModal, TCommonModalProps } from '../base-modal';
 import { E_MODALS, TDynModalMeta } from '../../../store/modals';
 import { JSX } from 'react';
 import { BaseModalFooter } from '../base-modal-footer';
-import {
-  Box,
-  Button,
-  List,
-  ListItemButton,
-  ListItemText,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Stack } from '@mui/material';
 import { E_VIDEO_ENTITY_KEYS, TVideo } from '../../../api/video/types';
 import { useVideos } from '../../../hooks/video/useVideoQuery';
 import { VideoRowItem } from '../../../components/video/dashboard/video-row-item/VideoRowItem';

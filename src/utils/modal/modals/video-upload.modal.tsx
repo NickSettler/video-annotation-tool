@@ -76,12 +76,8 @@ const VideoUploadModal = ({
     refetch,
   });
 
-  const [isPending, isSuccess, isError] = useMemo(
-    () => [
-      createMutation.isPending,
-      createMutation.isSuccess,
-      createMutation.isError,
-    ],
+  const [isPending, isSuccess] = useMemo(
+    () => [createMutation.isPending, createMutation.isSuccess],
     [createMutation],
   );
 
@@ -108,7 +104,7 @@ const VideoUploadModal = ({
 
     video.addEventListener(
       'loadedmetadata',
-      function (event) {
+      function () {
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
       },

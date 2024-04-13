@@ -18,17 +18,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import {
-  entries,
-  filter,
-  fromPairs,
-  isNull,
-  keys,
-  omit,
-  omitBy,
-  pickBy,
-  reduce,
-} from 'lodash';
+import { entries, filter, fromPairs, isNull, keys, omit, omitBy } from 'lodash';
 import {
   ANNOTATION_FIELDS_HUMAN_DESCRIPTION,
   ANNOTATION_FIELDS_IMPORT_RULES,
