@@ -23,9 +23,13 @@ export class VideoService extends BaseService {
     return Api.instance.get<Array<TVideo>>(this.endpoint);
   }
 
+  public static getVideoPosterURL(video: TVideo): string {
+    return `${Api.apiUrl}${this.endpoint}/${video[E_VIDEO_ENTITY_KEYS.ID]}/posters/${video[E_VIDEO_ENTITY_KEYS.POSTER_ID]}`;
+  }
+
   public static async getVideoPoster(video: TVideo): Promise<string> {
     const image = await Api.instance.get<Blob>(
-      `${Api.apiUrl}${this.endpoint}/${video[E_VIDEO_ENTITY_KEYS.ID]}/posters/${video[E_VIDEO_ENTITY_KEYS.POSTER_ID]}`,
+      VideoService.getVideoPosterURL(video),
       {
         responseType: 'blob',
       },

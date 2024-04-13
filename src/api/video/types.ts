@@ -50,7 +50,7 @@ export type TVideo = {
   [E_VIDEO_ENTITY_KEYS.ASPECT_X]: number | null;
   [E_VIDEO_ENTITY_KEYS.ASPECT_Y]: number | null;
   [E_VIDEO_ENTITY_KEYS.POSTERS]: Array<TPoster>;
-  [E_VIDEO_ENTITY_KEYS.PROJECTS]: Array<TProject>;
+  [E_VIDEO_ENTITY_KEYS.PROJECTS]?: Array<TProject>;
   [E_VIDEO_ENTITY_KEYS.CREATED_BY]: TUser;
   [E_VIDEO_ENTITY_KEYS.CREATED_AT]: Date;
 };

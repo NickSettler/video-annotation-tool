@@ -3,11 +3,14 @@ import { closeModal, openModal } from './actions';
 import { findLastIndex } from 'lodash';
 
 export enum E_MODALS {
+  CONFIRM_DIALOG = 'confirm-dialog.modal',
   PROJECT_SETTINGS = 'project-settings.modal',
   JUMP_TO_FRAME = 'jump-to-frame.modal',
   EDIT_ANNOTATION = 'edit-annotation.modal',
   IMPORT_ANNOTATIONS = 'import-annotations.modal',
   VIDEO_UPLOAD = 'video-upload.modal',
+  SELECT_VIDEO_LIST = 'select-video-list.modal',
+  CREATE_PROJECT = 'create-project.modal',
 }
 
 export type TModalMapItem = {
@@ -17,6 +20,12 @@ export type TModalMapItem = {
 };
 
 export type TModalMetaMap = {
+  [E_MODALS.CONFIRM_DIALOG]: {
+    title: string;
+    description?: string;
+    role?: E_MODAL_ROLE;
+    onConfirm(): void;
+  };
   [E_MODALS.PROJECT_SETTINGS]: {
     //
   };
@@ -32,6 +41,12 @@ export type TModalMetaMap = {
   };
   [E_MODALS.VIDEO_UPLOAD]: {
     onSuccess?(video: TVideo): void;
+  };
+  [E_MODALS.SELECT_VIDEO_LIST]: {
+    onSelect(video: TVideo): void;
+  };
+  [E_MODALS.CREATE_PROJECT]: {
+    //
   };
 };
 

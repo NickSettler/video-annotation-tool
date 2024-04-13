@@ -12,10 +12,15 @@ import { Image } from 'mui-image';
 import { VideoService } from '../../../../api/video/video.service';
 import moment from 'moment';
 import { useVideoMutations } from '../../../../hooks/video/useVideoMutations';
+import { useModal } from '../../../../hooks/modal/useModal';
+import { E_MODALS } from '../../../../store/modals';
+import { E_MODAL_ROLE } from '../../../../utils/modal/types';
 
 export type TVideoRowItemProps = {
   video: TVideo;
-  refetch(): Promise<void>;
+  isReadonly?: boolean;
+  onSelect?(video: TVideo): void;
+  refetch?(): Promise<unknown>;
 };
 
 const VideoRowItemImage = styled(Image)({
@@ -34,11 +39,15 @@ const VideoRowItemImagePlaceholder = styled(Skeleton)({
 
 export const VideoRowItem = ({
   video,
+  isReadonly = false,
+  onSelect,
   refetch,
 }: TVideoRowItemProps): JSX.Element => {
   const { deleteMutation } = useVideoMutations({
     refetch,
   });
+
+  const { onOpen: openConfirmDialog } = useModal(E_MODALS.CONFIRM_DIALOG);
 
   const [imageSrc, setImageSrc] = useState<string | null>(null);
 
@@ -49,6 +58,8 @@ export const VideoRowItem = ({
 
   const usedProjectsCaption = useMemo(() => {
     const projects = video[E_VIDEO_ENTITY_KEYS.PROJECTS];
+
+    if (!projects) return '';
 
     if (projects.length === 0) {
       return 'Not used in any projects';
@@ -61,14 +72,24 @@ export const VideoRowItem = ({
     VideoService.getVideoPoster(video).then(setImageSrc);
   }, [video]);
 
+  const handleSelectClick = () => {
+    if (onSelect) onSelect(video);
+  };
+
   const handleDeleteClick = () => {
-    deleteMutation.mutate(video[E_VIDEO_ENTITY_KEYS.ID]);
+    openConfirmDialog({
+      title: `Delete video ${video[E_VIDEO_ENTITY_KEYS.NAME]}?`,
+      description:
+        'Are you sure you want to delete this video? This action cannot be undone.',
+      role: E_MODAL_ROLE.DESTRUCTIVE,
+      onConfirm: () => deleteMutation.mutate(video[E_VIDEO_ENTITY_KEYS.ID]),
+    });
   };
 
   return (
-    <Stack direction={'row'} spacing={2}>
+    <Stack direction={'row'} spacing={2} alignItems={'center'}>
       {imageSrc ? (
-        <VideoRowItemImage src={imageSrc} width={'15%'} />
+        <VideoRowItemImage src={imageSrc} width={'20%'} />
       ) : (
         <VideoRowItemImagePlaceholder variant={'rectangular'} />
       )}
@@ -84,16 +105,34 @@ export const VideoRowItem = ({
         </Stack>
       </Stack>
       <Box flexGrow={1} />
-      <Stack direction={'row'} spacing={1} alignItems={'start'}>
-        <Button
-          variant={'text'}
-          color={'error'}
-          size={'small'}
-          disableElevation
-          onClick={handleDeleteClick}
-        >
-          Delete
-        </Button>
+      <Stack
+        direction={'row'}
+        spacing={1}
+        alignItems={'start'}
+        alignSelf={'start'}
+      >
+        {onSelect && (
+          <Button
+            variant={'text'}
+            color={'primary'}
+            size={'small'}
+            disableElevation
+            onClick={handleSelectClick}
+          >
+            Select
+          </Button>
+        )}
+        {!isReadonly && (
+          <Button
+            variant={'text'}
+            color={'error'}
+            size={'small'}
+            disableElevation
+            onClick={handleDeleteClick}
+          >
+            Delete
+          </Button>
+        )}
       </Stack>
     </Stack>
   );

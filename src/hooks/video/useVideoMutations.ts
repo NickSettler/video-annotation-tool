@@ -9,7 +9,7 @@ import { toast } from 'react-hot-toast';
 import { AxiosProgressEvent } from 'axios';
 
 export type TUseVideoMutationsParams = {
-  refetch(): Promise<unknown>;
+  refetch?(): Promise<unknown>;
   onCreateProgress?(event: AxiosProgressEvent): void;
 };
 
@@ -36,12 +36,12 @@ export const useVideoMutations = ({
         onUploadProgress: onCreateProgress,
       }),
     onSuccess: async () => {
-      await refetch();
+      if (refetch) await refetch();
 
       toast.success('Successfully created video');
     },
     onError: async () => {
-      await refetch();
+      if (refetch) await refetch();
 
       toast.error('Failed to create video');
     },
@@ -50,12 +50,12 @@ export const useVideoMutations = ({
   const deleteMutation = useMutation<void, TApiError, string>({
     mutationFn: async (videoID: string) => VideoService.deleteVideo(videoID),
     onSuccess: async () => {
-      await refetch();
+      if (refetch) await refetch();
 
       toast.success('Successfully deleted video');
     },
     onError: async () => {
-      await refetch();
+      if (refetch) await refetch();
 
       toast.error('Failed to delete video');
     },
