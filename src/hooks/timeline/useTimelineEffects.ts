@@ -86,6 +86,7 @@ export const useTimelineEffects = (timeline: VISTimeline | null) => {
     timeline.setOptions({
       max: new Date(videoDuration * 1000),
     });
+    timeline.zoomIn(0.1);
   }, [timeline, videoDuration]);
 
   useEffect(() => {
