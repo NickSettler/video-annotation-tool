@@ -1,6 +1,9 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { closeModal, openModal } from './actions';
 import { findLastIndex } from 'lodash';
+import { E_WORKSPACE_ENTITY_KEYS, TWorkspace } from '../../api/workspace/types';
+import { E_MODAL_ROLE } from '../../utils/modal/types';
+import { TVideo } from '../../api/video/types';
 
 export enum E_MODALS {
   CONFIRM_DIALOG = 'confirm-dialog.modal',
