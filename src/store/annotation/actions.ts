@@ -36,6 +36,9 @@ export enum E_ANNOTATION_ACTIONS {
   SET_IMPORT_FILE_TYPE = `${moduleName}/SET_IMPORT_FILE_TYPE`,
   SET_IMPORT_FILE_MAP = `${moduleName}/SET_IMPORT_FILE_MAP`,
   POPULATE_FROM_IMPORT = `${moduleName}/POPULATE_FROM_IMPORT`,
+
+  // Reset state
+  RESET_STATE = `${moduleName}/RESET_STATE`,
 }
 
 export const initAnnotationsAction = createAction<{
@@ -132,4 +135,8 @@ export const setImportFileMapAction = createAction<
 
 export const populateFromImportAction = createAction<Array<Array<TAnnotation>>>(
   E_ANNOTATION_ACTIONS.POPULATE_FROM_IMPORT,
+);
+
+export const resetAnnotationsState = createAction(
+  E_ANNOTATION_ACTIONS.RESET_STATE,
 );

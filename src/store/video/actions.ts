@@ -21,6 +21,8 @@ export enum E_VIDEO_ACTIONS {
   SET_VIDEO_PLAYING = `${moduleName}/SET_VIDEO_PLAYING`,
   SET_VIDEO_LOADING = `${moduleName}/SET_VIDEO_LOADING`,
   SET_VIDEO_LOADED = `${moduleName}/SET_VIDEO_LOADED`,
+
+  RESET_STATE = `${moduleName}/RESET_STATE`,
 }
 
 export const setVideoUrlAction = createAction<string>(
@@ -78,3 +80,5 @@ export const setVideoLoadingAction = createAction<boolean>(
 export const setVideoLoadedAction = createAction<boolean>(
   E_VIDEO_ACTIONS.SET_VIDEO_LOADED,
 );
+
+export const resetVideoStateAction = createAction(E_VIDEO_ACTIONS.RESET_STATE);

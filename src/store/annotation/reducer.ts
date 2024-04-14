@@ -7,6 +7,7 @@ import {
   groupSelectionAction,
   initAnnotationsAction,
   populateFromImportAction,
+  resetAnnotationsState,
   setAllAnnotationsAction,
   setAnnotationTypeFilterAction,
   setAnnotationTypesAction,
@@ -238,4 +239,6 @@ export const annotationReducer = createReducer(initialState, (builder) =>
         types,
       };
     }),
+    })
+    .addCase(resetAnnotationsState, () => initialState),
 );
