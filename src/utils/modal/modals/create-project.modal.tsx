@@ -7,7 +7,7 @@ import { E_PROJECT_ENTITY_KEYS, TProject } from '../../../api/projects/types';
 import { useModal } from '../../../hooks/modal/useModal';
 import { VideoRowItem } from '../../../components/video/dashboard/video-row-item/VideoRowItem';
 import { isEmpty } from 'lodash';
-import { useProjects } from '../../../hooks/projects/useProjectQuery';
+import { useProjects } from '../../../hooks/projects/useProjects';
 import { useProjectMutations } from '../../../hooks/projects/useProjectMutations';
 import { toast } from 'react-hot-toast';
 import { E_VIDEO_ENTITY_KEYS } from '../../../api/video/types';

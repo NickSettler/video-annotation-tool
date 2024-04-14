@@ -9,7 +9,7 @@ import {
 import { ProjectCard } from '../../projects/project-card/ProjectCard';
 import { useModal } from '../../../hooks/modal/useModal';
 import { E_MODALS } from '../../../store/modals';
-import { useProjects } from '../../../hooks/projects/useProjectQuery';
+import { useProjects } from '../../../hooks/projects/useProjects';
 import { E_PROJECT_ENTITY_KEYS } from '../../../api/projects/types';
 
 const DashboardProjects = (): JSX.Element => {

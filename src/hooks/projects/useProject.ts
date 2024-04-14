@@ -4,24 +4,23 @@ import {
   UseQueryResult,
 } from '@tanstack/react-query';
 import { TApiError } from '../../api/base/types';
-import { map } from 'lodash';
 import {
   applyTransforms,
   transformDate,
 } from '../../utils/react-query/transforms';
-import { TProject } from '../../api/projects/types';
+import { E_PROJECT_ENTITY_KEYS, TProject } from '../../api/projects/types';
 import { ProjectsService } from '../../api/projects/project.service';
 
-export const useProjects = (
+export const useProject = (
+  id: TProject[E_PROJECT_ENTITY_KEYS.ID],
   options?: Omit<
-    UseQueryOptions<Array<TProject>, TApiError, Array<TProject>, Array<string>>,
+    UseQueryOptions<TProject, TApiError, TProject, Array<string>>,
     'initialData' | 'queryFn' | 'queryKey'
   > & { initialData?(): undefined },
-): UseQueryResult<Array<TProject>, TApiError> =>
+): UseQueryResult<TProject, TApiError> =>
   useQuery({
     ...options,
-    queryKey: ['getProjects'],
-    queryFn: async (): Promise<Array<TProject>> =>
-      ProjectsService.getProjects(),
-    select: (d) => map(d, applyTransforms(transformDate).bind(this)),
+    queryKey: [`get-project-${id}`],
+    queryFn: async (): Promise<TProject> => ProjectsService.getProject(id),
+    select: (d) => applyTransforms(transformDate)(d),
   });
