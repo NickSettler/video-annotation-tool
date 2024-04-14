@@ -50,6 +50,11 @@ export const selectIsAnnotationsFiltered = createSelector(
 );
 
 // Annotations
+export const selectAllAnnotationsPure = createSelector(
+  annotationState,
+  (annotation) => annotation.annotations,
+);
+
 export const selectAllAnnotations = createSelector(
   annotationState,
   selectIsAnnotationsFiltered,

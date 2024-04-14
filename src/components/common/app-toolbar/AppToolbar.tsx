@@ -1,85 +1,51 @@
-import React, { ChangeEvent, FormEvent, JSX, useEffect, useState } from 'react';
+import React, { JSX, useMemo } from 'react';
 import {
-  alpha,
   AppBar,
-  Button,
+  Box,
+  CircularProgress,
+  Fade,
   IconButton,
-  InputBase,
-  LinearProgress,
   Stack,
   styled,
   Toolbar,
   Tooltip,
   Typography,
 } from '@mui/material';
-import { Link, Settings, Upload } from '@mui/icons-material';
-import { useAppDispatch, useAppSelector } from '../../../store/store';
-import {
-  setVideoUrlAction,
-  videoIsLoadingSelector,
-  videoUrlSelector,
-} from '../../../store/video';
+import { CloudDone, CloudQueue, Settings, Upload } from '@mui/icons-material';
 import { useModal } from '../../../hooks/modal/useModal';
 import { E_MODALS } from '../../../store/modals';
+import { Link } from '../../../utils/router/link';
+import { routesPaths } from '../../../utils/router';
+import { useAppSelector } from '../../../store/store';
+import {
+  studioProjectSelector,
+  studioSaveInProgress,
+} from '../../../store/studio';
+import { E_PROJECT_ENTITY_KEYS } from '../../../api/projects/types';
 
-const Search = styled('div')(({ theme }) => ({
+const SaveIconBox = styled(Box)(({ theme }) => ({
   position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  overflow: 'hidden',
-  transition: theme.transitions.create('background'),
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  '&:has(input:disabled)': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(1),
-    width: 'auto',
-  },
-}));
-
-const SearchProgress = styled(LinearProgress)({
-  position: 'absolute',
-  top: 0,
-  width: '100%',
-});
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-}));
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: '44ch',
-      '&:focus': {
-        width: '52ch',
-      },
+  '& > *': {
+    position: 'absolute',
+    left: theme.spacing(1),
+  },
+
+  '& > .MuiBox-root': {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    '& > *': {
+      position: 'absolute',
     },
   },
 }));
 
 export const AppToolbar = (): JSX.Element => {
-  const dispatch = useAppDispatch();
-
-  const storeUrl = useAppSelector(videoUrlSelector);
-  const isVideoLoading = useAppSelector(videoIsLoadingSelector);
-
   const { onOpen: handleSettingsModalOpen } = useModal(
     E_MODALS.PROJECT_SETTINGS,
   );
@@ -87,21 +53,13 @@ export const AppToolbar = (): JSX.Element => {
     E_MODALS.IMPORT_ANNOTATIONS,
   );
 
-  const [url, setUrl] = useState('');
+  const currentProject = useAppSelector(studioProjectSelector);
+  const saveInProgress = useAppSelector(studioSaveInProgress);
 
-  useEffect(() => {
-    if (storeUrl) setUrl(storeUrl);
-  }, [storeUrl]);
-
-  const handleURLChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setUrl(e.target.value);
-  };
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-
-    dispatch(setVideoUrlAction(url));
-  };
+  const projectName = useMemo(
+    () => currentProject?.[E_PROJECT_ENTITY_KEYS.NAME] ?? 'Studio',
+    [currentProject],
+  );
 
   return (
     <AppBar
@@ -110,31 +68,44 @@ export const AppToolbar = (): JSX.Element => {
       elevation={0}
     >
       <Toolbar>
-        <Typography variant='h6'>Video Annotation Tool</Typography>
-        <Stack
-          direction={'row'}
-          justifyContent={'center'}
-          position={'relative'}
-          spacing={1}
-          flexGrow={1}
-          component={'form'}
-          onSubmit={handleSubmit}
-        >
-          <Search>
-            {isVideoLoading && <SearchProgress />}
-            <SearchIconWrapper>
-              <Link />
-            </SearchIconWrapper>
-            <StyledInputBase
-              value={url}
-              onChange={handleURLChange}
-              placeholder='Video URL'
-            />
-          </Search>
-          <Button variant={'text'} type={'submit'} color={'inherit'}>
-            Load
-          </Button>
+        <Stack spacing={0}>
+          <Typography
+            variant='h6'
+            component={Link}
+            to={routesPaths.root}
+            sx={{ textDecoration: 'none' }}
+            color={'inherit'}
+          >
+            Video Annotation Tool
+          </Typography>
+          <Stack direction={'row'} spacing={2} alignItems={'center'}>
+            <Typography variant='body2' color={'inherit'}>
+              {projectName}
+            </Typography>
+            <SaveIconBox>
+              <Fade in={saveInProgress}>
+                <Tooltip title={'Save in progress'}>
+                  <Box>
+                    <CloudQueue fontSize={'small'} />
+                    <CircularProgress
+                      size={6}
+                      thickness={8}
+                      color={'inherit'}
+                    />
+                  </Box>
+                </Tooltip>
+              </Fade>
+              <Fade in={!saveInProgress}>
+                <Tooltip title={'All changes saved'}>
+                  <Box>
+                    <CloudDone fontSize={'small'} />
+                  </Box>
+                </Tooltip>
+              </Fade>
+            </SaveIconBox>
+          </Stack>
         </Stack>
+        <Stack flexGrow={1}></Stack>
         <Stack direction={'row'} spacing={1}>
           <Tooltip title={'Import'}>
             <IconButton color={'inherit'} onClick={handleImportModalOpen}>

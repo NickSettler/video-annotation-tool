@@ -5,6 +5,7 @@ import {
   moduleName as annotationModuleName,
 } from './annotation';
 import { modalsReducer, moduleName as modalsModuleName } from './modals';
+import { studioReducer, moduleName as studioModuleName } from './studio';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 export const store = configureStore({
@@ -12,6 +13,7 @@ export const store = configureStore({
     [videoModuleName]: videoReducer,
     [annotationModuleName]: annotationReducer,
     [modalsModuleName]: modalsReducer,
+    [studioModuleName]: studioReducer,
   }),
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

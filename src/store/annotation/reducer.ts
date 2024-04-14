@@ -6,6 +6,7 @@ import {
   clearSelectionAction,
   groupSelectionAction,
   initAnnotationsAction,
+  populateFromBackend,
   populateFromImportAction,
   resetAnnotationsState,
   setAllAnnotationsAction,
@@ -54,7 +55,9 @@ export const annotationReducer = createReducer(initialState, (builder) =>
   builder
     .addCase(initAnnotationsAction, (state, { payload: { count } }) => ({
       ...state,
-      annotations: times(count, constant([])),
+      annotations: state.annotations.length
+        ? state.annotations
+        : times(count, constant([])),
     }))
     .addCase(setAllAnnotationsAction, (state, { payload: annotations }) => ({
       ...state,
@@ -238,7 +241,30 @@ export const annotationReducer = createReducer(initialState, (builder) =>
         annotations,
         types,
       };
-    }),
+    })
+    .addCase(populateFromBackend, (state, { payload: annotations }) => {
+      const types: Array<TAnnotationType> = uniqBy(
+        filter(
+          map(
+            flattenDepth(annotations, 1),
+            (annotation): TAnnotationType | null =>
+              annotation?.properties?.type
+                ? {
+                    type: annotation.properties.type,
+                    color: annotation.properties.color,
+                  }
+                : null,
+          ),
+          (type): type is TAnnotationType => !!type,
+        ),
+        'type',
+      );
+
+      return {
+        ...state,
+        annotations,
+        types,
+      };
     })
     .addCase(resetAnnotationsState, () => initialState),
 );

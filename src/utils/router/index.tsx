@@ -73,7 +73,7 @@ export const routes: Array<RouteObject> = [
             ],
           },
           {
-            path: routesPaths.studio.root,
+            path: `${routesPaths.studio.root}/:projectID`,
             element: <StudioPage />,
           },
         ],
