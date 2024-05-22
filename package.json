@@ -10,7 +10,7 @@
     "@mui/material": "^5.15.18",
     "@mui/x-data-grid": "^7.5.0",
     "@reduxjs/toolkit": "^2.2.5",
-    "@sentry/react": "^8.2.1",
+    "@sentry/react": "^8.3.0",
     "@tanstack/react-query": "^5.37.1",
     "axios": "^1.7.2",
     "earcut": "^2.2.4",
